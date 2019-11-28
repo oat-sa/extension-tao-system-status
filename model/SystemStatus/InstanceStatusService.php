@@ -26,6 +26,7 @@ use common_report_Report as Report;
  * Class InstanceStatusService
  *
  * Service supposed to run check with type of CheckInterface::TYPE_INSTANCE
+ *
  * Checks should be run periodically on each instance and store result of each instance check in SystemStatusLog
  * so those results will be available for further analysis.
  *

@@ -20,7 +20,6 @@
 
 namespace oat\taoSystemStatus\model\SystemStatus;
 
-
 use oat\oatbox\service\ConfigurableService;
 
 /**

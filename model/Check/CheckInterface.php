@@ -43,13 +43,23 @@ interface CheckInterface extends Action
     public function __invoke($params): Report;
 
     /**
+     * See TYPE_* constants
      * @return string
      */
     public function getType(): string;
 
     /**
-     * Unique identifier
+     * Unique identifier. In most cases it may be fully classified class name
      * @return string
      */
     public function getId(): string;
+
+    /**
+     * Is check active and should be run.
+     * Some of checks may need to launched only once, right after instance is ready
+     * Or some checks makes sense only on worker server, so on web server it may be inactive
+     * @return string
+     */
+    public function isActive(): string;
+
 }

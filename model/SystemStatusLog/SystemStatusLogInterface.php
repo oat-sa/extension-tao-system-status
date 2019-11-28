@@ -25,7 +25,7 @@ use common_report_Report as Report;
 /**
  * Interface SystemStatusLogInterface
  *
- * Check launch log.
+ * Implementation of this interface supposed to store the log of check launches.
  *
  * @package oat\taoSystemStatus\model\SystemStatusLog
  */

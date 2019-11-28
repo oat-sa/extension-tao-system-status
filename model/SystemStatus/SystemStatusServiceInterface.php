@@ -24,6 +24,9 @@ use common_report_Report as Report;
 
 /**
  * Interface SystemCheckInterface
+ *
+ * Implementations of this interface will run all the registered checks and return report.
+ *
  * @package oat\taoSystemStatus\model\SystemStatus
  */
 interface SystemStatusServiceInterface

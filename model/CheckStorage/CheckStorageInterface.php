@@ -25,7 +25,7 @@ use oat\taoSystemStatus\model\Check\CheckInterface;
 /**
  * Interface CheckStorageInterface
  *
- * Check storage used to register checks and their parameters so they can be available for SystemStatus services.
+ * Check storage supposed to register and store checks and their parameters so they can be available for SystemStatus services.
  *
  * @package oat\taoSystemStatus\model\CheckStorage
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
