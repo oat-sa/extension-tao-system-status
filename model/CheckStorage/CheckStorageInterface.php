@@ -33,24 +33,32 @@ use oat\taoSystemStatus\model\Check\CheckInterface;
 interface CheckStorageInterface
 {
     /**
+     * Add check to the check storage
+     *
      * @param CheckInterface $check
      * @return mixed
      */
     public function add(CheckInterface $check);
 
     /**
+     * Remove check from the check storage
+     *
      * @param CheckInterface $check
      * @return mixed
      */
     public function remove(CheckInterface $check);
 
     /**
+     * Get all checks by type
+     *
      * @param string $type
      * @return mixed
      */
     public function getChecks(string $type);
 
     /**
+     * Install or prepare persistence
+     *
      * @param $persistence \common_persistence_Persistence
      * @return boolean
      */
