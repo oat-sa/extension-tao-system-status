@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE structures SYSTEM "../doc/structures.dtd">
+<structures>
+    <structure id="tools" name="Tools" level="18" group="settings">
+        <description />
+        <icon id="icon-tools" src=""/>
+        <sections>
+            <section id="system_status" name="System Status" url="/taoSystemStatus/SystemStatus/index" />
+        </sections>
+    </structure>
+</structures>

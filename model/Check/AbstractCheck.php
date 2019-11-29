@@ -29,13 +29,14 @@ use common_report_Report as Report;
  */
 abstract class AbstractCheck implements CheckInterface
 {
+    /** @var string  */
     private $type;
+    /** @var array  */
     private $params;
     /** @var string */
     private $category;
-
-    const DEFAULT_CATEGORY = 'system';
-    const PARAM_CATEGORY = 'category';
+    /** @var string */
+    private $details;
 
     /**
      * AbstractCheck constructor.
@@ -47,6 +48,7 @@ abstract class AbstractCheck implements CheckInterface
         $this->type = $type;
         $this->params = $params;
         $this->category = $params[static::PARAM_CATEGORY] ?? static::DEFAULT_CATEGORY;
+        $this->details = $params[static::PARAM_DETAILS] ?? '';
     }
 
     abstract public function __invoke($params): Report;
@@ -65,6 +67,14 @@ abstract class AbstractCheck implements CheckInterface
     public function getCategory(): string
     {
         return $this->category;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDetails(): string
+    {
+        return $this->details;
     }
 
     /**

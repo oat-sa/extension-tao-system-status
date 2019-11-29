@@ -27,19 +27,27 @@ return [
     'version' => '0.0.1',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
-        'tao' => '>=39.6.1',
+        'tao' => '>=39.5.3',
     ],
     'managementRole' => 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager',
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']],
+        ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#BaseUserRole', ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
     ],
     'install' => [
         'php' => []
     ],
     'uninstall' => [],
     'update' => oat\taoSystemStatus\scripts\update\Updater::class,
-    'routes' => [],
+    'routes' => array(
+        '/taoSystemStatus' => 'oat\\taoSystemStatus\\controller'
+    ),
     'constants' => [
+        'DIR_VIEWS' => __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
+        'BASE_URL'  => ROOT_URL . 'taoSystemStatus/',
+        'BASE_WWW'  => ROOT_URL . 'taoSystemStatus/views/',
     ],
-    'extra' => [],
+    'extra' => [
+        'structures' => __DIR__ . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml',
+    ],
 ];
