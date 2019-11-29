@@ -32,7 +32,7 @@ use common_report_Report as Report;
  */
 class SystemStatusService extends AbstractSystemStatusService
 {
-    const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
+    const SERVICE_ID = 'taoSystemStatus/SystemStatusService';
 
     /**
      * @inheritdoc
