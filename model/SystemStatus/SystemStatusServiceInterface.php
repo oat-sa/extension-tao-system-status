@@ -14,29 +14,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+namespace oat\taoSystemStatus\model\SystemStatus;
 
-use common_ext_ExtensionUpdater;
+use common_report_Report as Report;
 
 /**
- * Class Updater
+ * Interface SystemCheckInterface
  *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Implementations of this interface will run all the registered checks and return report.
+ *
+ * @package oat\taoSystemStatus\model\SystemStatus
  */
-class Updater extends common_ext_ExtensionUpdater
+interface SystemStatusServiceInterface
 {
     /**
-     * @param $initialVersion
-     * @return string|void
+     * Run all registered checks and return report
+     * @return Report
      */
-    public function update($initialVersion)
-    {
-
-    }
+    public function check(): Report;
 }
-

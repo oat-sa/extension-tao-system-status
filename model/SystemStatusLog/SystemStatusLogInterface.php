@@ -14,29 +14,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+namespace oat\taoSystemStatus\model\SystemStatusLog;
 
-use common_ext_ExtensionUpdater;
+use common_report_Report as Report;
 
 /**
- * Class Updater
+ * Interface SystemStatusLogInterface
  *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Implementation of this interface supposed to store the log of check launches.
+ *
+ * @package oat\taoSystemStatus\model\SystemStatusLog
  */
-class Updater extends common_ext_ExtensionUpdater
+interface SystemStatusLogInterface
 {
     /**
-     * @param $initialVersion
-     * @return string|void
+     * Log the result of checking
+     * 
+     * @param Report $report
+     * @param string $instanceId
+     * @return mixed
      */
-    public function update($initialVersion)
-    {
-
-    }
+    public function log(Report $report, string $instanceId = null);
 }
-

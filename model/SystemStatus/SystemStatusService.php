@@ -14,29 +14,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+namespace oat\taoSystemStatus\model\SystemStatus;
 
-use common_ext_ExtensionUpdater;
+use common_report_Report as Report;
 
 /**
- * Class Updater
+ * Class SystemStatusService
  *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Service supposed to run check with type of CheckInterface::TYPE_SYSTEM
+ *
+ * @package oat\taoSystemStatus\model\SystemStatus
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class Updater extends common_ext_ExtensionUpdater
+class SystemStatusService extends AbstractSystemStatusService
 {
-    /**
-     * @param $initialVersion
-     * @return string|void
-     */
-    public function update($initialVersion)
-    {
+    const SERVICE_ID = 'taoSystemStatus/SystemStatusService';
 
+    /**
+     * @inheritdoc
+     */
+    public function check(): Report
+    {
+        // TODO: Implement check() method.
     }
 }
-

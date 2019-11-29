@@ -14,29 +14,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+namespace oat\taoSystemStatus\model\SystemStatus;
 
-use common_ext_ExtensionUpdater;
+use oat\oatbox\service\ConfigurableService;
 
 /**
- * Class Updater
- *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Class AbstractSystemStatusService
+ * @package oat\taoSystemStatus\model\SystemStatus
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class Updater extends common_ext_ExtensionUpdater
+abstract class AbstractSystemStatusService extends ConfigurableService implements SystemStatusServiceInterface
 {
-    /**
-     * @param $initialVersion
-     * @return string|void
-     */
-    public function update($initialVersion)
-    {
 
-    }
 }
-
