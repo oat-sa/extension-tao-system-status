@@ -18,35 +18,24 @@
  *
  */
 
-namespace oat\taoSystemStatus\test\model\SystemStatus;
+namespace oat\taoSystemStatus\test\model\Check;
 
-use oat\generis\test\TestCase;
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+use oat\taoSystemStatus\model\Check\AbstractCheck;
+use common_report_Report as Report;
 
 /**
- * Class SystemStatusService
- * @package oat\taoSystemStatus\test\model\SystemStatus
+ * class SampleCheck
+ * @package oat\taoSystemStatus\test\model\Check
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SystemStatusServiceTest extends TestCase
+class SampleCheck extends AbstractCheck
 {
-    const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
-
-    /**
-     * @inheritdoc
-     */
-    public function testCheck()
+    public function __invoke($params): Report
     {
-
+        return Report::createSuccess('foo');
     }
-
-    /**
-     * @return SystemStatusService
-     */
-    private function getInstance()
+    public function isActive(): bool
     {
-        $service = new SystemStatusService([]);
-        $service->setServiceLocator($this->getServiceLocatorMock());
-        return $service;
+        return true;
     }
 }

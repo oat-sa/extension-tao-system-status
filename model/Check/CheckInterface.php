@@ -43,6 +43,11 @@ interface CheckInterface extends Action
     public function __invoke($params): Report;
 
     /**
+     * @return string
+     */
+    public function getCategory(): string;
+
+    /**
      * See TYPE_* constants
      * @return string
      */
@@ -55,11 +60,17 @@ interface CheckInterface extends Action
     public function getId(): string;
 
     /**
+     * Get check parameters
+     * @return mixed
+     */
+    public function getParameters();
+
+    /**
      * Is check active and should be run.
      * Some of checks may need to launched only once, right after instance is ready
      * Or some checks makes sense only on worker server, so on web server it may be inactive
-     * @return string
+     * @return bool
      */
-    public function isActive(): string;
+    public function isActive(): bool;
 
 }

@@ -18,35 +18,17 @@
  *
  */
 
-namespace oat\taoSystemStatus\test\model\SystemStatus;
-
-use oat\generis\test\TestCase;
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+namespace oat\taoSystemStatus\model;
 
 /**
- * Class SystemStatusService
- * @package oat\taoSystemStatus\test\model\SystemStatus
+ * Class SystemStatusException
+ *
+ * Basic exception for taoSystemStatus extension
+ *
+ * @package oat\taoSystemStatus\model
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SystemStatusServiceTest extends TestCase
+class SystemStatusException extends \Exception
 {
-    const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
 
-    /**
-     * @inheritdoc
-     */
-    public function testCheck()
-    {
-
-    }
-
-    /**
-     * @return SystemStatusService
-     */
-    private function getInstance()
-    {
-        $service = new SystemStatusService([]);
-        $service->setServiceLocator($this->getServiceLocatorMock());
-        return $service;
-    }
 }
