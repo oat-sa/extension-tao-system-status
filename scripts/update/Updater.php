@@ -39,3 +39,4 @@ class Updater extends common_ext_ExtensionUpdater
 
     }
 }
+
