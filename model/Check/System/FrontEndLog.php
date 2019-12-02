@@ -82,6 +82,6 @@ class FrontEndLog extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Frontend log correctly configured');
+        return __('Check if frontend log correctly configured');
     }
 }
