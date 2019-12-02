@@ -41,7 +41,7 @@ class FrontEndLog extends AbstractCheck
         /** @var \common_ext_ExtensionsManager $extMgr */
         $extMgr = $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID);
         $config = $extMgr->getExtensionById('tao')->getConfig('client_lib_config_registry');
-        var_dump($config);
+        //todo: implement checking
         return new Report(Report::TYPE_INFO);
     }
 

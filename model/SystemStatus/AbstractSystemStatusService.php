@@ -63,9 +63,9 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
     {
         if (!$this->storage) {
             $persistenceId = $this->getOption(static::OPTION_STORAGE_PERSISTENCE);
-            $persistence = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID)->getPersistenceById($persistenceId);
             $storageClass = $this->getOption(static::OPTION_STORAGE_CLASS);
-            $this->storage = new $storageClass($persistence);
+            $this->storage = new $storageClass($persistenceId);
+            $this->propagate($this->storage);
         }
         return $this->storage;
     }

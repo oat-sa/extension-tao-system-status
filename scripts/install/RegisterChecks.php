@@ -26,9 +26,9 @@ use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 /**
- * Class RegisterJobs
+ * Class RegisterChecks
  * @author Aleh Hutnikau <hutnikau@1pt.com>
- * @package oat\taoScheduler\scripts\install
+ * @package oat\taoSystemStatus\scripts\install
  */
 class RegisterChecks extends AbstractAction
 {
