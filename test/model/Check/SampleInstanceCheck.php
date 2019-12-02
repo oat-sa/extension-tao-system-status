@@ -24,18 +24,30 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 use common_report_Report as Report;
 
 /**
- * class SampleCheck
+ * class SampleInstanceCheck
  * @package oat\taoSystemStatus\test\model\Check
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SampleCheck extends AbstractCheck
+class SampleInstanceCheck extends AbstractCheck
 {
-    public function __invoke($params): Report
+    public function __invoke($params = []): Report
     {
         return Report::createSuccess('foo');
     }
     public function isActive(): bool
     {
         return true;
+    }
+    public function getType(): string
+    {
+        return self::TYPE_INSTANCE;
+    }
+    public function getCategory(): string
+    {
+        return 'Instance category check name';
+    }
+    public function getDetails(): string
+    {
+        return 'check details';
     }
 }

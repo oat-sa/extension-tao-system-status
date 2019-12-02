@@ -46,7 +46,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
     const COLUMN_TYPE = 'type';
     const COLUMN_PARAMS = 'params';
 
-    const UNIQUE_ID_INDEX = 'idx_unique_variables_storage';
+    const UNIQUE_ID_INDEX = 'idx_unique_system_checks_storage';
 
     /**
      * RdsCheckStorage constructor.
@@ -112,7 +112,6 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
                 throw new SystemStatusException('Check class does not exist: ' . $check[self::COLUMN_CLASS]);
             }
             $result[] = $checkReflection->newInstanceArgs([
-                $check[self::COLUMN_TYPE],
                 json_decode($check[self::COLUMN_PARAMS], true),
             ]);
         }
@@ -133,7 +132,11 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $fromSchema = clone $schema;
 
         try {
-            $table = $schema->createTable(self::TABLE_NAME);
+            if ($schema->hasTable(self::TABLE_NAME)) {
+                $table = $schema->getTable(self::TABLE_NAME);
+            } else {
+                $table = $schema->createTable(self::TABLE_NAME);
+            }
             $table->addOption('engine', 'InnoDB');
             $table->addColumn(static::COLUMN_ID, 'string', ['length' => 255]);
             $table->addColumn(static::COLUMN_CLASS, 'text', ['notnull' => true]);

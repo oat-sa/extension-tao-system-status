@@ -24,7 +24,7 @@ return [
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.0.3',
+    'version' => '0.2.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
         'tao' => '>=39.5.3',
@@ -35,7 +35,10 @@ return [
         ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#BaseUserRole', ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
     ],
     'install' => [
-        'php' => []
+        'php' => [
+            \oat\taoSystemStatus\scripts\install\RegisterCheckStorage::class,
+            \oat\taoSystemStatus\scripts\install\RegisterChecks::class
+        ]
     ],
     'uninstall' => [],
     'update' => oat\taoSystemStatus\scripts\update\Updater::class,

@@ -18,5 +18,9 @@
  */
 
 use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
+use oat\taoSystemStatus\model\CheckStorage\RdsCheckStorage;
 
-return new InstanceStatusService();
+return new InstanceStatusService([
+    InstanceStatusService::OPTION_STORAGE_PERSISTENCE => 'default',
+    InstanceStatusService::OPTION_STORAGE_CLASS => RdsCheckStorage::class
+]);

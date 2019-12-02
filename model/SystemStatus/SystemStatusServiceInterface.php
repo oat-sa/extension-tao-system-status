@@ -21,6 +21,8 @@
 namespace oat\taoSystemStatus\model\SystemStatus;
 
 use common_report_Report as Report;
+use oat\taoSystemStatus\model\Check\CheckInterface;
+use oat\taoSystemStatus\model\SystemStatusException;
 
 /**
  * Interface SystemCheckInterface
@@ -36,4 +38,18 @@ interface SystemStatusServiceInterface
      * @return Report
      */
     public function check(): Report;
+
+    /**
+     * @param CheckInterface $check
+     * @return bool
+     * @throws SystemStatusException check with given id already exists
+     */
+    public function addCheck(CheckInterface $check): bool;
+
+    /**
+     * @param CheckInterface $check
+     * @return bool
+     * @throws SystemStatusException check with given id does not exist
+     */
+    public function removeCheck(CheckInterface $check): bool;
 }
