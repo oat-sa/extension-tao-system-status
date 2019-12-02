@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\SystemStatus;
 
 use common_report_Report as Report;
+use oat\taoSystemStatus\model\Check\CheckInterface;
 
 /**
  * Class SystemStatusService
@@ -39,6 +40,25 @@ class SystemStatusService extends AbstractSystemStatusService
      */
     public function check(): Report
     {
-        // TODO: Implement check() method.
+        $report = new Report(Report::TYPE_INFO);
+
+        foreach ($this->getChecks() as $check) {
+            try {
+                $report->add($check());
+            } catch (\Exception $e) {
+                $this->logError(sprintf('Cannot run check `%s`; Error message: %s', $check->getId(), $e->getMessage()));
+            }
+        }
+
+        return $this->prepareReport($report);
+    }
+
+    /**
+     * Get syetem type checks
+     * @return array|CheckInterface[]
+     */
+    private function getChecks(): array
+    {
+        return $this->getCheckStorage()->getChecks(CheckInterface::TYPE_SYSTEM);
     }
 }

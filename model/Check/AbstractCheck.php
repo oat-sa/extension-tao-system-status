@@ -51,7 +51,7 @@ abstract class AbstractCheck implements CheckInterface
         $this->details = $params[static::PARAM_DETAILS] ?? '';
     }
 
-    abstract public function __invoke($params): Report;
+    abstract public function __invoke($params = []): Report;
 
     /**
      * @inheritdoc

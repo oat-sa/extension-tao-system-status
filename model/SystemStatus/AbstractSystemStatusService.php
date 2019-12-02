@@ -20,7 +20,11 @@
 
 namespace oat\taoSystemStatus\model\SystemStatus;
 
+use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\service\ConfigurableService;
+use oat\taoSystemStatus\model\CheckStorage\CheckStorageInterface;
+use oat\taoSystemStatus\model\Check\CheckInterface;
+use common_report_Report as Report;
 
 /**
  * Class AbstractSystemStatusService
@@ -30,4 +34,58 @@ use oat\oatbox\service\ConfigurableService;
 abstract class AbstractSystemStatusService extends ConfigurableService implements SystemStatusServiceInterface
 {
 
+    const OPTION_STORAGE_CLASS = 'storage_class';
+    const OPTION_STORAGE_PERSISTENCE = 'storage_persistence';
+
+    /** @var CheckStorageInterface */
+    protected $storage;
+
+    /**
+     * @inheritdoc
+     */
+    public function addCheck(CheckInterface $check): bool
+    {
+        return $this->getCheckStorage()->addCheck($check);
+    }
+
+    /**
+     *  @inheritdoc
+     */
+    public function removeCheck(CheckInterface $check): bool
+    {
+        return $this->getCheckStorage()->removeCheck($check);
+    }
+
+    /**
+     * @return CheckStorageInterface
+     */
+    protected function getCheckStorage(): CheckStorageInterface
+    {
+        if (!$this->storage) {
+            $persistenceId = $this->getOption(static::OPTION_STORAGE_PERSISTENCE);
+            $persistence = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID)->getPersistenceById($persistenceId);
+            $storageClass = $this->getOption(static::OPTION_STORAGE_CLASS);
+            $this->storage = new $storageClass($persistence);
+        }
+        return $this->storage;
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        if ($report->contains(Report::TYPE_WARNING)) {
+            $report->setType(Report::TYPE_WARNING);
+            $report->setMessage(__('Partially Degraded Service'));
+        }
+
+        if ($report->contains(Report::TYPE_ERROR)) {
+            $report->setType(Report::TYPE_ERROR);
+            $report->setMessage(__('We\'re noticing an increased rate of errors'));
+        }
+
+        return $report;
+    }
 }

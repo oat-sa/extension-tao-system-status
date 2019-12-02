@@ -45,7 +45,7 @@ interface CheckInterface extends Action
      * @param $params
      * @return Report
      */
-    public function __invoke($params): Report;
+    public function __invoke($params = []): Report;
 
     /**
      * @return string
