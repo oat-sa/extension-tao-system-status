@@ -22,13 +22,14 @@ namespace oat\taoSystemStatus\model\Check;
 
 use oat\oatbox\action\Action;
 use common_report_Report as Report;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
  * Interface CheckInterface
  * @package oat\taoSystemStatus\model\Check
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-interface CheckInterface extends Action
+interface CheckInterface extends Action, ServiceLocatorAwareInterface
 {
     /** @var string per instance check */
     const TYPE_INSTANCE = 'instance';

@@ -51,6 +51,7 @@ class InstanceStatusService extends AbstractSystemStatusService
 
         foreach ($this->getChecks() as $check) {
             try {
+                $this->propagate($check);
                 $checkReport = $check();
                 $report->add($checkReport);
                 $this->logCheckReport($checkReport);

@@ -25,7 +25,8 @@ use oat\generis\test\TestCase;
 use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\taoSystemStatus\model\CheckStorage\RdsCheckStorage;
-use oat\taoSystemStatus\test\model\Check\SampleCheck;
+use oat\taoSystemStatus\test\model\Check\SampleInstanceCheck;
+use oat\taoSystemStatus\test\model\Check\SampleSystemCheck;
 
 /**
  * @inheritdoc
@@ -39,7 +40,7 @@ class RdsCheckStorageTest extends TestCase
             $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']))
         );
         $checks = $service->getChecks(CheckInterface::TYPE_INSTANCE);
-        $this->assertEquals(SampleCheck::class, $checks[0]->getId());
+        $this->assertEquals(SampleInstanceCheck::class, $checks[0]->getId());
         $this->assertEquals(['foo' => 'bar'], $checks[0]->getParameters());
     }
 
@@ -72,7 +73,7 @@ class RdsCheckStorageTest extends TestCase
         );
         $checks = $service->getChecks(CheckInterface::TYPE_INSTANCE);
         $this->assertCount(1, $checks);
-        $this->assertEquals(SampleCheck::class, $checks[0]->getId());
+        $this->assertEquals(SampleInstanceCheck::class, $checks[0]->getId());
         $this->assertEquals(['foo' => 'bar'], $checks[0]->getParameters());
         $this->assertCount(0, $service->getChecks(CheckInterface::TYPE_SYSTEM));
     }
@@ -97,6 +98,11 @@ class RdsCheckStorageTest extends TestCase
      */
     private function getCheckMock($type, $params)
     {
-        return new SampleCheck($type, $params);
+        if ($type === CheckInterface::TYPE_INSTANCE) {
+            return new SampleInstanceCheck($params);
+        }
+        if ($type === CheckInterface::TYPE_SYSTEM) {
+            return new SampleSystemCheck($params);
+        }
     }
 }

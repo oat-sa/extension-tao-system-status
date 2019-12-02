@@ -22,6 +22,7 @@
 namespace oat\taoSystemStatus\scripts\update;
 
 use common_ext_ExtensionUpdater;
+use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 /**
  * Class Updater
@@ -33,10 +34,18 @@ class Updater extends common_ext_ExtensionUpdater
     /**
      * @param $initialVersion
      * @return string|void
+     * @throws \oat\taoSystemStatus\model\SystemStatusException
      */
     public function update($initialVersion)
     {
         $this->skip('0.0.1', '0.1.0');
+
+        if ($this->isVersion('0.1.0')) {
+            /** @var SystemStatusService $systemStatusService */
+            $systemStatusService = $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
+            $systemStatusService->addCheck(new \oat\taoSystemStatus\model\Check\System\FrontEndLog([]));
+            $this->setVersion('0.2.0');
+        }
     }
 }
 

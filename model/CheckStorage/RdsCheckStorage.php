@@ -112,7 +112,6 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
                 throw new SystemStatusException('Check class does not exist: ' . $check[self::COLUMN_CLASS]);
             }
             $result[] = $checkReflection->newInstanceArgs([
-                $check[self::COLUMN_TYPE],
                 json_decode($check[self::COLUMN_PARAMS], true),
             ]);
         }

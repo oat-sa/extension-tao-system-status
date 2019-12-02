@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\Check;
 
 use common_report_Report as Report;
+use oat\oatbox\service\ServiceManagerAwareTrait;
 
 /**
  * class AbstractCheck
@@ -29,26 +30,18 @@ use common_report_Report as Report;
  */
 abstract class AbstractCheck implements CheckInterface
 {
-    /** @var string  */
-    private $type;
+    use ServiceManagerAwareTrait;
+
     /** @var array  */
     private $params;
-    /** @var string */
-    private $category;
-    /** @var string */
-    private $details;
 
     /**
      * AbstractCheck constructor.
-     * @param $type
      * @param $params
      */
-    public function __construct(string $type, array $params = [])
+    public function __construct(array $params = [])
     {
-        $this->type = $type;
         $this->params = $params;
-        $this->category = $params[static::PARAM_CATEGORY] ?? static::DEFAULT_CATEGORY;
-        $this->details = $params[static::PARAM_DETAILS] ?? '';
     }
 
     abstract public function __invoke($params = []): Report;
@@ -56,26 +49,17 @@ abstract class AbstractCheck implements CheckInterface
     /**
      * @inheritdoc
      */
-    public function getType(): string
-    {
-        return $this->type;
-    }
+    abstract public function getType(): string;
 
     /**
      * @inheritdoc
      */
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
+    abstract public function getCategory(): string;
 
     /**
      * @inheritdoc
      */
-    public function getDetails(): string
-    {
-        return $this->details;
-    }
+    abstract public function getDetails(): string;
 
     /**
      * @inheritdoc

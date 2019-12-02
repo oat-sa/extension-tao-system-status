@@ -44,6 +44,7 @@ class SystemStatusService extends AbstractSystemStatusService
 
         foreach ($this->getChecks() as $check) {
             try {
+                $this->propagate($check);
                 $report->add($check());
             } catch (\Exception $e) {
                 $this->logError(sprintf('Cannot run check `%s`; Error message: %s', $check->getId(), $e->getMessage()));
