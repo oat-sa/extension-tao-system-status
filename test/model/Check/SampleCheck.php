@@ -18,17 +18,24 @@
  *
  */
 
-namespace oat\taoSystemStatus\model;
+namespace oat\taoSystemStatus\test\model\Check;
+
+use oat\taoSystemStatus\model\Check\AbstractCheck;
+use common_report_Report as Report;
 
 /**
- * Class SystemCheckException
- *
- * Exception supposed to be thrown when any system check fails
- *
- * @package oat\taoSystemStatus\model
+ * class SampleCheck
+ * @package oat\taoSystemStatus\test\model\Check
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SystemCheckException extends SystemStatusException
+class SampleCheck extends AbstractCheck
 {
-
+    public function __invoke($params): Report
+    {
+        return Report::createSuccess('foo');
+    }
+    public function isActive(): bool
+    {
+        return true;
+    }
 }

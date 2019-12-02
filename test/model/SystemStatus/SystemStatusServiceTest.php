@@ -18,7 +18,7 @@
  *
  */
 
-namespace oat\taoSystemStatus\test\model\SystemStatus ;
+namespace oat\taoSystemStatus\test\model\SystemStatus;
 
 use oat\generis\test\TestCase;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;

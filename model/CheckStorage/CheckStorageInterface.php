@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\CheckStorage;
 
 use oat\taoSystemStatus\model\Check\CheckInterface;
+use oat\taoSystemStatus\model\SystemStatusException;
 
 /**
  * Interface CheckStorageInterface
@@ -36,25 +37,27 @@ interface CheckStorageInterface
      * Add check to the check storage
      *
      * @param CheckInterface $check
-     * @return mixed
+     * @throws SystemStatusException check with the same id already exists
+     * @return bool
      */
-    public function add(CheckInterface $check);
+    public function addCheck(CheckInterface $check): bool;
 
     /**
      * Remove check from the check storage
      *
      * @param CheckInterface $check
-     * @return mixed
+     * @throws SystemStatusException check with given id does not exist
+     * @return bool
      */
-    public function remove(CheckInterface $check);
+    public function removeCheck(CheckInterface $check): bool;
 
     /**
      * Get all checks by type
      *
      * @param string $type
-     * @return mixed
+     * @return CheckInterface[]
      */
-    public function getChecks(string $type);
+    public function getChecks(string $type): array;
 
     /**
      * Install or prepare persistence
@@ -62,5 +65,5 @@ interface CheckStorageInterface
      * @param $persistence \common_persistence_Persistence
      * @return boolean
      */
-    public static function install($persistence): bool;
+    public function install(\common_persistence_Persistence $persistence): bool;
 }

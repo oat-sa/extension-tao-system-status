@@ -33,7 +33,7 @@ interface SystemStatusLogInterface
 {
     /**
      * Log the result of checking
-     * 
+     *
      * @param Report $report
      * @param string $instanceId
      * @return mixed

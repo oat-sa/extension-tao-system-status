@@ -21,14 +21,14 @@
 namespace oat\taoSystemStatus\model;
 
 /**
- * Class SystemCheckException
+ * Class SystemStatusException
  *
- * Exception supposed to be thrown when any system check fails
+ * Basic exception for taoSystemStatus extension
  *
  * @package oat\taoSystemStatus\model
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SystemCheckException extends SystemStatusException
+class SystemStatusException extends \Exception
 {
 
 }
