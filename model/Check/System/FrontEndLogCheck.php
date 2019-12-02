@@ -24,11 +24,11 @@ use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class FrontEndLog
+ * Class FrontEndLogCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class FrontEndLog extends AbstractCheck
+class FrontEndLogCheck extends AbstractCheck
 {
 
     /**
