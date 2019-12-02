@@ -24,30 +24,22 @@ return [
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.0.2',
+    'version' => '0.0.3',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
-        'tao' => '>=39.5.3',
+        'tao' => '>=39.6.1',
     ],
     'managementRole' => 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager',
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']],
-        ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#BaseUserRole', ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
     ],
     'install' => [
         'php' => []
     ],
     'uninstall' => [],
     'update' => oat\taoSystemStatus\scripts\update\Updater::class,
-    'routes' => array(
-        '/taoSystemStatus' => 'oat\\taoSystemStatus\\controller'
-    ),
+    'routes' => [],
     'constants' => [
-        'DIR_VIEWS' => __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
-        'BASE_URL'  => ROOT_URL . 'taoSystemStatus/',
-        'BASE_WWW'  => ROOT_URL . 'taoSystemStatus/views/',
     ],
-    'extra' => [
-        'structures' => __DIR__ . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml',
-    ],
+    'extra' => [],
 ];
