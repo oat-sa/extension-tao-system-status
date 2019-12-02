@@ -24,7 +24,7 @@ return [
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.0.2',
+    'version' => '0.0.3',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
         'tao' => '>=39.5.3',
