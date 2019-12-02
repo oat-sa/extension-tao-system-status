@@ -78,6 +78,23 @@ abstract class AbstractCheck implements CheckInterface
     }
 
     /**
+     * Add metadata to the report, such as category, details etc.
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $data = $report->getData();
+        if ($data === null) {
+            $data = [];
+        }
+        $data[self::PARAM_CATEGORY] = $this->getCategory();
+        $data[self::PARAM_DETAILS] = $this->getDetails();
+        $report->setData($data);
+        return $report;
+    }
+
+    /**
      * @inheritdoc
      */
     abstract public function isActive(): bool;

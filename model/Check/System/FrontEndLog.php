@@ -41,8 +41,16 @@ class FrontEndLog extends AbstractCheck
         /** @var \common_ext_ExtensionsManager $extMgr */
         $extMgr = $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID);
         $config = $extMgr->getExtensionById('tao')->getConfig('client_lib_config_registry');
-        //todo: implement checking
-        return new Report(Report::TYPE_INFO);
+        $enabled = isset($config['core/logger']['loggers']['core/logger/http']) &&
+            in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);
+
+        if ($enabled) {
+            $report = new Report(Report::TYPE_SUCCESS, __('Front end log enabled'));
+        } else {
+            $report = new Report(Report::TYPE_WARNING, __('Front end log disabled'));
+        }
+
+        return $this->prepareReport($report);
     }
 
     /**

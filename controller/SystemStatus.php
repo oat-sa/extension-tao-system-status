@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\controller;
 
 use common_report_Report as Report;
+use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 /**
  * Class Status
@@ -39,28 +40,27 @@ class SystemStatus extends \tao_actions_SinglePageModule
         $this->setView('Status/index.tpl');
     }
 
+    /**
+     * Get system status report
+     */
     public function reports()
     {
         $params = $this->getPsrRequest()->getQueryParams();
+        /** @var Report[] $reports */
+        $reports = $this->getSystemStatusService()->check();
 
         if (isset($params['category'])) {
-            $report = new Report(Report::TYPE_WARNING, 'Partially Degraded Service', ['category' => $params['category']]);
-            $report->add(new Report(Report::TYPE_SUCCESS, 'Service A operational', ['category' => $params['category']]));
-            $report->add(new Report(Report::TYPE_WARNING, 'Service B operational', ['category' => $params['category'], 'details' => 'Average time of response above average']));
-            $report->add(new Report(Report::TYPE_SUCCESS, 'Service C operational', ['category' => $params['category']]));
-            $report->add(new Report(Report::TYPE_SUCCESS, 'Service D operational', ['category' => $params['category']]));
-            $report->add(new Report(Report::TYPE_INFO,    'Service E operational', ['category' => $params['category'], 'details' => '12 days of uptime']));
-            $report->add(new Report(Report::TYPE_ERROR,   'Service F operational', ['category' => $params['category'], 'details' => 'Partially Degraded Service']));
-        } else {
-            $report = new Report(Report::TYPE_ERROR, 'Partially Degraded Service', ['category' => 'Tao System']);
-            $report->add(new Report(Report::TYPE_SUCCESS, 'All Systems Operational', ['category' => 'Tao System']));
-            $report->add(new Report(Report::TYPE_WARNING, 'The system is not configured optimally', ['category' => 'Tao configuration']));
-            $report->add(new Report(Report::TYPE_ERROR, '2 tasks were failed during last 24 hours', ['category' => 'Task queue']));
+            //todo: filter reports by category
         }
 
-        $this->returnJson([
-            'report' => $report
-        ]);
+        $this->returnJson(['report' => $reports]);
     }
 
+    /**
+     * @return SystemStatusService
+     */
+    protected function getSystemStatusService()
+    {
+        return $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
+    }
 }
