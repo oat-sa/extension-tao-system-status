@@ -36,6 +36,11 @@ interface CheckInterface extends Action
     /** @var string common check */
     const TYPE_SYSTEM = 'system';
 
+    const DEFAULT_CATEGORY = 'Tao System';
+
+    const PARAM_CATEGORY = 'category';
+    const PARAM_DETAILS = 'details';
+
     /**
      * @param $params
      * @return Report
@@ -46,6 +51,11 @@ interface CheckInterface extends Action
      * @return string
      */
     public function getCategory(): string;
+
+    /**
+     * @return string
+     */
+    public function getDetails(): string;
 
     /**
      * See TYPE_* constants
