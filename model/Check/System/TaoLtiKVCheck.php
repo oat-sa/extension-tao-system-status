@@ -21,22 +21,19 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
-use oat\ltiDeliveryProvider\model\execution\implementation\KvLtiDeliveryExecutionService;
-use oat\ltiDeliveryProvider\model\execution\LtiDeliveryExecutionService;
 use oat\taoLti\models\classes\ResourceLink\KeyValueLink;
 use oat\taoLti\models\classes\ResourceLink\LinkService;
 use oat\taoLti\models\classes\user\KvLtiUserService;
 use oat\taoLti\models\classes\user\LtiUserService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use common_ext_ExtensionsManager;
-use common_exception_Error;
 
 /**
- * Class LtiKVCheck
+ * Class TaoLtiKVCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class LtiKVCheck extends AbstractCheck
+class TaoLtiKVCheck extends AbstractCheck
 {
 
     /** @var Report */
@@ -45,17 +42,16 @@ class LtiKVCheck extends AbstractCheck
     /**
      * @param array $params
      * @return Report
-     * @throws common_exception_Error
      */
     public function __invoke($params = []): Report
     {
-        $this->report = new Report(Report::TYPE_SUCCESS, __('Check LTI KV implementations'));
+        $this->report = new Report(Report::TYPE_SUCCESS);
 
-        $this->checkLtiLinkService();
-        $this->checkLtiUserService();
-        $this->checkLtiDeliveryExecutionService();
+        if (!$this->checkLtiLinkService()) {
+            $this->report->setType(Report::TYPE_WARNING);
+        }
 
-        if ($this->report->contains(Report::TYPE_WARNING)) {
+        if (!$this->checkLtiUserService()) {
             $this->report->setType(Report::TYPE_WARNING);
         }
 
@@ -67,7 +63,7 @@ class LtiKVCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-       return $this->checkInstalledLtiExtensions();
+       return $this->checkInstalledTaoLtiExtension();
     }
 
     /**
@@ -91,68 +87,55 @@ class LtiKVCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if LTI services correctly configured to KV implementations');
+        return __('Check if taoLTI services correctly configured to KV implementations');
     }
 
     /**
      * @return bool
-     * @throws \common_exception_Error
      */
     private function checkLtiLinkService() : bool
     {
         $ltiLinkService = $this->getLtiLinkService();
 
         if ($ltiLinkService instanceof KeyValueLink) {
-            $this->report->add(new Report(Report::TYPE_SUCCESS, __('KeyValue storage is configured for LtiLinkService')));
+            $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is configured for LtiLinkService.'));
             return true;
         }
 
-        $this->report->add(new Report(Report::TYPE_WARNING, __('KeyValue storage is not configured for LtiLinkService')));
+        $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is not configured for LtiLinkService.'));
         return false;
     }
 
     /**
      * @return bool
-     * @throws common_exception_Error
      */
     private function checkLtiUserService() : bool
     {
         $ltiUserService = $this->getLtiUserService();
 
         if ($ltiUserService instanceof KvLtiUserService) {
-            $this->report->add(new Report(Report::TYPE_SUCCESS, __('KeyValue storage is configured for LtiUserService')));
+            $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is configured for LtiUserService.'));
             return true;
         }
-
-        $this->report->add(new Report(Report::TYPE_WARNING, __('KeyValue storage is not configured for LtiUserService')));
+        $this->report->setMessage($this->getMessageFromReport()  . __('KeyValue storage is not configured for LtiUserService.'));
         return false;
     }
 
     /**
-     * @return bool
-     * @throws common_exception_Error
+     * @return string
      */
-    private function checkLtiDeliveryExecutionService() : bool
+    private function getMessageFromReport() : string
     {
-        $ltiDeliveryExecutionService = $this->getLtiDeliveryExecutionService();
-
-        if ($ltiDeliveryExecutionService instanceof KvLtiDeliveryExecutionService) {
-            $this->report->add(new Report(Report::TYPE_SUCCESS, __('KeyValue storage is configured for LtiDeliveryExecutionService')));
-            return true;
-        }
-
-        $this->report->add(new Report(Report::TYPE_WARNING, __('KeyValue storage is not configured for LtiDeliveryExecutionService')));
-        return false;
-
+        return $this->report->getMessage() ? $this->report->getMessage() . ' ' : '';
     }
 
     /**
      * @return bool
      */
-    private function checkInstalledLtiExtensions() : bool
+    private function checkInstalledTaoLtiExtension() : bool
     {
         $extensionManagerService = $this->getExtensionsManagerService();
-        return $extensionManagerService->isInstalled('taoLti') && $extensionManagerService->isInstalled('ltiDeliveryProvider');
+        return $extensionManagerService->isInstalled('taoLti');
     }
 
     /**
@@ -180,14 +163,5 @@ class LtiKVCheck extends AbstractCheck
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
-    }
-
-    /**
-     * @return LtiDeliveryExecutionService
-     */
-    private function getLtiDeliveryExecutionService() : LtiDeliveryExecutionService
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getServiceLocator()->get(LtiDeliveryExecutionService::SERVICE_ID);
     }
 }
