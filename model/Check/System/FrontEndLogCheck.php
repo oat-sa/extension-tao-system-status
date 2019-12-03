@@ -38,9 +38,7 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
-        /** @var \common_ext_ExtensionsManager $extMgr */
-        $extMgr = $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID);
-        $config = $extMgr->getExtensionById('tao')->getConfig('client_lib_config_registry');
+        $config = $this->getExtensionsManagerService()->getExtensionById('tao')->getConfig('client_lib_config_registry');
         $enabled = isset($config['core/logger']['loggers']['core/logger/http']) &&
             in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);
 

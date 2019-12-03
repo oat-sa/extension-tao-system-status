@@ -57,7 +57,9 @@ class RegisterChecks extends AbstractAction
     private function getSystemChecks(): array
     {
         return [
-            new \oat\taoSystemStatus\model\Check\System\FrontEndLogCheck([])
+            new \oat\taoSystemStatus\model\Check\System\FrontEndLogCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaoLtiKVCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaoLtiDeliveryKVCheck([])
         ];
     }
 
