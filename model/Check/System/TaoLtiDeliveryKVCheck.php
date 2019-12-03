@@ -24,7 +24,6 @@ use common_report_Report as Report;
 use oat\ltiDeliveryProvider\model\execution\implementation\KvLtiDeliveryExecutionService;
 use oat\ltiDeliveryProvider\model\execution\LtiDeliveryExecutionService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use common_ext_ExtensionsManager;
 
 /**
  * Class TaoLtiDeliveryKVCheck
@@ -103,15 +102,6 @@ class TaoLtiDeliveryKVCheck extends AbstractCheck
     {
         $extensionManagerService = $this->getExtensionsManagerService();
         return $extensionManagerService->isInstalled('ltiDeliveryProvider');
-    }
-
-    /**
-     * @return common_ext_ExtensionsManager
-     */
-    private function getExtensionsManagerService() : common_ext_ExtensionsManager
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
     }
 
     /**

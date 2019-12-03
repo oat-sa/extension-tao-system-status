@@ -26,7 +26,6 @@ use oat\taoLti\models\classes\ResourceLink\LinkService;
 use oat\taoLti\models\classes\user\KvLtiUserService;
 use oat\taoLti\models\classes\user\LtiUserService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use common_ext_ExtensionsManager;
 
 /**
  * Class TaoLtiKVCheck
@@ -154,14 +153,5 @@ class TaoLtiKVCheck extends AbstractCheck
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(LtiUserService::SERVICE_ID);
-    }
-
-    /**
-     * @return common_ext_ExtensionsManager
-     */
-    private function getExtensionsManagerService() : common_ext_ExtensionsManager
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
     }
 }
