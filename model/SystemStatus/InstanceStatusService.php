@@ -51,7 +51,6 @@ class InstanceStatusService extends AbstractSystemStatusService
 
         foreach ($this->getChecks() as $check) {
             try {
-                $this->propagate($check);
                 $checkReport = $check();
                 $report->add($checkReport);
                 $this->logCheckReport($checkReport);
@@ -71,12 +70,8 @@ class InstanceStatusService extends AbstractSystemStatusService
         //ToDo: implement check log
     }
 
-    /**
-     * Get instance type checks
-     * @return array|CheckInterface[]
-     */
-    private function getChecks(): array
+    protected function getChecksType(): string
     {
-        return $this->getCheckStorage()->getChecks(CheckInterface::TYPE_INSTANCE);
+        return CheckInterface::TYPE_INSTANCE;
     }
 }
