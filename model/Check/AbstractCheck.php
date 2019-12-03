@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\model\Check;
 
 use common_report_Report as Report;
 use oat\oatbox\service\ServiceManagerAwareTrait;
+use common_ext_ExtensionsManager;
 
 /**
  * class AbstractCheck
@@ -93,6 +94,16 @@ abstract class AbstractCheck implements CheckInterface
         $data[self::PARAM_CHECK_ID] = $this->getId();
         $report->setData($data);
         return $report;
+    }
+
+
+    /**
+     * @return common_ext_ExtensionsManager
+     */
+    protected function getExtensionsManagerService() : common_ext_ExtensionsManager
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
     }
 
     /**
