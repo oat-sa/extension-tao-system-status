@@ -41,6 +41,7 @@ interface CheckInterface extends Action, ServiceLocatorAwareInterface
 
     const PARAM_CATEGORY = 'category';
     const PARAM_DETAILS = 'details';
+    const PARAM_CHECK_ID = 'check_id';
 
     /**
      * @param $params
