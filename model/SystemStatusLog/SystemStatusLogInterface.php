@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\SystemStatusLog;
 
 use common_report_Report as Report;
+use oat\taoSystemStatus\model\Check\CheckInterface;
 
 /**
  * Interface SystemStatusLogInterface
@@ -35,8 +36,16 @@ interface SystemStatusLogInterface
      * Log the result of checking
      *
      * @param Report $report
+     * @param CheckInterface $check
      * @param string $instanceId
-     * @return mixed
+     * @return bool
      */
-    public function log(Report $report, string $instanceId = null);
+    public function log(CheckInterface $check, Report $report, string $instanceId = null);
+
+    /**
+     * Return latest logs groupped by check,instance
+     *
+     * @return array
+     */
+    public function getLatest();
 }
