@@ -33,17 +33,14 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class TaoLtiDeliveryKVCheck extends AbstractCheck
 {
 
-    /** @var Report */
-    private $report;
-
     /**
      * @param array $params
      * @return Report
      */
     public function __invoke($params = []): Report
     {
-        $this->checkLtiDeliveryExecutionService();
-        return $this->prepareReport($this->report);
+        $report = $this->checkLtiDeliveryExecutionService();
+        return $this->prepareReport($report);
     }
 
     /**
@@ -79,19 +76,17 @@ class TaoLtiDeliveryKVCheck extends AbstractCheck
     }
 
     /**
-     * @return bool
+     * @return Report
      */
-    private function checkLtiDeliveryExecutionService() : bool
+    private function checkLtiDeliveryExecutionService() : Report
     {
         $ltiDeliveryExecutionService = $this->getLtiDeliveryExecutionService();
 
         if ($ltiDeliveryExecutionService instanceof KvLtiDeliveryExecutionService) {
-            $this->report = new Report(Report::TYPE_SUCCESS, __('KeyValue storage is configured for LtiDeliveryExecutionService'));
-            return true;
+            return new Report(Report::TYPE_SUCCESS, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is configured correctly.'));
         }
 
-        $this->report = new Report(Report::TYPE_WARNING, __('KeyValue storage is not configured for LtiDeliveryExecutionService'));
-        return false;
+        return new Report(Report::TYPE_WARNING, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is not configured optimally. There may be performance issues.'));
 
     }
 

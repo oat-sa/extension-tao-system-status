@@ -97,11 +97,11 @@ class TaoLtiKVCheck extends AbstractCheck
         $ltiLinkService = $this->getLtiLinkService();
 
         if ($ltiLinkService instanceof KeyValueLink) {
-            $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is configured for LtiLinkService.'));
+            $this->report->setMessage($this->getMessageFromReport() . __('The LTI Link Service (\'taoLti/ResourceLink\') is configured correctly.'));
             return true;
         }
 
-        $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is not configured for LtiLinkService.'));
+        $this->report->setMessage($this->getMessageFromReport() . __('The LTI Link Service (\'taoLti/ResourceLink\') is not configured optimally. There may be performance issues.'));
         return false;
     }
 
@@ -113,10 +113,10 @@ class TaoLtiKVCheck extends AbstractCheck
         $ltiUserService = $this->getLtiUserService();
 
         if ($ltiUserService instanceof KvLtiUserService) {
-            $this->report->setMessage($this->getMessageFromReport() . __('KeyValue storage is configured for LtiUserService.'));
+            $this->report->setMessage($this->getMessageFromReport() . __('The LTI User Service (\'taoLti/LtiUserService\') is configured correctly.'));
             return true;
         }
-        $this->report->setMessage($this->getMessageFromReport()  . __('KeyValue storage is not configured for LtiUserService.'));
+        $this->report->setMessage($this->getMessageFromReport()  . __('The LTI User Service (\'taoLti/LtiUserService\') is not configured optimally. There may be performance issues.'));
         return false;
     }
 
