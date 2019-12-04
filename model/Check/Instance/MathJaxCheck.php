@@ -31,7 +31,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class MathJaxCheck extends AbstractCheck
 {
-    private const MATH_JAZ_FOLDER_PREFIX = 'views/js/mathjax';
+    const MATH_JAX_FOLDER_PREFIX = 'views/js/mathjax';
 
     /**
      * @param array $params
@@ -53,7 +53,6 @@ class MathJaxCheck extends AbstractCheck
     }
 
     /**
-     * @todo Should be changed to type instance after checking
      * @return string
      */
     public function getType(): string
@@ -84,7 +83,7 @@ class MathJaxCheck extends AbstractCheck
     private function checkMathJax() : Report
     {
         $qtiItemDir = $this->getExtensionsManagerService()->getExtensionById('taoQtiItem')->getDir();
-        if (!$this->checkDirIsEmpty($qtiItemDir.self::MATH_JAZ_FOLDER_PREFIX)) {
+        if (!$this->checkDirIsEmpty($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX)) {
             return new Report(Report::TYPE_WARNING, __('MathJax folder is empty.'));
         }
 
