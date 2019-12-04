@@ -87,7 +87,7 @@ class MathJaxCheck extends AbstractCheck
             return new Report(Report::TYPE_WARNING, __('MathJax folder is empty.'));
         }
 
-        if (!$this->isMathJaxJsExists($qtiItemDir.self::MATH_JAZ_FOLDER_PREFIX.'/MathJax.js')) {
+        if (!$this->isMathJaxJsExists($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX.'/MathJax.js')) {
             return new Report(Report::TYPE_WARNING, __('MathJax.js is not exist.'));
         }
 
