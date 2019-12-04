@@ -22,7 +22,6 @@ namespace oat\taoSystemStatus\scripts\install;
 
 use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\extension\AbstractAction;
-use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 use common_report_Report as Report;
 
@@ -35,21 +34,8 @@ class RegisterCheckStorage extends AbstractAction
 {
     public function __invoke($params)
     {
-        $this->installInstanceStatusStorage();
         $this->installSystemStatusStorage();
         return new Report(Report::TYPE_SUCCESS, __('System status storage successfully installed'));
-    }
-
-    private function installInstanceStatusStorage()
-    {
-        $instanceStatusService = $this->getServiceManager()->get(InstanceStatusService::SERVICE_ID);
-        $persistenceManager = $this->getServiceManager()->get(PersistenceManager::SERVICE_ID);
-        $instanceStatusService->getOption(InstanceStatusService::OPTION_STORAGE_PERSISTENCE);
-        $storageClass = $instanceStatusService->getOption(InstanceStatusService::OPTION_STORAGE_CLASS);
-        $persistenceId = $instanceStatusService->getOption(InstanceStatusService::OPTION_STORAGE_PERSISTENCE);
-        $persistence = $persistenceManager->getPersistenceById($persistenceId);
-        $storage = new $storageClass($persistenceId);
-        $storage->install($persistence);
     }
 
     private function installSystemStatusStorage()
