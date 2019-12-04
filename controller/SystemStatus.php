@@ -37,6 +37,7 @@ class SystemStatus extends \tao_actions_SinglePageModule
      */
     public function index()
     {
+        $this->setData('reports', $this->getSystemStatusService()->check());
         $this->setView('Status/index.tpl');
     }
 
