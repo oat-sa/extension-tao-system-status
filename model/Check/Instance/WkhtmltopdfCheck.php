@@ -18,7 +18,7 @@
  *
  */
 
-namespace oat\taoSystemStatus\model\Check\System;
+namespace oat\taoSystemStatus\model\Check\Instance;
 
 use common_report_Report as Report;
 use oat\taoBooklet\model\export\PdfBookletExporter;
@@ -62,7 +62,7 @@ class WkhtmltopdfCheck extends AbstractCheck
      */
     public function getType(): string
     {
-        return self::TYPE_SYSTEM;
+        return self::TYPE_INSTANCE;
     }
 
     /**
