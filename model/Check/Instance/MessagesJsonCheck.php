@@ -86,12 +86,17 @@ class MessagesJsonCheck extends AbstractCheck
     {
         $taoDir = $this->getExtensionsManagerService()->getExtensionById('tao')->getDir();
         $dir = new \DirectoryIterator($taoDir.self::TAO_LOCALES_PREFIX);
+        $isDir = false;
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+                $isDir = true;
                 if (!file_exists($fileinfo->getPathname().'/'.self::MESSAGES_JSON_NAME)) {
                     return new Report(Report::TYPE_WARNING, __('Missed messages.json for '.$fileinfo->getFilename()));
                 }
             }
+        }
+        if (!$isDir) {
+            return new Report(Report::TYPE_WARNING, __('Locales folder is empty'));
         }
         return new Report(Report::TYPE_SUCCESS, __('All messages.json exists'));
 
