@@ -31,11 +31,8 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
- * Interface SystemStatusLogInterface
+ * Rds implementation of SystemStatusLogStorageInterface
  *
- * Implementation of this interface supposed to store the log of check launches.
- *
- * @package oat\taoSystemStatus\model\SystemStatusLog
  */
 class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterface, ServiceLocatorAwareInterface
 {
@@ -56,7 +53,7 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
     const INSTANCE_ID_INDEX = 'idx_system_status_log_instance_id';
 
     /**
-     * RdsCheckStorage constructor.
+     * RdsSystemStatusLogStorageStorage constructor.
      * @param string $persistenceId
      */
     public function __construct(string $persistenceId)
