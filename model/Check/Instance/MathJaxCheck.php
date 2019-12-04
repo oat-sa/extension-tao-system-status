@@ -83,7 +83,7 @@ class MathJaxCheck extends AbstractCheck
     private function checkMathJax() : Report
     {
         $qtiItemDir = $this->getExtensionsManagerService()->getExtensionById('taoQtiItem')->getDir();
-        if (!$this->checkDirIsEmpty($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX)) {
+        if (!$this->checkDirIsNotEmpty($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX)) {
             return new Report(Report::TYPE_WARNING, __('MathJax folder is empty.'));
         }
 
@@ -98,7 +98,7 @@ class MathJaxCheck extends AbstractCheck
      * @param $dir
      * @return bool
      */
-    private function checkDirIsEmpty($dir) : bool
+    private function checkDirIsNotEmpty($dir) : bool
     {
         if (!is_readable($dir)) {
             return false;
