@@ -76,6 +76,9 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
      */
     protected function prepareReport(Report $report): Report
     {
+        $report->setType(Report::TYPE_SUCCESS);
+        $report->setMessage(__('All Systems Operational'));
+
         if ($report->contains(Report::TYPE_WARNING)) {
             $report->setType(Report::TYPE_WARNING);
             $report->setMessage(__('Partially Degraded Service'));
@@ -88,4 +91,27 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
 
         return $report;
     }
+
+    /**
+     * Get instance type checks
+     * @return array|CheckInterface[]
+     */
+    protected function getChecks(): array
+    {
+        $checks = $this->getCheckStorage()->getChecks($this->getChecksType());
+        $result = [];
+        foreach ($checks as $check) {
+            $this->propagate($check);
+            if ($check->isActive()) {
+                $result[] = $check;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Get type of checks which should be run by the service
+     * @return string
+     */
+    abstract protected function getChecksType(): string;
 }

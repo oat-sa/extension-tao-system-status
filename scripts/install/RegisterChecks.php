@@ -22,7 +22,6 @@ namespace oat\taoSystemStatus\scripts\install;
 
 use oat\oatbox\extension\AbstractAction;
 use common_report_Report as Report;
-use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 /**
@@ -41,14 +40,9 @@ class RegisterChecks extends AbstractAction
     {
         /** @var SystemStatusService $systemStatusService */
         $systemStatusService = $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
-        /** @var InstanceStatusService $systemStatusService */
-        $instanceStatusService = $this->getServiceLocator()->get(InstanceStatusService::SERVICE_ID);
 
         foreach ($this->getSystemChecks() as $check) {
             $systemStatusService->addCheck($check);
-        }
-        foreach ($this->getInstanceChecks() as $check) {
-            $instanceStatusService->addCheck($check);
         }
 
         return new Report(Report::TYPE_SUCCESS, __('System status checks successfully registered.'));
@@ -57,13 +51,13 @@ class RegisterChecks extends AbstractAction
     private function getSystemChecks(): array
     {
         return [
-            new \oat\taoSystemStatus\model\Check\System\FrontEndLog([])
+            new \oat\taoSystemStatus\model\Check\System\FrontEndLogCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaoLtiKVCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaoLtiDeliveryKVCheck([]),
+            new \oat\taoSystemStatus\model\Check\Instance\MathJaxCheck([]),
+            new \oat\taoSystemStatus\model\Check\Instance\WkhtmltopdfCheck([]),
+            new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([])
         ];
     }
 
-    private function getInstanceChecks(): array
-    {
-        return [
-        ];
-    }
 }

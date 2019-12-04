@@ -16,27 +16,30 @@
  *
  * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
  *
- *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+namespace oat\taoSystemStatus\scripts\tools;
 
-use common_ext_ExtensionUpdater;
+use oat\oatbox\extension\AbstractAction;
+use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 
 /**
- * Class Updater
+ * Class RunInstanceCheck
  *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Running instance checking:
+ * ```bash
+ * $ sudo -u www-data php index.php '\oat\taoSystemStatus\scripts\tools\RunInstanceCheck'
+ * ```
+ *
+ * @package oat\taoSystemStatus\scripts\tools
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class Updater extends common_ext_ExtensionUpdater
+class RunInstanceCheck extends AbstractAction
 {
-    /**
-     * @param $initialVersion
-     * @return string|void
-     */
-    public function update($initialVersion)
+    public function __invoke($params)
     {
-        $this->skip('0.0.1', '0.4.0');
+        /** @var InstanceStatusService $instanceStatusService */
+        $instanceStatusService = $this->getServiceLocator()->get(InstanceStatusService::SERVICE_ID);
+        return $instanceStatusService->check();
     }
 }
-

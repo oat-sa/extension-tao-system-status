@@ -44,7 +44,6 @@ class SystemStatusService extends AbstractSystemStatusService
 
         foreach ($this->getChecks() as $check) {
             try {
-                $this->propagate($check);
                 $report->add($check());
             } catch (\Exception $e) {
                 $this->logError(sprintf('Cannot run check `%s`; Error message: %s', $check->getId(), $e->getMessage()));
@@ -55,11 +54,10 @@ class SystemStatusService extends AbstractSystemStatusService
     }
 
     /**
-     * Get syetem type checks
-     * @return array|CheckInterface[]
+     * @return string
      */
-    private function getChecks(): array
+    protected function getChecksType(): string
     {
-        return $this->getCheckStorage()->getChecks(CheckInterface::TYPE_SYSTEM);
+        return CheckInterface::TYPE_SYSTEM;
     }
 }

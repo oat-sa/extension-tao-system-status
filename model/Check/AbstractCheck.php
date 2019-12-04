@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\model\Check;
 
 use common_report_Report as Report;
 use oat\oatbox\service\ServiceManagerAwareTrait;
+use common_ext_ExtensionsManager;
 
 /**
  * class AbstractCheck
@@ -75,6 +76,34 @@ abstract class AbstractCheck implements CheckInterface
     public function getParameters()
     {
         return $this->params;
+    }
+
+    /**
+     * Add metadata to the report, such as category, details etc.
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $data = $report->getData();
+        if ($data === null) {
+            $data = [];
+        }
+        $data[self::PARAM_CATEGORY] = $this->getCategory();
+        $data[self::PARAM_DETAILS] = $this->getDetails();
+        $data[self::PARAM_CHECK_ID] = $this->getId();
+        $report->setData($data);
+        return $report;
+    }
+
+
+    /**
+     * @return common_ext_ExtensionsManager
+     */
+    protected function getExtensionsManagerService() : common_ext_ExtensionsManager
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
     }
 
     /**
