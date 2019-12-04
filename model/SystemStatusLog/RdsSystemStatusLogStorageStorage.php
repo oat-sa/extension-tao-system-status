@@ -37,7 +37,7 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  *
  * @package oat\taoSystemStatus\model\SystemStatusLog
  */
-class RdsSystemStatusLogStorage implements SystemStatusLogInterface, ServiceLocatorAwareInterface
+class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterface, ServiceLocatorAwareInterface
 {
 
     use ServiceLocatorAwareTrait;

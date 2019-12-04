@@ -30,7 +30,7 @@ use oat\taoSystemStatus\model\Check\CheckInterface;
  *
  * @package oat\taoSystemStatus\model\SystemStatusLog
  */
-interface SystemStatusLogInterface
+interface SystemStatusLogStorageInterface
 {
     /**
      * Log the result of checking
