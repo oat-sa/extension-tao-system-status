@@ -110,4 +110,23 @@ abstract class AbstractCheck implements CheckInterface
      * @inheritdoc
      */
     abstract public function isActive(): bool;
+
+    /**
+     * Check if current instance is a worker
+     *
+     * NOTE: In debug mode all instances treated as workers because this is the most probably developer instance.
+     * NOTE: Instance treated as worker if any task queue process is active.
+     *
+     * @return bool
+     */
+    protected function isWorker(): bool
+    {
+        if (DEBUG_MODE) {
+            return true;
+        }
+        exec('ps -ef |egrep \'.+www-data.*index.php\soat\'', $output);
+        $taskQueueProcesses = preg_grep('/RunWorker/', $output);
+
+        return !empty($taskQueueProcesses);
+    }
 }
