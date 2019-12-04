@@ -63,7 +63,8 @@ class ConfigCongruenceS3Check extends AbstractCheck
             $this->logError('The instance configuration is not match configuration stored on s3');
             $report = new Report(Report::TYPE_ERROR, __('The instance configuration is not match configuration stored on s3'));
         }
-        return $report;
+
+        return $this->prepareReport($report);
     }
 
     /**
