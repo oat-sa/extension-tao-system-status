@@ -95,7 +95,7 @@ class WkhtmltopdfCheck extends AbstractCheck
 
         if (isset($matches[1])) {
             //
-            if (strnatcmp($matches[1], self::MINIMUM_STABLE_VERSION) < 0) {
+            if (version_compare($matches[1], self::MINIMUM_STABLE_VERSION) < 0) {
                 return new Report(
                     Report::TYPE_WARNING,
                     __('wkhtmltopdf lib has the wrong version %s. Should %s or more', $matches[1], self::MINIMUM_STABLE_VERSION)
