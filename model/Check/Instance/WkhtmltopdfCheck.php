@@ -90,7 +90,7 @@ class WkhtmltopdfCheck extends AbstractCheck
         $options = $this->getWkhtmltopdfConfig();
         $guessPath = PdfBookletExporter::guessWhereWkhtmltopdfInstalled();
 
-        $process = shell_exec(trim($guessPath) . ' -V');
+        $process = shell_exec(escapeshellarg(trim($guessPath)) . ' -V');
         preg_match("/(?:wkhtmltopdf)\s*((?:[0-9]+\.?)+)/i", $process, $matches);
 
         if (isset($matches[1])) {
