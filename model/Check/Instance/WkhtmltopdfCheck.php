@@ -26,7 +26,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 use common_ext_ExtensionException;
 
 /**
- * Class FrontEndLogCheck
+ * Class WkhtmltopdfCheck 
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
