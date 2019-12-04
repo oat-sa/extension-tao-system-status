@@ -32,8 +32,8 @@ use common_ext_ExtensionException;
 class MessagesJsonCheck extends AbstractCheck
 {
 
-    private const TAO_LOCALES_PREFIX = 'views/locales';
-    private const MESSAGES_JSON_NAME = 'messages.json';
+    const TAO_LOCALES_PREFIX = 'views/locales';
+    const MESSAGES_JSON_NAME = 'messages.json';
 
     /**
      * @param array $params
