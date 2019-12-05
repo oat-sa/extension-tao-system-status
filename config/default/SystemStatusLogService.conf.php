@@ -14,29 +14,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
- *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA ;
  */
 
-namespace oat\taoSystemStatus\scripts\update;
+use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogService;
+use oat\taoSystemStatus\model\SystemStatusLog\RdsSystemStatusLogStorageStorage;
 
-use common_ext_ExtensionUpdater;
-
-/**
- * Class Updater
- *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
- */
-class Updater extends common_ext_ExtensionUpdater
-{
-    /**
-     * @param $initialVersion
-     * @return string|void
-     */
-    public function update($initialVersion)
-    {
-        $this->skip('0.0.1', '0.6.0');
-    }
-}
-
+return new SystemStatusLogService([
+    SystemStatusLogService::OPTION_STORAGE_PERSISTENCE => 'default',
+    SystemStatusLogService::OPTION_STORAGE_CLASS => RdsSystemStatusLogStorageStorage::class,
+    SystemStatusLogService::OPTION_LATEST_REPORTS_INTERVAL => 'PT30M',
+]);

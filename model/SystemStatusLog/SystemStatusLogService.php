@@ -21,26 +21,28 @@
 namespace oat\taoSystemStatus\model\SystemStatusLog;
 
 use common_report_Report as Report;
-use oat\generis\persistence\PersistenceManager;
+use oat\oatbox\service\ConfigurableService;
 use oat\taoSystemStatus\model\Check\CheckInterface;
-use oat\taoSystemStatus\model\SystemStatusException;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+use DateInterval;
 
 /**
  * Class SystemStatusLogService
  * @package oat\taoSystemStatus\model\SystemStatusLog
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class SystemStatusLogService implements ServiceLocatorAwareInterface
+class SystemStatusLogService extends ConfigurableService
 {
-    use ServiceLocatorAwareTrait;
+    const SERVICE_ID = 'taoSystemStatus/SystemStatusLogService';
 
     /** @var SystemStatusLogStorageInterface */
     private $storage;
 
     const OPTION_STORAGE_CLASS = 'storage_class';
     const OPTION_STORAGE_PERSISTENCE = 'storage_persistence';
+    const OPTION_LATEST_REPORTS_INTERVAL = 'latest_reports_interval';
+
+    const DEFAULT_INTERVAL = 'PT30M';
 
     /**
      * @param CheckInterface $check
@@ -53,10 +55,11 @@ class SystemStatusLogService implements ServiceLocatorAwareInterface
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getLatest(): array
     {
-        return $this->getStorage()->getLatest();
+        return $this->getStorage()->getLatest($this->getInterval());
     }
 
     /**
@@ -78,6 +81,19 @@ class SystemStatusLogService implements ServiceLocatorAwareInterface
      */
     private function getInstanceId(): string
     {
+        return $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID)->getInstanceId();
+    }
 
+    /**
+     * @return DateInterval
+     * @throws \Exception
+     */
+    private function getInterval(): DateInterval
+    {
+        if (!$this->hasOption(self::OPTION_LATEST_REPORTS_INTERVAL)) {
+            return new DateInterval(self::DEFAULT_INTERVAL);
+        } else {
+            return new DateInterval($this->getOption(self::OPTION_LATEST_REPORTS_INTERVAL));
+        }
     }
 }

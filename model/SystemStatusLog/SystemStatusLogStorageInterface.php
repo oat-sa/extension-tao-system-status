@@ -32,6 +32,12 @@ use oat\taoSystemStatus\model\Check\CheckInterface;
  */
 interface SystemStatusLogStorageInterface
 {
+    const COLUMN_ID = 'id';
+    const COLUMN_CHECK_ID = 'check_id';
+    const COLUMN_INSTANCE_ID = 'instance_id';
+    const COLUMN_REPORT = 'report';
+    const COLUMN_CREATED_AT = 'created_at';
+
     /**
      * Log the result of checking
      *
@@ -43,9 +49,10 @@ interface SystemStatusLogStorageInterface
     public function log(CheckInterface $check, Report $report, string $instanceId = null);
 
     /**
-     * Return latest logs groupped by check,instance
+     * Return latest logs grouped by check,instance
      *
-     * @return array
+     * @param \DateInterval $interval
+     * @return mixed
      */
-    public function getLatest();
+    public function getLatest(\DateInterval $interval);
 }
