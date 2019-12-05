@@ -81,23 +81,23 @@ class WriteConfigDataCheck extends AbstractCheck
         $dataDir = ROOT_PATH.'data';
 
         if (!is_writable($configDir)) {
-            return new Report(Report::TYPE_WARNING, __('TAO has not permissions to write into \'config\' folder'));
+            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config\' folder'));
         }
 
         $dir = new \DirectoryIterator($configDir);
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDir() && !$fileinfo->isDot()) {
                 if (!is_writable($fileinfo->getPathname())) {
-                    return new Report(Report::TYPE_WARNING, __('TAO has not permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
+                    return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
                 }
             }
         }
 
         if (!file_exists($dataDir)) {
-            return new Report(Report::TYPE_WARNING, __('\'data\' folder is not exists'));
+            return new Report(Report::TYPE_ERROR, __('\'data\' folder is not exists'));
         }
         if (!is_writable($dataDir)) {
-            return new Report(Report::TYPE_WARNING, __('TAO has not permissions to write into \'data\' folder'));
+            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'data\' folder'));
         }
 
 
