@@ -70,7 +70,7 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show Default Language');
+        return __('Show Default Languages');
     }
 
     /**
@@ -78,6 +78,6 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     private function checkDefaultLanguage() : Report
     {
-        return new Report(Report::TYPE_SUCCESS, __('Default Language is '.DEFAULT_LANG));
+        return new Report(Report::TYPE_SUCCESS, __('Global language is %s. Anonymous interface language is %s', DEFAULT_LANG, DEFAULT_ANONYMOUS_INTERFACE_LANG));
     }
 }
