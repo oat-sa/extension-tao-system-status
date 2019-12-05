@@ -24,11 +24,11 @@ use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class DefaultTimeZoneAndFormatCheck
+ * Class DefaultTimeZoneCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class DefaultTimeZoneAndFormatCheck extends AbstractCheck
+class DefaultTimeZoneCheck extends AbstractCheck
 {
 
     /**
@@ -37,7 +37,7 @@ class DefaultTimeZoneAndFormatCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
-        $report = $this->checkDefaultTimeZoneAndFormat();
+        $report = $this->checkDefaultTimeZone();
         return $this->prepareReport($report);
     }
 
@@ -70,13 +70,13 @@ class DefaultTimeZoneAndFormatCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show Default Language');
+        return __('Show Time Zone');
     }
 
     /**
      * @return Report
      */
-    private function checkDefaultTimeZoneAndFormat() : Report
+    private function checkDefaultTimeZone() : Report
     {
         return new Report(Report::TYPE_SUCCESS, __('Time Zone is %s.', TIME_ZONE));
     }
