@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\test\model\SystemStatus;
 
 use oat\generis\test\TestCase;
+use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 /**
@@ -40,13 +41,20 @@ class SystemStatusServiceTest extends TestCase
 
     }
 
+    public function testGetInstanceId()
+    {
+        $instanceId = $this->getInstance()->getInstanceId();
+        $this->assertEquals($instanceId, $this->getInstance()->getInstanceId());
+    }
+
     /**
      * @return SystemStatusService
      */
     private function getInstance()
     {
         $service = new SystemStatusService([]);
-        $service->setServiceLocator($this->getServiceLocatorMock());
+//        $service->setServiceLocator($this->getServiceLocatorMock());
+        $service->setServiceLocator(ServiceManager::getServiceManager());
         return $service;
     }
 }

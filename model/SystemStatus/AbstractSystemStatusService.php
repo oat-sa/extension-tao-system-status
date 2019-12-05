@@ -40,6 +40,9 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
     /** @var CheckStorageInterface */
     protected $storage;
 
+    /** @var string */
+    protected $instanceId;
+
     /**
      * @inheritdoc
      */
@@ -114,4 +117,44 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
      * @return string
      */
     abstract protected function getChecksType(): string;
+
+    /**
+     * @return string
+     */
+    public function getInstanceId(): string
+    {
+        if ($this->instanceId !== null) {
+            return $this->instanceId;
+        }
+
+        //here we assume that ths is instance inside AWS stack.
+        if ($this->getServiceLocator()->has('generis/awsClient')) {
+            try {
+                $this->instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id');
+            } catch (\Throwable $e) {
+                $this->generateInstanceId();
+            }
+        } elseif (false) { //here we need to check that we are on google environment
+            //todo: call https://cloud.google.com/compute/docs/storing-retrieving-metadata
+        } else {
+            $this->instanceId = $this->generateInstanceId();
+        }
+
+        return $this->instanceId;
+    }
+
+    /**
+     * @return bool|string
+     */
+    private function generateInstanceId(): string
+    {
+        $file = __DIR__ .DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'instance-id';
+        if (!file_exists($file)) {
+            $this->instanceId = uniqid('i-' . time() . '_', true);
+            file_put_contents($file, $this->instanceId);
+        } else {
+            $this->instanceId = file_get_contents($file);
+        }
+        return $this->instanceId;
+    }
 }
