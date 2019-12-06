@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
 use oat\oatbox\mutex\LockService;
+use oat\oatbox\mutex\NoLockStorage;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
@@ -78,10 +79,11 @@ class LockServiceCheck extends AbstractCheck
      */
     private function checkLockServiceService() : Report
     {
-        $ltiLinkService = $this->getLockService();
+        $lockService = $this->getLockService();
+        $storage = $lockService->getOption(LockService::OPTION_PERSISTENCE_CLASS);
 
-        if ($ltiLinkService instanceof LockService) {
-            return new Report(Report::TYPE_WARNING, __('Lock service not correctly configured.'));
+        if ($storage === NoLockStorage::class) {
+            return new Report(Report::TYPE_WARNING, __('Lock service is disabled.'));
         }
 
         return new Report(Report::TYPE_SUCCESS, __('Lock service correctly configured.'));
