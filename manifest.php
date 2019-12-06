@@ -19,6 +19,8 @@
  *
  */
 
+use oat\tao\model\user\TaoRoles;
+
 return [
     'name' => 'taoSystemStatus',
     'label' => 'TAO System Status',
@@ -32,7 +34,7 @@ return [
     'managementRole' => 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager',
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']],
-        ['grant', 'http://www.tao.lu/Ontologies/TAO.rdf#BaseUserRole', ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
+        ['grant', TaoRoles::SYSTEM_ADMINISTRATOR, ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
     ],
     'install' => [
         'php' => [

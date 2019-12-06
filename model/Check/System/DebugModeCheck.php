@@ -77,6 +77,7 @@ class DebugModeCheck extends AbstractCheck
      */
     private function checkDebugMode() : Report
     {
-        return new Report(Report::TYPE_SUCCESS, __('Debug Mode is '. (DEBUG_MODE ? 'On' : 'Off')));
+        $type = DEBUG_MODE ? Report::TYPE_WARNING : Report::TYPE_SUCCESS;
+        return new Report($type, __('Debug Mode is '. (DEBUG_MODE ? 'On' : 'Off')));
     }
 }
