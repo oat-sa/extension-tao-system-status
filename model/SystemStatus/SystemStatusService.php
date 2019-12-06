@@ -37,6 +37,8 @@ class SystemStatusService extends AbstractSystemStatusService
 {
     const SERVICE_ID = 'taoSystemStatus/SystemStatusService';
 
+    const OPTION_SUPPORT_PORTAL_LINK = 'support_portal_link';
+
     /**
      * @inheritdoc
      */
@@ -57,6 +59,13 @@ class SystemStatusService extends AbstractSystemStatusService
         return $this->prepareReport($report);
     }
 
+    /**
+     * @return string|bool
+     */
+    public function getSupportPortalLink()
+    {
+        return $this->getOption(self::OPTION_SUPPORT_PORTAL_LINK);
+    }
     /**
      * @return Report[]
      * @throws \common_exception_Error

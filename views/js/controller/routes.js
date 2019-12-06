@@ -1,4 +1,3 @@
-<?php
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,14 +13,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA ;
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ *
+ *
  */
 
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
-use oat\taoSystemStatus\model\CheckStorage\RdsCheckStorage;
+define(function(){
+    'use strict';
 
-return new SystemStatusService([
-    SystemStatusService::OPTION_STORAGE_PERSISTENCE => 'default',
-    SystemStatusService::OPTION_STORAGE_CLASS => RdsCheckStorage::class,
-    SystemStatusService::OPTION_SUPPORT_PORTAL_LINK => false,
-]);
+    return {
+        'SystemStatus': {
+            'actions' : {
+                'index' : 'controller/SystemStatus/index'
+            }
+        }
+    };
+});
