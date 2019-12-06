@@ -33,12 +33,16 @@ use common_report_Report as Report;
  */
 abstract class AbstractSystemStatusService extends ConfigurableService implements SystemStatusServiceInterface
 {
-
+    const INSTANCE_ID_CALL_TIMEOUT = 10;
     const OPTION_STORAGE_CLASS = 'storage_class';
     const OPTION_STORAGE_PERSISTENCE = 'storage_persistence';
+    const INSTANCE_ID_ENDPOINT = 'http://169.254.169.254/latest/meta-data/instance-id';
 
     /** @var CheckStorageInterface */
     protected $storage;
+
+    /** @var string */
+    protected $instanceId;
 
     /**
      * @inheritdoc
@@ -114,4 +118,55 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
      * @return string
      */
     abstract protected function getChecksType(): string;
+
+    /**
+     * @return string
+     */
+    public function getInstanceId(): string
+    {
+        if ($this->instanceId !== null) {
+            return $this->instanceId;
+        }
+
+        //here we assume that ths is instance inside AWS stack.
+        if ($this->getServiceLocator()->has('generis/awsClient')) {
+            try {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, self::INSTANCE_ID_ENDPOINT);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_TIMEOUT, self::INSTANCE_ID_CALL_TIMEOUT);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::INSTANCE_ID_CALL_TIMEOUT);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                if ($result) {
+                    $this->instanceId = $result;
+                } else {
+                    $this->instanceId = $this->generateInstanceId();
+                }
+            } catch (\Throwable $e) {
+                $this->instanceId = $this->generateInstanceId();
+            }
+        } elseif (false) { //here we need to check that we are on google environment
+            //todo: call https://cloud.google.com/compute/docs/storing-retrieving-metadata
+        } else {
+            $this->instanceId = $this->generateInstanceId();
+        }
+
+        return $this->instanceId;
+    }
+
+    /**
+     * @return bool|string
+     */
+    private function generateInstanceId(): string
+    {
+        $file = __DIR__ .DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'instance-id';
+        if (!file_exists($file)) {
+            $this->instanceId = uniqid('i-' . time() . '_', true);
+            file_put_contents($file, $this->instanceId);
+        } else {
+            $this->instanceId = file_get_contents($file);
+        }
+        return $this->instanceId;
+    }
 }

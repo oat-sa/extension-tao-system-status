@@ -39,7 +39,7 @@ class RdsSystemStatusLogStorageTest extends TestCase
         $report = new Report(Report::TYPE_INFO);
         $check = new SampleInstanceCheck();
         $this->assertTrue($service->log($check, $report, 'testInstance'));
-        $checks = $service->getLatest();
+        $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertEquals($check->getId(), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_CHECK_ID]);
         $this->assertEquals(json_encode($report), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_REPORT]);
     }
@@ -52,19 +52,21 @@ class RdsSystemStatusLogStorageTest extends TestCase
         $report3 = new Report(Report::TYPE_INFO, 'message3');
         $service = $this->getInstance();
 
-        $checks = $service->getLatest();
+        $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertCount(0,$checks);
 
         $this->assertTrue($service->log($check, $report1, 'instance1'));
         $this->assertTrue($service->log($check, $report2, 'instance1'));
-        $checks = $service->getLatest();
+        $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertEquals($check->getId(), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_CHECK_ID]);
         $this->assertEquals(json_encode($report2), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_REPORT]);
         $this->assertCount(1,$checks);
 
         $this->assertTrue($service->log($check, $report3, 'instance2'));
-        $checks = $service->getLatest();
+        $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertCount(2,$checks);
+        sleep(2);
+        $this->assertCount(0, $service->getLatest(new \DateInterval('PT1S')));
     }
 
 

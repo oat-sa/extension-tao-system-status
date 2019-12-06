@@ -43,12 +43,6 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
 
     const TABLE_NAME = 'system_status_log';
 
-    const COLUMN_ID = 'id';
-    const COLUMN_CHECK_ID = 'check_id';
-    const COLUMN_INSTANCE_ID = 'instance_id';
-    const COLUMN_REPORT = 'report';
-    const COLUMN_CREATED_AT = 'created_at';
-
     const CHECK_ID_INDEX = 'idx_system_status_log_check_id';
     const INSTANCE_ID_INDEX = 'idx_system_status_log_instance_id';
 
@@ -71,6 +65,7 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
             self::COLUMN_CHECK_ID    => $check->getId(),
             self::COLUMN_INSTANCE_ID => $instanceId,
             self::COLUMN_REPORT      => json_encode($report),
+            self::COLUMN_CREATED_AT  => $this->getPersistence()->getPlatForm()->getNowExpression(),
         ];
 
         try {
@@ -83,26 +78,21 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
     /**
      * @inheritDoc
      */
-    public function getLatest()
+    public function getLatest(\DateInterval $interval)
     {
+        $date = (new \DateTime)->sub($interval);
+        $conditionSql = $this->getQueryBuilder()
+            ->select('max('.self::COLUMN_ID.')')
+            ->where(self::COLUMN_CREATED_AT . ' > :date')
+            ->groupBy([
+                self::COLUMN_CHECK_ID,
+                self::COLUMN_INSTANCE_ID
+            ])
+            ->getSQL();
         $queryBuilder = $this->getQueryBuilder();
-        $queryBuilder->select([
-            'max(' . self::TABLE_NAME . '1.' . self::COLUMN_ID . ') ' . self::COLUMN_ID,
-            self::TABLE_NAME . '2.' . self::COLUMN_CHECK_ID . ' ' . self::COLUMN_CHECK_ID,
-            self::TABLE_NAME . '2.' . self::COLUMN_INSTANCE_ID . ' ' . self::COLUMN_INSTANCE_ID,
-            self::TABLE_NAME . '2.' . self::COLUMN_REPORT . ' ' . self::COLUMN_REPORT,
-            self::TABLE_NAME . '2.' . self::COLUMN_CREATED_AT . ' ' . self::COLUMN_CREATED_AT,
-        ]);
-        $queryBuilder->leftJoin(
-            self::TABLE_NAME . '1',
-            self::TABLE_NAME,
-            self::TABLE_NAME . '2',
-            self::TABLE_NAME . '2.' . self::COLUMN_ID . '=' . self::TABLE_NAME . '1.' . self::COLUMN_ID
-        );
-        $queryBuilder->groupBy([
-            self::TABLE_NAME . '1.' . self::COLUMN_CHECK_ID,
-            self::TABLE_NAME . '1.' . self::COLUMN_INSTANCE_ID
-        ]);
+        $queryBuilder->select(['*']);
+        $queryBuilder->where(self::COLUMN_ID . ' IN (' . $conditionSql . ')');
+        $queryBuilder->setParameter('date', $date->format('Y-m-d H:i:s'));
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -165,6 +155,6 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
      */
     private function getQueryBuilder(): QueryBuilder
     {
-        return $this->getPersistence()->getPlatForm()->getQueryBuilder()->from(self::TABLE_NAME, self::TABLE_NAME . '1');
+        return $this->getPersistence()->getPlatForm()->getQueryBuilder()->from(self::TABLE_NAME);
     }
 }
