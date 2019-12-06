@@ -22,6 +22,8 @@ namespace oat\taoSystemStatus\model\SystemStatus;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\CheckInterface;
+use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogService;
+use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogStorageInterface;
 
 /**
  * Class SystemStatusService
@@ -49,8 +51,41 @@ class SystemStatusService extends AbstractSystemStatusService
                 $this->logError(sprintf('Cannot run check `%s`; Error message: %s', $check->getId(), $e->getMessage()));
             }
         }
-
+        foreach ($this->getInstanceCheckReports() as $instanceReport) {
+            $report->add($instanceReport);
+        }
         return $this->prepareReport($report);
+    }
+
+    /**
+     * @return Report[]
+     * @throws \common_exception_Error
+     */
+    protected function getInstanceCheckReports()
+    {
+        /** @var Report[] $result */
+        $result = [];
+        /** @var SystemStatusLogService $instanceStatusService */
+        $instanceStatusService = $this->getServiceLocator()->get(SystemStatusLogService::SERVICE_ID);
+        $instanceReports = $instanceStatusService->getLatest();
+        $severityMap = [
+            Report::TYPE_ERROR => 3,
+            Report::TYPE_WARNING => 2,
+            Report::TYPE_INFO => 1,
+            Report::TYPE_SUCCESS => 0,
+        ];
+        foreach ($instanceReports as $instanceReport) {
+            $report = Report::jsonUnserialize($instanceReport[SystemStatusLogStorageInterface::COLUMN_REPORT]);
+            $checkId = $instanceReport[SystemStatusLogStorageInterface::COLUMN_CHECK_ID];
+            if (!isset($result[$checkId])) {
+                $result[$checkId] = $report;
+                continue;
+            }
+            if ($severityMap[$result[$checkId]->getType()] < $severityMap[$report->getType()]) {
+                $result[$checkId] = $report;
+            }
+        }
+        return array_values($result);
     }
 
     /**

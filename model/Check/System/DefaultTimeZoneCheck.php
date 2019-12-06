@@ -24,30 +24,20 @@ use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class FrontEndLogCheck
+ * Class DefaultTimeZoneCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
+ * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class FrontEndLogCheck extends AbstractCheck
+class DefaultTimeZoneCheck extends AbstractCheck
 {
 
     /**
      * @param array $params
      * @return Report
-     * @throws \common_ext_ExtensionException
      */
     public function __invoke($params = []): Report
     {
-        $config = $this->getExtensionsManagerService()->getExtensionById('tao')->getConfig('client_lib_config_registry');
-        $enabled = isset($config['core/logger']['loggers']['core/logger/http']) &&
-            in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);
-
-        if ($enabled) {
-            $report = new Report(Report::TYPE_SUCCESS, __('Front end log enabled'));
-        } else {
-            $report = new Report(Report::TYPE_ERROR, __('Front end log disabled'));
-        }
-
+        $report = $this->checkDefaultTimeZone();
         return $this->prepareReport($report);
     }
 
@@ -56,7 +46,7 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return true;
+       return true;
     }
 
     /**
@@ -80,6 +70,14 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if frontend log correctly configured');
+        return __('Show Time Zone');
+    }
+
+    /**
+     * @return Report
+     */
+    private function checkDefaultTimeZone() : Report
+    {
+        return new Report(Report::TYPE_SUCCESS, __('Time Zone is %s.', TIME_ZONE));
     }
 }

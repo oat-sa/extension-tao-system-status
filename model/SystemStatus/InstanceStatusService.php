@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\model\SystemStatus;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\CheckInterface;
+use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogService;
 
 /**
  * Class InstanceStatusService
@@ -53,7 +54,7 @@ class InstanceStatusService extends AbstractSystemStatusService
             try {
                 $checkReport = $check();
                 $report->add($checkReport);
-                $this->logCheckReport($checkReport);
+                $this->logCheckReport($check, $checkReport);
             } catch (\Exception $e) {
                 $this->logError(sprintf('Cannot run check `%s`; Error message: %s', $check->getId(), $e->getMessage()));
             }
@@ -63,13 +64,19 @@ class InstanceStatusService extends AbstractSystemStatusService
     }
 
     /**
+     * @param CheckInterface $check
      * @param Report $report
      */
-    protected function logCheckReport(Report $report)
+    protected function logCheckReport(CheckInterface $check, Report $report)
     {
-        //ToDo: implement check log
+        /** @var SystemStatusLogService $systemStatusLogService */
+        $systemStatusLogService = $this->getServiceLocator()->get(SystemStatusLogService::SERVICE_ID);
+        return $systemStatusLogService->log($check, $report);
     }
 
+    /**
+     * @return string
+     */
     protected function getChecksType(): string
     {
         return CheckInterface::TYPE_INSTANCE;

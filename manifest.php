@@ -37,7 +37,8 @@ return [
     'install' => [
         'php' => [
             \oat\taoSystemStatus\scripts\install\RegisterCheckStorage::class,
-            \oat\taoSystemStatus\scripts\install\RegisterChecks::class
+            \oat\taoSystemStatus\scripts\install\RegisterChecks::class,
+            \oat\taoSystemStatus\scripts\install\RegisterSystemStatusLog::class,
         ]
     ],
     'uninstall' => [],

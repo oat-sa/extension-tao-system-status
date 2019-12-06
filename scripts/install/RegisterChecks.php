@@ -23,6 +23,7 @@ namespace oat\taoSystemStatus\scripts\install;
 use oat\oatbox\extension\AbstractAction;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+use oat\taoSystemStatus\model\SystemStatusException;
 
 /**
  * Class RegisterChecks
@@ -42,7 +43,11 @@ class RegisterChecks extends AbstractAction
         $systemStatusService = $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
 
         foreach ($this->getSystemChecks() as $check) {
-            $systemStatusService->addCheck($check);
+            try {
+                $systemStatusService->addCheck($check);
+            } catch (SystemStatusException $e) {
+                $this->logError($e->getMessage());
+            }
         }
 
         return new Report(Report::TYPE_SUCCESS, __('System status checks successfully registered.'));
@@ -55,10 +60,15 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\TaoLtiKVCheck([]),
             new \oat\taoSystemStatus\model\Check\System\TaoLtiDeliveryKVCheck([]),
             new \oat\taoSystemStatus\model\Check\System\LockServiceCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\DefaultLanguageCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\DefaultTimeZoneCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\MessagesJsonCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\MathJaxCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\WkhtmltopdfCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([])
+            new \oat\taoSystemStatus\model\Check\System\FileSystemS3CacheCheck([]),
+            new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([]),
+            new \oat\taoSystemStatus\model\Check\Instance\WriteConfigDataCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\DebugModeCheck([]),
         ];
     }
 

@@ -52,4 +52,10 @@ interface SystemStatusServiceInterface
      * @throws SystemStatusException check with given id does not exist
      */
     public function removeCheck(CheckInterface $check): bool;
+
+    /**
+     * Get server instance id
+     * @return string
+     */
+    public function getInstanceId(): string;
 }
