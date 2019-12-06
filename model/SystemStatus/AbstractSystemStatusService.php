@@ -36,6 +36,7 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
     const INSTANCE_ID_CALL_TIMEOUT = 10;
     const OPTION_STORAGE_CLASS = 'storage_class';
     const OPTION_STORAGE_PERSISTENCE = 'storage_persistence';
+    const INSTANCE_ID_ENDPOINT = 'http://169.254.169.254/latest/meta-data/instance-id';
 
     /** @var CheckStorageInterface */
     protected $storage;
@@ -131,7 +132,7 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
         if ($this->getServiceLocator()->has('generis/awsClient')) {
             try {
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'http://169.254.169.254/latest/meta-data/instance-id');
+                curl_setopt($ch, CURLOPT_URL, self::INSTANCE_ID_ENDPOINT);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_TIMEOUT, self::INSTANCE_ID_CALL_TIMEOUT);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::INSTANCE_ID_CALL_TIMEOUT);

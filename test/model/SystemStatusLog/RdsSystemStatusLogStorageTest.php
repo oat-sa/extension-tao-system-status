@@ -39,7 +39,7 @@ class RdsSystemStatusLogStorageTest extends TestCase
         $report = new Report(Report::TYPE_INFO);
         $check = new SampleInstanceCheck();
         $this->assertTrue($service->log($check, $report, 'testInstance'));
-        $checks = $service->getLatest();
+        $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertEquals($check->getId(), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_CHECK_ID]);
         $this->assertEquals(json_encode($report), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_REPORT]);
     }
