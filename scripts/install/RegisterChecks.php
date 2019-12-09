@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\scripts\install;
 
 use oat\oatbox\extension\AbstractAction;
 use common_report_Report as Report;
+use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 use oat\taoSystemStatus\model\SystemStatusException;
 
@@ -53,6 +54,9 @@ class RegisterChecks extends AbstractAction
         return new Report(Report::TYPE_SUCCESS, __('System status checks successfully registered.'));
     }
 
+    /**
+     * @return CheckInterface[]
+     */
     private function getSystemChecks(): array
     {
         return [
@@ -69,6 +73,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([]),
             new \oat\taoSystemStatus\model\Check\Instance\WriteConfigDataCheck([]),
             new \oat\taoSystemStatus\model\Check\System\DebugModeCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaoUpdateCheck([])
         ];
     }
 
