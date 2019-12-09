@@ -37,6 +37,9 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $report = $this->checkFileSystemConfig();
         return $this->prepareReport($report);
     }

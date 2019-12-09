@@ -45,6 +45,9 @@ class WkhtmltopdfCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $report = $this->checkWkhtmltopdf();
         return $this->prepareReport($report);
     }

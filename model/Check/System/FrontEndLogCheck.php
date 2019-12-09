@@ -38,6 +38,9 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $config = $this->getExtensionsManagerService()->getExtensionById('tao')->getConfig('client_lib_config_registry');
         $enabled = isset($config['core/logger']['loggers']['core/logger/http']) &&
             in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);

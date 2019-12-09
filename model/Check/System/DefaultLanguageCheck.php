@@ -37,6 +37,9 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $report = $this->checkDefaultLanguage();
         return $this->prepareReport($report);
     }
