@@ -55,7 +55,7 @@ class TaskQueueFailsCheck extends AbstractCheck
         if (empty($tasks)) {
             return new Report(Report::TYPE_SUCCESS, __('No failed tasks in the task queue log'));
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, __('Last %n failed tasks:', $limit));
+            $report = new Report(Report::TYPE_WARNING, __('Last %n failed tasks:', $limit));
         }
 
         foreach ($tasks as $task) {

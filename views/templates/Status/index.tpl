@@ -32,6 +32,9 @@ $childRepors = $report->getChildren();
                         <span class="tooltip-content" ><?= $childReport->getData()['details'] ?></span>
                     </span>
                 </div>
+                <?php if($childReport->hasChildren()): ?>
+                    
+                <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </div>
