@@ -64,7 +64,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Instance configuration');
     }
 
     /**
