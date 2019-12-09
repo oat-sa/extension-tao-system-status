@@ -62,6 +62,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\LockServiceCheck([]),
             new \oat\taoSystemStatus\model\Check\System\DefaultLanguageCheck([]),
             new \oat\taoSystemStatus\model\Check\System\DefaultTimeZoneCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\LocalNamespaceCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\MessagesJsonCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\MathJaxCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\WkhtmltopdfCheck([]),
