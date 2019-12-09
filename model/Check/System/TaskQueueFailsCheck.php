@@ -26,6 +26,7 @@ use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
 use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
 use oat\tao\model\taskQueue\TaskLog\Entity\EntityInterface;
+use oat\tao\helpers\Template;
 
 /**
  * Class TaskQueueFailsCheck
@@ -98,6 +99,29 @@ class TaskQueueFailsCheck extends AbstractCheck
     }
 
     /**
+     * @param Report $report
+     * @param null $template
+     * @return string
+     * @throws \common_Exception
+     */
+    public function renderReport(Report $report): string
+    {
+        $result = parent::renderReport($report);
+        $flat = [];
+        foreach ($report->getChildren() as $taskReport) {
+            $result .= parent::renderReport($taskReport);
+            foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
+                $flat[] = $child;
+            }
+            $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
+            $renderer->setData('reports', $flat);
+            $result .= $renderer->render();
+        }
+
+        return $result;
+    }
+
+    /**
      * @param int $amount
      * @return EntityInterface[]
      */
@@ -111,5 +135,17 @@ class TaskQueueFailsCheck extends AbstractCheck
         $filter->setSortBy(TaskLogBrokerInterface::COLUMN_CREATED_AT);
         $filter->setSortOrder('DESC');
         return $taskQueueLog->search($filter);
+    }
+
+    /**
+     * @param $report
+     * @return \RecursiveIteratorIterator
+     */
+    private function getRecursiveReportIterator(Report $report)
+    {
+        return new \RecursiveIteratorIterator(
+            new \common_report_RecursiveReportIterator($report->getChildren()),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
     }
 }

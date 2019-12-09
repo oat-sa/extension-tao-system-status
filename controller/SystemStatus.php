@@ -39,6 +39,7 @@ class SystemStatus extends \tao_actions_SinglePageModule
     {
         $this->setData('reports', $this->getSystemStatusService()->check());
         $this->setData('support_portal_link', $this->getSystemStatusService()->getSupportPortalLink());
+        $this->setData('service', $this->getSystemStatusService());
         $this->setView('Status/index.tpl');
     }
 

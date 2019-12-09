@@ -90,6 +90,30 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getCheck(string $id): CheckInterface
+    {
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->select('*');
+        $queryBuilder->where(self::COLUMN_ID . ' = ?');
+        $queryBuilder->setParameters([$id]);
+        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        $checkData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        try {
+            $checkReflection = new ReflectionClass($checkData[self::COLUMN_CLASS]);
+        } catch (\ReflectionException $e) {
+            throw new SystemStatusException('Check class does not exist: ' . $checkData[self::COLUMN_CLASS]);
+        }
+        $check = $checkReflection->newInstanceArgs([
+            json_decode($checkData[self::COLUMN_PARAMS], true),
+        ]);
+
+        return $check;
+    }
+
+    /**
      * Get all checks by type
      *
      * @param string $type

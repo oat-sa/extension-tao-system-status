@@ -47,6 +47,12 @@ interface SystemStatusServiceInterface
     public function addCheck(CheckInterface $check): bool;
 
     /**
+     * @param string $id
+     * @return CheckInterface
+     */
+    public function getCheck(string $id): CheckInterface;
+
+    /**
      * @param CheckInterface $check
      * @return bool
      * @throws SystemStatusException check with given id does not exist
@@ -58,4 +64,10 @@ interface SystemStatusServiceInterface
      * @return string
      */
     public function getInstanceId(): string;
+
+    /**
+     * Get server instance id
+     * @return string|bool
+     */
+    public function getSupportPortalLink();
 }

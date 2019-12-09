@@ -1,9 +1,16 @@
 <?php
+use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\tao\helpers\Template;
+
 $report = get_data('reports');
 $link = get_data('support_portal_link');
-$childRepors = $report->getChildren();
+$service = get_data('service');
+$childReports = $report->getChildren();
+
 ?>
+
+<link rel="stylesheet" href="<?= Template::css('preview.css') ?>" />
+
 <div class="data-container-wrapper flex-container-full">
     <div class="grid-container">
         <div class="grid-row">
@@ -23,18 +30,8 @@ $childRepors = $report->getChildren();
                     <?= $report->getMessage() ?>
                 </div>
                 <h2>Current Status</h2>
-                <?php foreach($childRepors as $childReport): ?>
-                <div class="feedback-<?= mb_strtolower($childReport->getType()) ?> feedback-nesting-1 leaf tao-scope">
-                    <div class="icon-<?= mb_strtolower($childReport->getType()) ?>"></div>
-                    <?= $childReport->getMessage() ?>
-                    <span style="float: right;">
-                        <span class="icon-help r tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info"></span>
-                        <span class="tooltip-content" ><?= $childReport->getData()['details'] ?></span>
-                    </span>
-                </div>
-                <?php if($childReport->hasChildren()): ?>
-                    
-                <?php endif; ?>
+                <?php foreach($childReports as $childReport): ?>
+                <?= $service->getCheck($childReport->getData()[CheckInterface::PARAM_CHECK_ID])->renderReport($childReport) ?>
                 <?php endforeach; ?>
             </div>
         </div>

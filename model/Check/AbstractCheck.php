@@ -23,6 +23,7 @@ namespace oat\taoSystemStatus\model\Check;
 use common_report_Report as Report;
 use oat\oatbox\service\ServiceManagerAwareTrait;
 use common_ext_ExtensionsManager;
+use oat\tao\helpers\Template;
 
 /**
  * class AbstractCheck
@@ -76,6 +77,24 @@ abstract class AbstractCheck implements CheckInterface
     public function getParameters()
     {
         return $this->params;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function renderReport(Report $report): string
+    {
+        $renderer = new \Renderer($this->getTemplate());
+        $renderer->setData('report', $report);
+        return $renderer->render();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplate()
+    {
+        return Template::getTemplate('Reports/default.tpl', 'taoSystemStatus');
     }
 
     /**
