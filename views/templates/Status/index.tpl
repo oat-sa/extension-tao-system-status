@@ -9,7 +9,7 @@ $childReports = $report->getChildren();
 
 ?>
 
-<link rel="stylesheet" href="<?= Template::css('preview.css') ?>" />
+<link rel="stylesheet" href="<?= Template::css('systemstatus.css') ?>" />
 
 <div class="data-container-wrapper flex-container-full">
     <div class="grid-container">

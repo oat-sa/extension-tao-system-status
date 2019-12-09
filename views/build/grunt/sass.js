@@ -6,14 +6,14 @@ module.exports = function (grunt) {
     var notify  = grunt.config('notify') || {};
     var root    = grunt.option('root') + '/taoSystemStatus/views/';
 
-    sass.taosync = {
+    sass.taosystemstatus = {
         options : {},
         files : {}
     };
 
-    sass.taosync.files[root + 'css/systemstatus.css'] = root + 'scss/systemstatus.scss';
+    sass.taosystemstatus.files[root + 'css/systemstatus.css'] = root + 'scss/systemstatus.scss';
 
-    watch.taosyncsass = {
+    watch.taosystemstatussass = {
         files : [
             root + 'scss/**/*.scss',
         ],
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         }
     };
 
-    notify.taosyncsass = {
+    notify.taosystemstatussass = {
         options: {
             title: 'Grunt SASS',
             message: 'SASS files compiled to CSS'

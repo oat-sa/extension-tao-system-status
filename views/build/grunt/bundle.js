@@ -13,19 +13,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2018 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ *
  */
 
 /**
  * configure the extension bundles
- * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
 module.exports = function(grunt) {
     'use strict';
 
     grunt.config.merge({
         bundle : {
-            taosync : {
+            taosystemstatus : {
                 options : {
                     extension : 'taoSystemStatus',
                     outputDir : 'loader',

@@ -109,11 +109,11 @@ class TaskQueueFailsCheck extends AbstractCheck
         $result = parent::renderReport($report);
         $flat = [];
         foreach ($report->getChildren() as $taskReport) {
-            $result .= parent::renderReport($taskReport);
             foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
                 $flat[] = $child;
             }
             $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
+            $renderer->setData('task-report', $taskReport);
             $renderer->setData('reports', $flat);
             $result .= $renderer->render();
         }
