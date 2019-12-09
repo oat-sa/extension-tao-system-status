@@ -26,7 +26,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 /**
  * Class TaoUpdateCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleksej Tikhanovich, <hutnikau@1pt.com>
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
 class TaoUpdateCheck extends AbstractCheck
 {
