@@ -3,7 +3,7 @@
 Extension supposed to be used to monitor the status of some services and the correct configuration of the TAO.
 
 
-## AppendStream
+## Installation
 
 Requires the following CRON job on ALL instances (web and workers):
 
