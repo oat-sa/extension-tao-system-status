@@ -40,6 +40,9 @@ class ConfigCongruenceS3Check extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $fileSystem = $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
         $filesystemConf = $fileSystem->getOptions();
         if (isset($filesystemConf['dirs']['private'])) {

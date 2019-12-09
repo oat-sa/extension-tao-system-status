@@ -44,6 +44,9 @@ class TaoLtiKVCheck extends AbstractCheck
      */
     public function __invoke($params = []): Report
     {
+        if (!$this->isActive()) {
+            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        }
         $this->report = new Report(Report::TYPE_SUCCESS);
 
         if (!$this->checkLtiLinkService()) {
