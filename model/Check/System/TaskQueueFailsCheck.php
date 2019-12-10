@@ -27,6 +27,9 @@ use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
 use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
 use oat\tao\model\taskQueue\TaskLog\Entity\EntityInterface;
 use oat\tao\helpers\Template;
+use RecursiveIteratorIterator;
+use common_Exception;
+use common_exception_Error;
 
 /**
  * Class TaskQueueFailsCheck
@@ -42,7 +45,7 @@ class TaskQueueFailsCheck extends AbstractCheck
     /**
      * @param array $params
      * @return Report
-     * @throws \common_exception_Error
+     * @throws common_exception_Error
      */
     public function __invoke($params = []): Report
     {
@@ -100,9 +103,8 @@ class TaskQueueFailsCheck extends AbstractCheck
 
     /**
      * @param Report $report
-     * @param null $template
      * @return string
-     * @throws \common_Exception
+     * @throws common_Exception
      */
     public function renderReport(Report $report): string
     {
@@ -139,9 +141,9 @@ class TaskQueueFailsCheck extends AbstractCheck
 
     /**
      * @param $report
-     * @return \RecursiveIteratorIterator
+     * @return RecursiveIteratorIterator
      */
-    private function getRecursiveReportIterator(Report $report)
+    private function getRecursiveReportIterator(Report $report) : RecursiveIteratorIterator
     {
         return new \RecursiveIteratorIterator(
             new \common_report_RecursiveReportIterator($report->getChildren()),

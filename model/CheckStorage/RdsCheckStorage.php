@@ -29,6 +29,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ReflectionClass;
+use common_persistence_SqlPersistence;
 
 /**
  * @inheritdoc
@@ -183,10 +184,10 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
 
     /**
-     * @return \common_persistence_SqlPersistence
+     * @return common_persistence_SqlPersistence
      * @throws
      */
-    private function getPersistence(): \common_persistence_SqlPersistence
+    private function getPersistence(): common_persistence_SqlPersistence
     {
         $persistenceManager = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID);
         return $persistenceManager->getPersistenceById($this->persistenceId);
