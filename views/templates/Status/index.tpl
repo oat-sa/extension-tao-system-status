@@ -11,7 +11,7 @@ $childReports = get_data('reports_by_status');
 
 <link rel="stylesheet" href="<?= Template::css('systemstatus.css') ?>" />
 
-<div class="data-container-wrapper flex-container-full">
+<div class="data-container-wrapper flex-container-full" id="system-status-report">
     <div class="grid-container">
         <div class="grid-row">
             <div class="col-9">
