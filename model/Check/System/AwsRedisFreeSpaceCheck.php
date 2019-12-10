@@ -21,11 +21,13 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
+use oat\generis\persistence\PersistenceManager;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\log\loggerawaretrait;
 use DateInterval;
 use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
+use oat\taoSystemStatus\model\SystemCheckException;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -35,6 +37,9 @@ use Aws\ElastiCache\ElastiCacheClient;
 class AwsRedisFreeSpaceCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
+
+    const PARAM_PERIOD = 'period';
+    const PARAM_DEFAULT_PERIOD = 300;
 
     /**
      * @param array $params
@@ -47,41 +52,31 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
 
-        $cloudWatchClient = $this->getServiceLocator()->get('generis/awsClient')->getCloudWatchClient();
         $elastiCacheClient = $this->getElastiCacheClient();
+        $redisHost = $this->getRedisHost();
+        $stackId = $this->getStackId($redisHost);
+        $cacheClusters = $elastiCacheClient->describeCacheClusters()->toArray();
+        $clusterData = null;
+        foreach ($cacheClusters['CacheClusters'] as $cacheCluster) {
+            if (strpos($cacheCluster['CacheClusterId'], $stackId) === 0) {
+                $clusterData = $cacheCluster;
+                break;
+            }
+        }
 
-        var_dump($elastiCacheClient->describeCacheClusters());
-        exit();
+        if ($clusterData === null) {
+            throw new SystemCheckException('ElastiCache cluster not found');
+        }
 
-        $period = 300;
-        $interval = new DateInterval('PT' . $period . 'S');
-        $since = (new DateTime())->sub($interval);
-        $result = $cloudWatchClient->getMetricData([
-            'StartTime' => $since,
-            'EndTime' => (new DateTime()),
-            'MetricDataQueries' => [
-                [
-                    'Id' => 'm1',
-                    'MetricStat' => [
-                        'Metric' => [
-                            'Namespace' => 'AWS/ElastiCache',
-                            'MetricName' => 'FreeableMemory',
-                            'Dimensions' => [
-                                [
-                                    'Name' => 'CacheClusterId',
-                                    'Value' => 'usact03det-ectao-001'
-                                ]
-                            ]
-                        ],
-                        'Period' => $period,
-                        'Stat' => 'Average',
-                    ]
-                ]
-            ]
-        ]);
+        $freeSpacePercentage = $this->getFreePercentage($clusterData['CacheClusterId']);
 
-        var_dump($result->get('MetricDataResults')[0]['Values'][0]);
-        exit();
+        if ($freeSpacePercentage < 30) {
+            $report = new Report(Report::TYPE_ERROR, __('Redis storage has less than 30% of free space'));
+        } elseif ($freeSpacePercentage < 50) {
+            $report = new Report(Report::TYPE_WARNING, __('Redis storage has less than 50% of free space'));
+        } else {
+            $report = new Report(Report::TYPE_SUCCESS, __('Redis storage has %s%% of free space', round($freeSpacePercentage)));
+        }
 
         return $this->prepareReport($report);
     }
@@ -91,7 +86,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return $this->isAws();
+        return $this->isAws() && $this->getRedisHost() !== null;
     }
 
     /**
@@ -115,7 +110,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check free space on ElastiCache');
+        return __('Check free space on ElastiCache storage');
     }
 
     /**
@@ -124,5 +119,104 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     private function getElastiCacheClient(): ElastiCacheClient
     {
         return new ElastiCacheClient($this->getServiceLocator()->get('generis/awsClient')->getOptions());
+    }
+
+    /**
+     * @param string $redisHost
+     * @return string
+     * @throws SystemCheckException
+     */
+    private function getStackId(string $redisHost)
+    {
+        $hostParts = explode('.', $redisHost);
+        if (!isset($hostParts[2])) {
+            throw new SystemCheckException('Cannot get stack id by redis host');
+        }
+        return $hostParts[2];
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getRedisHost()
+    {
+        $persistences = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID)
+            ->getOption(PersistenceManager::OPTION_PERSISTENCES);
+
+        $host = null;
+        foreach ($persistences as $persistence) {
+            if (isset($persistence['driver']) && $persistence['driver'] === 'phpredis') {
+                $host = $persistence['host'];
+            }
+        }
+        return $host;
+    }
+
+    /**
+     * @param string $clusterId
+     * @return float|int
+     * @throws SystemCheckException
+     */
+    public function getFreePercentage(string $clusterId)
+    {
+        $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
+        $interval = new DateInterval('PT' . $period . 'S');
+        $since = (new DateTime())->sub($interval);
+        $cloudWatchClient = $this->getServiceLocator()->get('generis/awsClient')->getCloudWatchClient();
+        $result = $cloudWatchClient->getMetricData([
+            'StartTime' => $since,
+            'EndTime' => (new DateTime()),
+            'MetricDataQueries' => [
+                [
+                    'Id' => 'free',
+                    'MetricStat' => [
+                        'Metric' => [
+                            'Namespace' => 'AWS/ElastiCache',
+                            'MetricName' => 'FreeableMemory',
+                            'Dimensions' => [
+                                [
+                                    'Name' => 'CacheClusterId',
+                                    'Value' => $clusterId
+                                ]
+                            ]
+                        ],
+                        'Period' => $period,
+                        'Stat' => 'Average',
+                    ]
+                ],
+                [
+                    'Id' => 'used',
+                    'MetricStat' => [
+                        'Metric' => [
+                            'Namespace' => 'AWS/ElastiCache',
+                            'MetricName' => 'BytesUsedForCache',
+                            'Dimensions' => [
+                                [
+                                    'Name' => 'CacheClusterId',
+                                    'Value' => $clusterId
+                                ]
+                            ]
+                        ],
+                        'Period' => $period,
+                        'Stat' => 'Average',
+                    ]
+                ]
+            ]
+        ]);
+
+        $usedBytes = null;
+        $freeBytes = null;
+        foreach ($result->toArray()['MetricDataResults'] as $metric) {
+            if ($metric['Id'] === 'used') {
+                $usedBytes = $metric['Values'][0];
+            }
+            if ($metric['Id'] === 'free') {
+                $freeBytes = $metric['Values'][0];
+            }
+        }
+        if ($usedBytes === null || $freeBytes === null) {
+            throw new SystemCheckException('Cannot get redis cluster metrics');
+        }
+        return $freeBytes / (($usedBytes + $freeBytes) / 100);
     }
 }
