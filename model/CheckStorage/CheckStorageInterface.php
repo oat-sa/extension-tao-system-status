@@ -52,6 +52,14 @@ interface CheckStorageInterface
     public function removeCheck(CheckInterface $check): bool;
 
     /**
+     * Get check by id
+     *
+     * @param string $id
+     * @return CheckInterface
+     */
+    public function getCheck(string $id): CheckInterface;
+
+    /**
      * Get all checks by type
      *
      * @param string $type

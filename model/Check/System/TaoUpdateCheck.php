@@ -18,18 +18,19 @@
  *
  */
 
-namespace oat\taoSystemStatus\model\Check\Instance;
+namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class WriteConfigDataCheck
+ * Class TaoUpdateCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class WriteConfigDataCheck extends AbstractCheck
+class TaoUpdateCheck extends AbstractCheck
 {
+
     /**
      * @param array $params
      * @return Report
@@ -39,7 +40,18 @@ class WriteConfigDataCheck extends AbstractCheck
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $report = $this->checkConfigAndDataFolders();
+        $extManager = $this->getExtensionsManagerService();
+        $notUpdated = [];
+        foreach ($this->getExtensionsManagerService()->getInstalledExtensions() as $extension) {
+            if ($extManager->getInstalledVersion($extension->getId()) !== $extension->getVersion()) {
+                $notUpdated[] = $extension->getId();
+            }
+        }
+        if (empty($notUpdated)) {
+            $report = new Report(Report::TYPE_SUCCESS, __('All extensions are up to date'));
+        } else {
+            $report = new Report(Report::TYPE_WARNING, __('The following extensions require update: ') . implode(', ', $notUpdated));
+        }
         return $this->prepareReport($report);
     }
 
@@ -56,7 +68,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getType(): string
     {
-        return self::TYPE_INSTANCE;
+        return self::TYPE_SYSTEM;
     }
 
     /**
@@ -64,7 +76,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('System configuration');
     }
 
     /**
@@ -72,39 +84,6 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if TAO has permissions to write into \'config\' and \'data\' folders');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkConfigAndDataFolders() : Report
-    {
-        $configDir = ROOT_PATH.'config';
-        $dataDir = ROOT_PATH.'data';
-
-        if (!is_writable($configDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config\' folder'));
-        }
-
-        $dir = new \DirectoryIterator($configDir);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
-                if (!is_writable($fileinfo->getPathname())) {
-                    return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
-                }
-            }
-        }
-
-        if (!file_exists($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('\'data\' folder is not exists'));
-        }
-        if (!is_writable($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'data\' folder'));
-        }
-
-
-        return new Report(Report::TYPE_SUCCESS, __('TAO has permissions to write into \'config\' and \'data\' folders'));
-
+        return __('Check if extensions require update');
     }
 }

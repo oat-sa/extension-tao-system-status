@@ -64,6 +64,15 @@ class RdsCheckStorageTest extends TestCase
         $this->assertCount(0, $service->getChecks(CheckInterface::TYPE_INSTANCE));
     }
 
+    public function testGetCheck()
+    {
+        $service = $this->getInstance();
+        $check = $this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']);
+        $this->assertTrue($service->addCheck($check));
+        $this->assertEquals($check, $service->getCheck($check->getId()));
+
+    }
+
     public function testGetChecks()
     {
         $service = $this->getInstance();

@@ -22,6 +22,7 @@ namespace oat\taoSystemStatus\controller;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+use oat\taoSystemStatus\model\Check\CheckInterface;
 
 /**
  * Class Status
@@ -37,8 +38,17 @@ class SystemStatus extends \tao_actions_SinglePageModule
      */
     public function index()
     {
-        $this->setData('reports', $this->getSystemStatusService()->check());
+        $report = $this->getSystemStatusService()->check();
+        $this->setData('report', $report);
+        $reportsByStatus = [];
+        foreach ($report->getChildren() as $childReport) {
+            $check = $this->getSystemStatusService()->getCheck($childReport->getData()[CheckInterface::PARAM_CHECK_ID]);
+            $reportsByStatus[$check->getCategory()][] = $childReport;
+        }
+        ksort($reportsByStatus);
+        $this->setData('reports_by_status', $reportsByStatus);
         $this->setData('support_portal_link', $this->getSystemStatusService()->getSupportPortalLink());
+        $this->setData('service', $this->getSystemStatusService());
         $this->setView('Status/index.tpl');
     }
 

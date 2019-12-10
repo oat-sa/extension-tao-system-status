@@ -18,17 +18,19 @@
  *
  */
 
-namespace oat\taoSystemStatus\model\Check\Instance;
+namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
+use oat\generis\model\kernel\uri\UriProvider;
+use oat\oatbox\service\ConfigurableService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class WriteConfigDataCheck
+ * Class LocalNamespaceCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class WriteConfigDataCheck extends AbstractCheck
+class LocalNamespaceCheck extends AbstractCheck
 {
     /**
      * @param array $params
@@ -39,7 +41,7 @@ class WriteConfigDataCheck extends AbstractCheck
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $report = $this->checkConfigAndDataFolders();
+        $report = $this->checkLocalNamespace();
         return $this->prepareReport($report);
     }
 
@@ -56,7 +58,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getType(): string
     {
-        return self::TYPE_INSTANCE;
+        return self::TYPE_SYSTEM;
     }
 
     /**
@@ -64,7 +66,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('System configuration');
     }
 
     /**
@@ -72,39 +74,31 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if TAO has permissions to write into \'config\' and \'data\' folders');
+        return __('Check LOCAL_NAMESPACE and URI provider configuration.');
     }
 
     /**
      * @return Report
      */
-    private function checkConfigAndDataFolders() : Report
+    private function checkLocalNamespace() : Report
     {
-        $configDir = ROOT_PATH.'config';
-        $dataDir = ROOT_PATH.'data';
-
-        if (!is_writable($configDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config\' folder'));
+        $uriProvider = $this->getUriProviderService();
+        $namespace = trim($uriProvider->getOption('namespace'), ' #');
+        if (!$namespace) {
+            return new Report(Report::TYPE_WARNING, 'Namespace option for UriProvider does not exist');
         }
-
-        $dir = new \DirectoryIterator($configDir);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
-                if (!is_writable($fileinfo->getPathname())) {
-                    return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
-                }
-            }
+        if ($namespace !== LOCAL_NAMESPACE) {
+            return new Report(Report::TYPE_WARNING, 'Namespace option for UriProvider is not equal to LOCAL_NAMESPACE.');
         }
+        return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured.'));
+    }
 
-        if (!file_exists($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('\'data\' folder is not exists'));
-        }
-        if (!is_writable($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has not permissions to write into \'data\' folder'));
-        }
-
-
-        return new Report(Report::TYPE_SUCCESS, __('TAO has permissions to write into \'config\' and \'data\' folders'));
-
+    /**
+     * @return UriProvider|ConfigurableService
+     */
+    private function getUriProviderService() : UriProvider
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(UriProvider::SERVICE_ID);
     }
 }
