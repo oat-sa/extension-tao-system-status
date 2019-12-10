@@ -74,7 +74,8 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([]),
             new \oat\taoSystemStatus\model\Check\Instance\WriteConfigDataCheck([]),
             new \oat\taoSystemStatus\model\Check\System\DebugModeCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaoUpdateCheck([])
+            new \oat\taoSystemStatus\model\Check\System\TaoUpdateCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck([]),
         ];
     }
 
