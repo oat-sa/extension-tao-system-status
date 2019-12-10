@@ -1,0 +1,14 @@
+{
+	"version": 3,
+	"file": "systemstatus.css",
+	"sources": [
+		"../scss/systemstatus.scss",
+		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_bootstrap.scss",
+		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_variables.scss",
+		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_functions.scss",
+		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_colors.scss",
+		"../../../tao/views/scss/inc/fonts/_tao-icon-vars.scss"
+	],
+	"names": [],
+	"mappings": "AACC,AAAA,qBAAqB,AAAC,CACpB,YAAY,CAAE,IAAI,CAOnB,AARD,AAEE,qBAFmB,CAEnB,cAAc,AAAC,CACb,MAAM,CAAE,WAAW,CACpB,AAJH,AAKE,qBALmB,CAKnB,iBAAiB,AAAC,CAChB,OAAO,CAAE,IAAI,CACd,AAEJ,AAAA,qBAAqB,AAAC,CACpB,MAAM,CAAE,KAAK,CACb,QAAQ,CAAE,IAAI,CACf"
+}

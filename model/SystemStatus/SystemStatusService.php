@@ -66,6 +66,7 @@ class SystemStatusService extends AbstractSystemStatusService
     {
         return $this->getOption(self::OPTION_SUPPORT_PORTAL_LINK);
     }
+
     /**
      * @return Report[]
      * @throws \common_exception_Error

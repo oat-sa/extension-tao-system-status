@@ -61,6 +61,14 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getCheck(string $id): CheckInterface
+    {
+        return $this->getCheckStorage()->getCheck($id);
+    }
+
+    /**
      * @return CheckStorageInterface
      */
     protected function getCheckStorage(): CheckStorageInterface

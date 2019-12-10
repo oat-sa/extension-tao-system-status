@@ -85,4 +85,10 @@ interface CheckInterface extends Action, ServiceLocatorAwareInterface
      */
     public function isActive(): bool;
 
+    /**
+     * @param Report $report
+     * @return string
+     */
+    public function renderReport(Report $report): string;
+
 }

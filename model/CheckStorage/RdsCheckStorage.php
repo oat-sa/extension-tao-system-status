@@ -29,6 +29,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ReflectionClass;
+use common_persistence_SqlPersistence;
 
 /**
  * @inheritdoc
@@ -87,6 +88,30 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->setParameters([$check->getId()]);
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
         return $stmt->execute();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCheck(string $id): CheckInterface
+    {
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->select('*');
+        $queryBuilder->where(self::COLUMN_ID . ' = ?');
+        $queryBuilder->setParameters([$id]);
+        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        $checkData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        try {
+            $checkReflection = new ReflectionClass($checkData[self::COLUMN_CLASS]);
+        } catch (\ReflectionException $e) {
+            throw new SystemStatusException('Check class does not exist: ' . $checkData[self::COLUMN_CLASS]);
+        }
+        $check = $checkReflection->newInstanceArgs([
+            json_decode($checkData[self::COLUMN_PARAMS], true),
+        ]);
+
+        return $check;
     }
 
     /**
@@ -159,10 +184,10 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
 
     /**
-     * @return \common_persistence_SqlPersistence
+     * @return common_persistence_SqlPersistence
      * @throws
      */
-    private function getPersistence(): \common_persistence_SqlPersistence
+    private function getPersistence(): common_persistence_SqlPersistence
     {
         $persistenceManager = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID);
         return $persistenceManager->getPersistenceById($this->persistenceId);
