@@ -107,8 +107,8 @@ class TaskQueueFailsCheck extends AbstractCheck
     public function renderReport(Report $report): string
     {
         $result = parent::renderReport($report);
-        $flat = [];
         foreach ($report->getChildren() as $taskReport) {
+            $flat = [];
             foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
                 $flat[] = $child;
             }
