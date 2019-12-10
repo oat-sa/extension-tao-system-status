@@ -64,10 +64,4 @@ interface SystemStatusServiceInterface
      * @return string
      */
     public function getInstanceId(): string;
-
-    /**
-     * Get server instance id
-     * @return string|bool
-     */
-    public function getSupportPortalLink();
 }

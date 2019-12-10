@@ -2,10 +2,10 @@
 use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\tao\helpers\Template;
 
-$report = get_data('reports');
+$report = get_data('report');
 $link = get_data('support_portal_link');
 $service = get_data('service');
-$childReports = $report->getChildren();
+$childReports = get_data('reports_by_status');
 
 ?>
 
@@ -29,9 +29,11 @@ $childReports = $report->getChildren();
                     <span class="icon-<?= mb_strtolower($report->getType()) ?> leaf-icon"></span>
                     <?= $report->getMessage() ?>
                 </div>
-                <h2>Current Status</h2>
-                <?php foreach($childReports as $childReport): ?>
-                <?= $service->getCheck($childReport->getData()[CheckInterface::PARAM_CHECK_ID])->renderReport($childReport) ?>
+                <?php foreach($childReports as $childReportCategory => $categoryReports): ?>
+                    <h2><?= $childReportCategory ?></h2>
+                    <?php foreach($categoryReports as $childReport): ?>
+                        <?= $service->getCheck($childReport->getData()[CheckInterface::PARAM_CHECK_ID])->renderReport($childReport) ?>
+                    <?php endforeach; ?>
                 <?php endforeach; ?>
             </div>
         </div>
