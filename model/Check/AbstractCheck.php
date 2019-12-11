@@ -151,4 +151,15 @@ abstract class AbstractCheck implements CheckInterface
 
         return !empty($taskQueueProcesses);
     }
+
+
+    /**
+     * @return bool
+     */
+    protected function isAws(): bool
+    {
+        //this is an assumption.
+        //Todo: check if there is another way to check if we are in the AWS environment.
+        return $this->getServiceLocator()->has('generis/awsClient');
+    }
 }
