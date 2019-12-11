@@ -28,6 +28,7 @@ use DateInterval;
 use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
+use oat\awsTools\AwsClient;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -118,7 +119,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     private function getElastiCacheClient(): ElastiCacheClient
     {
-        return new ElastiCacheClient($this->getServiceLocator()->get('generis/awsClient')->getOptions());
+        return new ElastiCacheClient($this->getAwsClient()->getOptions());
     }
 
     /**
@@ -162,7 +163,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
         $since = (new DateTime())->sub($interval);
-        $cloudWatchClient = $this->getServiceLocator()->get('generis/awsClient')->getCloudWatchClient();
+        $cloudWatchClient = $this->getAwsClient()->getCloudWatchClient();
         $result = $cloudWatchClient->getMetricData([
             'StartTime' => $since,
             'EndTime' => (new DateTime()),
@@ -218,5 +219,13 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             throw new SystemCheckException('Cannot get redis cluster metrics');
         }
         return $freeBytes / (($usedBytes + $freeBytes) / 100);
+    }
+
+    /**
+     * @return AwsClient
+     */
+    private function getAwsClient(): AwsClient
+    {
+        return $this->getServiceLocator()->get('generis/awsClient');
     }
 }
