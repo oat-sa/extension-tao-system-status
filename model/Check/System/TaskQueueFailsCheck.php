@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
+use oat\tao\model\taskQueue\TaskLog\CollectionInterface;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
@@ -56,11 +57,11 @@ class TaskQueueFailsCheck extends AbstractCheck
         $limit = $params[self::PARAM_LIMIT] ?? self::PARAM_DEFAULT_LIMIT;
         $tasks = $this->getLaskFailedTasks($limit);
 
-        if (empty($tasks)) {
-            return new Report(Report::TYPE_SUCCESS, __('No failed tasks in the task queue log'));
-        } else {
-            $report = new Report(Report::TYPE_WARNING, __('Last %n failed tasks:', $limit));
+        if ($tasks->isEmpty()) {
+            return $this->prepareReport(new Report(Report::TYPE_SUCCESS, __('No failed tasks in the task queue log')));
         }
+
+        $report = new Report(Report::TYPE_WARNING, __('Last %n failed tasks:', $limit));
 
         foreach ($tasks as $task) {
             $report->add($task->getReport());
@@ -125,7 +126,7 @@ class TaskQueueFailsCheck extends AbstractCheck
 
     /**
      * @param int $amount
-     * @return EntityInterface[]
+     * @return CollectionInterface|EntityInterface[]
      */
     private function getLaskFailedTasks(int $amount)
     {
