@@ -92,7 +92,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show last finished tasks in the task queue');
+        return __('Statistics of processed tasks:');
     }
 
     /**

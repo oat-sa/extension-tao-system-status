@@ -16,7 +16,6 @@ define([
         $modal.modal('open');
 
         $modal.on('closed.modal', function() {
-            console.log(1);
             $modal.modal('destroy');
             $(this).remove();
         });
