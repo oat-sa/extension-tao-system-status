@@ -76,6 +76,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\DebugModeCheck([]),
             new \oat\taoSystemStatus\model\Check\System\TaoUpdateCheck([]),
             new \oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\TaskQueueFinishedCheck([]),
             new \oat\taoSystemStatus\model\Check\System\AwsRedisFreeSpaceCheck([]),
         ];
     }

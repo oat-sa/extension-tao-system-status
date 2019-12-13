@@ -71,8 +71,9 @@ class SystemStatus extends \tao_actions_SinglePageModule
     /**
      * @return SystemStatusService
      */
-    protected function getSystemStatusService()
+    protected function getSystemStatusService() : SystemStatusService
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
     }
 }
