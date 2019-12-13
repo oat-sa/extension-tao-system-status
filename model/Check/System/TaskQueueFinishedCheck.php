@@ -128,14 +128,9 @@ class TaskQueueFinishedCheck extends AbstractCheck
             $timeKeys = \tao_helpers_Date::getTimeKeys(
                 new \DateInterval($interval),
                 new \DateTime('now', new \DateTimeZone('UTC'))
+                , $name === 'P1W' ? 7 : null
             );
-            if ($name === 'P1W') {
-                $timeKeys = \tao_helpers_Date::getTimeKeys(
-                    new \DateInterval($interval),
-                    new \DateTime('now', new \DateTimeZone('UTC'))
-                    , 7
-                );
-            }
+
             foreach ($timeKeys as $timeKey) {
                 $to = clone($timeKey);
                 $from = clone($to);
