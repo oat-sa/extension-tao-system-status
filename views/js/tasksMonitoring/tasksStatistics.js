@@ -41,7 +41,11 @@ define([
                 x: 'time',
                 xFormat: '%Y-%m-%d %H:%M:%S',
                 mimeType: 'json',
-                type: 'line'
+                type: 'line',
+                names: {
+                    amount: __('Tasks processed'),
+                    average: __('Average processing time, s')
+                }
             },
             tooltip: {
                 format: {

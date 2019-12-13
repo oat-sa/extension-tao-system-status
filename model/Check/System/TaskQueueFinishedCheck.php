@@ -136,7 +136,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
                 $from = clone($to);
                 $from->sub($intervalObj);
                 $filter = new TaskLogFilter();
-                $filter->eq(TaskLogBrokerInterface::COLUMN_STATUS, TaskLogInterface::STATUS_COMPLETED);
+                $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_COMPLETED, TaskLogInterface::STATUS_ARCHIVED]);
                 $filter->gte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $from->format('Y-m-d H:i:s'));
                 $filter->lte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $to->format('Y-m-d H:i:s'));
 
