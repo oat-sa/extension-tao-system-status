@@ -6,7 +6,7 @@ $statistics = get_data('task-statistics');
 <div class="taskqueue_log_report js-report">
     <div class="feedback-<?= mb_strtolower($report->getType()) ?> feedback-nesting-1 leaf tao-scope">
         <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div>
-        <?= $report->getMessage() ?>
+        <span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
         <?php if (isset($report->getData()['details'])): ?>
         <span style="float: right;">
             <span class="icon-help r tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info"></span>

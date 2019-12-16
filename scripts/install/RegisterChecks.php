@@ -78,6 +78,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck([]),
             new \oat\taoSystemStatus\model\Check\System\TaskQueueFinishedCheck([]),
             new \oat\taoSystemStatus\model\Check\System\AwsRedisFreeSpaceCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\Act\OdsConfigurationCheck([]),
         ];
     }
 
