@@ -26,6 +26,8 @@ use oat\taoAct\model\webservices\OdsReconciliationService;
 use oat\taoAct\model\webservices\OdsResultService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\taoAct\model\webservices\OdsConnector;
+use oat\taoAct\model\webservices\InvalidTokenException;
+use common_exception_Error;
 
 /**
  * Class OdsConfigurationCheck
@@ -34,12 +36,11 @@ use oat\taoAct\model\webservices\OdsConnector;
  */
 class OdsConfigurationCheck extends AbstractCheck
 {
-
     /**
      * @param array $params
      * @return Report
-     * @throws \common_exception_Error
-     * @throws \oat\taoAct\model\webservices\InvalidTokenException
+     * @throws common_exception_Error
+     * @throws InvalidTokenException
      */
     public function __invoke($params = []): Report
     {
@@ -54,7 +55,7 @@ class OdsConfigurationCheck extends AbstractCheck
         $report->add($this->checkOdsReconciliation());
         $report->add($this->checkLeapOdsResultService());
 
-        if (count($report->getSuccesses()) === 4) {
+        if (count($report->getSuccesses()) === count($report->getChildren())) {
             $report->setType(Report::TYPE_SUCCESS);
         } else if(count($report->getErrors()) > 0)  {
             $report->setType(Report::TYPE_ERROR);
@@ -82,12 +83,12 @@ class OdsConfigurationCheck extends AbstractCheck
 
     /**
      * @return Report
-     * @throws \oat\taoAct\model\webservices\InvalidTokenException
+     * @throws InvalidTokenException
      */
     private function checkOdsConnector(): Report
     {
-        /** @var OdsConnector $service */
-        $service = $this->getServiceLocator()->get(OdsConnector::SERVICE_ID);
+        $service = $this->getOdsConnector();
+
         $options = $service->getOptions();
         if (
             empty($options[OdsConnector::OPTION_CLIENT_ID]) ||
@@ -98,7 +99,7 @@ class OdsConfigurationCheck extends AbstractCheck
         }
 
         //attempt to make an empty 'reconcile' request
-        $url = $this->getServiceLocator()->get(OdsResultService::SERVICE_ID)->getOption(OdsResultService::OPTION_ODS_URL);
+        $url = $this->getOdsResultService()->getOption(OdsResultService::OPTION_ODS_URL);
         $url = rtrim($url, '/') . '/reconcile/';
         $response = $service->request($url, 'POST');
         $code = $response->getStatusCode();
@@ -106,9 +107,8 @@ class OdsConfigurationCheck extends AbstractCheck
 
         if ($code === 400 && $body === 'EVENT PAYLOAD IS REQUIRED') {
             return new Report(Report::TYPE_SUCCESS, __('Ods Connector service correctly configured'));
-        } else {
-            return new Report(Report::TYPE_ERROR, $body);
         }
+        return new Report(Report::TYPE_ERROR, $body);
     }
 
     /**
@@ -116,8 +116,7 @@ class OdsConfigurationCheck extends AbstractCheck
      */
     private function checkOdsResultService(): Report
     {
-        $service = $this->getServiceLocator()->get(OdsResultService::SERVICE_ID);
-        $options = $service->getOptions();
+        $options = $this->getOdsResultService()->getOptions();
         //if url is default
         if ($options[OdsResultService::OPTION_ODS_URL] === 'https://api-dev.act.org/medw/1.0.0.5.5/') {
             return new Report(Report::TYPE_ERROR, __('Ods Result service has default value of `ods_url` option'));
@@ -131,8 +130,7 @@ class OdsConfigurationCheck extends AbstractCheck
      */
     private function checkOdsReconciliation(): Report
     {
-        $service = $this->getServiceLocator()->get(OdsReconciliationService::SERVICE_ID);
-        $options = $service->getOptions();
+        $options = $this->getOdsReconciliationService()->getOptions();
         //if url is default
         if ($options[OdsReconciliationService::OPTION_RECONCILIATION_REQUEST_URL] === 'https://api-dev.act.org/medw/1.0.0.5.5/reconcile/') {
             return new Report(Report::TYPE_ERROR, __('Ods Reconciliation service has default value of `reconciliation_request_url` option'));
@@ -146,8 +144,7 @@ class OdsConfigurationCheck extends AbstractCheck
      */
     private function checkLeapOdsResultService(): Report
     {
-        $service = $this->getServiceLocator()->get(LeapOdsResultService::SERVICE_ID);
-        $options = $service->getOptions();
+        $options = $this->getLeapOdsResultService()->getOptions();
         //if url is default
         if ($options[LeapOdsResultService::OPTION_ODS_URL] === 'https://api5-dev.act.org/eventsapi_v1/') {
             return new Report(Report::TYPE_ERROR, __('LEAP Ods result service has default value of `ods_url` option'));
@@ -186,6 +183,42 @@ class OdsConfigurationCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Check if ODS/LEAP services are correctly configured');
+    }
+
+    /**
+     * @return LeapOdsResultService
+     */
+    private function getLeapOdsResultService() : LeapOdsResultService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(LeapOdsResultService::SERVICE_ID);
+    }
+
+    /**
+     * @return OdsReconciliationService
+     */
+    private function getOdsReconciliationService() : OdsReconciliationService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(OdsReconciliationService::SERVICE_ID);
+    }
+
+    /**
+     * @return OdsResultService
+     */
+    private function getOdsResultService() : OdsResultService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(OdsResultService::SERVICE_ID);
+    }
+
+    /**
+     * @return OdsConnector
+     */
+    private function getOdsConnector() : OdsConnector
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(OdsConnector::SERVICE_ID);
     }
 
 }
