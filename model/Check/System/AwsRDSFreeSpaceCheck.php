@@ -57,9 +57,11 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
         $stackId = $this->getStackId($rdsHost);
 
         $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
+
         $InstanceData = null;
         foreach ($dbInstances['DBInstances'] as $dbInstance) {
             if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
+
                 $InstanceData = $dbInstance;
                 break;
             }
@@ -69,7 +71,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
             throw new SystemCheckException('RDS instance not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($InstanceData['DBInstanceIdentifier']);
+        $freeSpacePercentage = $this->getFreePercentage($InstanceData);
 
         if ($freeSpacePercentage < 30) {
             $report = new Report(Report::TYPE_ERROR, __('RDS storage has less than 30% of free space'));
@@ -154,11 +156,11 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
     }
 
     /**
-     * @param string $clusterId
+     * @param array $instanceData
      * @return float|int
      * @throws SystemCheckException
      */
-    public function getFreePercentage(string $clusterId)
+    public function getFreePercentage(array $instanceData)
     {
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
@@ -177,24 +179,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
                             'Dimensions' => [
                                 [
                                     'Name' => 'DBInstanceIdentifier',
-                                    'Value' => $clusterId
-                                ]
-                            ]
-                        ],
-                        'Period' => $period,
-                        'Stat' => 'Average',
-                    ]
-                ],
-                [
-                    'Id' => 'used',
-                    'MetricStat' => [
-                        'Metric' => [
-                            'Namespace' => 'AWS/RDS',
-                            'MetricName' => 'FreeStorageSpace',
-                            'Dimensions' => [
-                                [
-                                    'Name' => 'DBInstanceIdentifier',
-                                    'Value' => $clusterId
+                                    'Value' => $instanceData['DBInstanceIdentifier']
                                 ]
                             ]
                         ],
@@ -205,20 +190,19 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
             ]
         ]);
 
-        $usedBytes = null;
-        $freeBytes = null;
+        $freeGB = null;
+
         foreach ($result->toArray()['MetricDataResults'] as $metric) {
-            if ($metric['Id'] === 'used') {
-                $usedBytes = $metric['Values'][0];
-            }
             if ($metric['Id'] === 'free') {
-                $freeBytes = $metric['Values'][0];
+                $freeGB = $metric['Values'][0] / 1073741824;
             }
         }
-        if ($usedBytes === null || $freeBytes === null) {
+        $allocatedStorage = $instanceData['AllocatedStorage'];
+
+        if ($freeGB === null) {
             throw new SystemCheckException('Cannot get rds instance metrics');
         }
-        return $freeBytes / (($usedBytes + $freeBytes) / 100);
+        return $freeGB / ($allocatedStorage / 100);
     }
 
     /**
