@@ -53,10 +53,10 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
 
-        $elasticCacheClient = $this->getElastiCacheClient();
+        $elastiCacheClient = $this->getElastiCacheClient();
         $redisHost = $this->getRedisHost();
         $stackId = $this->getStackId($redisHost);
-        $cacheClusters = $elasticCacheClient->describeCacheClusters()->toArray();
+        $cacheClusters = $elastiCacheClient->describeCacheClusters()->toArray();
         $clusterData = null;
         foreach ($cacheClusters['CacheClusters'] as $cacheCluster) {
             if (strpos($cacheCluster['CacheClusterId'], $stackId) === 0) {

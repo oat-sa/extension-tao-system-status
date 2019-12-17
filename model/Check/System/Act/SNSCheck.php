@@ -80,14 +80,6 @@ class SNSCheck extends AbstractCheck
     }
 
     /**
-     * 'odsFailsTopicArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-    'ltiStatsTopicArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-    'loginUtilizationArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-    'monitorODSOATArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-    'monitorODSACTArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-    'instantActionReportArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
-     */
-    /**
      * @return Report
      */
     private function checkSNS() : Report
