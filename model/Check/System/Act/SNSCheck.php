@@ -43,6 +43,7 @@ class SNSCheck extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
         $report = $this->checkSNS();
+
         return $this->prepareReport($report);
     }
 
@@ -79,13 +80,21 @@ class SNSCheck extends AbstractCheck
     }
 
     /**
+     * 'odsFailsTopicArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+    'ltiStatsTopicArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+    'loginUtilizationArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+    'monitorODSOATArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+    'monitorODSACTArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+    'instantActionReportArn' => 'VALUE_MUST_BE_CHANGED_AFTER_INSTALLATION',
+     */
+    /**
      * @return Report
      */
     private function checkSNS() : Report
     {
         $snsOptions = $this->getSnsService()->getOptions();
-        if (in_array(AmazonSimpleNotificationService::ARN_NOT_CONFIGURED_VALUE, $snsOptions, true)) {
-            return new Report(Report::TYPE_WARNING, __('SNS messaging service not correctly configured.'));
+        if ($search = array_keys($snsOptions, AmazonSimpleNotificationService::ARN_NOT_CONFIGURED_VALUE)) {
+            return new Report(Report::TYPE_WARNING, __('SNS messaging service not correctly configured. Next options have default values: '.PHP_EOL. implode(PHP_EOL, $search)));
         }
 
         return new Report(Report::TYPE_SUCCESS, __('SNS messaging service correctly configured.'));
