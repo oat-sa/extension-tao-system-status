@@ -18,7 +18,7 @@
  *
  */
 
-namespace oat\taoSystemStatus\model\Check\System;
+namespace oat\taoSystemStatus\model\Check\System\Act;
 
 use common_report_Report as Report;
 use common_ext_ExtensionException;

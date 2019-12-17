@@ -6,7 +6,7 @@ $report = get_data('task-report');
 <div class="taskqueue_log_report js-report">
     <div class="feedback-<?= mb_strtolower($report->getType()) ?> feedback-nesting-1 leaf tao-scope">
         <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div>
-        <?= $report->getMessage() ?>
+        <span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
         <?php if (isset($report->getData()['details'])): ?>
         <span style="float: right;">
             <span class="icon-help r tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info"></span>
@@ -34,7 +34,7 @@ $report = get_data('task-report');
             <tr>
                 <td>
                     <div class="feedback-<?= mb_strtolower($report->getType()) ?> small">
-                        <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div><?= $report->getMessage() ?>
+                        <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div><span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
                     </div>
                 </td>
                 <td>

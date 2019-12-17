@@ -19,7 +19,7 @@ $childReports = get_data('reports_by_status');
             </div>
             <div class="col-3">
                 <?php if ($link): ?>
-                <a href="<?= $link ?>" target="_blank" class="form-submitter btn-info large"><span class="icon-save"></span> Visit Support Portal</a>
+                <a href="<?= $link ?>" target="_blank" class="btn-info large"><span class="icon-save"></span> Visit Support Portal</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -27,7 +27,7 @@ $childReports = get_data('reports_by_status');
             <div class="col-9">
                 <div class="feedback-<?= mb_strtolower($report->getType()) ?> feedback-nesting-0 leaf tao-scope">
                     <span class="icon-<?= mb_strtolower($report->getType()) ?> leaf-icon"></span>
-                    <?= $report->getMessage() ?>
+                    <span class="formatted-feedback-message"> <?= $report->getMessage() ?></span>
                 </div>
                 <?php foreach($childReports as $childReportCategory => $categoryReports): ?>
                     <h2><?= $childReportCategory ?></h2>
