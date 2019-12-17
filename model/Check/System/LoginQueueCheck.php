@@ -41,7 +41,7 @@ class LoginQueueCheck extends AbstractCheck
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $report = $this->checkHeartBeat();
+        $report = $this->checkLoginQueue();
         return $this->prepareReport($report);
     }
 
@@ -80,7 +80,7 @@ class LoginQueueCheck extends AbstractCheck
     /**
      * @return Report
      */
-    private function checkHeartBeat() : Report
+    private function checkLoginQueue() : Report
     {
         $loginQueueActions = $this->getInstantActionQueue()->getOption(InstantActionQueue::OPTION_ACTIONS);
 
