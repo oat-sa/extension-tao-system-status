@@ -20,22 +20,22 @@
 
 namespace oat\taoSystemStatus\model\Check\System;
 
+use Aws\Rds\RdsClient;
 use common_report_Report as Report;
 use oat\generis\persistence\PersistenceManager;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\log\loggerawaretrait;
 use DateInterval;
 use DateTime;
-use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
 
 /**
  * Class AwsRedisFreeSpaceCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
+ * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class AwsRedisFreeSpaceCheck extends AbstractCheck
+class AwsRDSFreeSpaceCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
 
@@ -53,30 +53,30 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
 
-        $elasticCacheClient = $this->getElastiCacheClient();
-        $redisHost = $this->getRedisHost();
-        $stackId = $this->getStackId($redisHost);
-        $cacheClusters = $elasticCacheClient->describeCacheClusters()->toArray();
-        $clusterData = null;
-        foreach ($cacheClusters['CacheClusters'] as $cacheCluster) {
-            if (strpos($cacheCluster['CacheClusterId'], $stackId) === 0) {
-                $clusterData = $cacheCluster;
+        $rdsHost = $this->getRDSHost();
+        $stackId = $this->getStackId($rdsHost);
+
+        $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
+        $InstanceData = null;
+        foreach ($dbInstances['DBInstances'] as $dbInstance) {
+            if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
+                $InstanceData = $dbInstance;
                 break;
             }
         }
 
-        if ($clusterData === null) {
-            throw new SystemCheckException('ElastiCache cluster not found');
+        if ($InstanceData === null) {
+            throw new SystemCheckException('RDS instance not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($clusterData['CacheClusterId']);
+        $freeSpacePercentage = $this->getFreePercentage($InstanceData['DBInstanceIdentifier']);
 
         if ($freeSpacePercentage < 30) {
-            $report = new Report(Report::TYPE_ERROR, __('Redis storage has less than 30% of free space'));
+            $report = new Report(Report::TYPE_ERROR, __('RDS storage has less than 30% of free space'));
         } elseif ($freeSpacePercentage < 50) {
-            $report = new Report(Report::TYPE_WARNING, __('Redis storage has less than 50% of free space'));
+            $report = new Report(Report::TYPE_WARNING, __('RDS storage has less than 50% of free space'));
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, __('Redis storage has %s%% of free space', round($freeSpacePercentage)));
+            $report = new Report(Report::TYPE_SUCCESS, __('RDS storage has %s%% of free space', round($freeSpacePercentage)));
         }
 
         return $this->prepareReport($report);
@@ -87,7 +87,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return $this->isAws() && $this->getRedisHost() !== null;
+        return $this->isAws();
     }
 
     /**
@@ -111,27 +111,27 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check free space on ElastiCache storage');
+        return __('Check free space on RDS instance');
     }
 
     /**
-     * @return ElastiCacheClient
+     * @return RdsClient
      */
-    private function getElastiCacheClient(): ElastiCacheClient
+    private function getRdsClient(): RdsClient
     {
-        return new ElastiCacheClient($this->getAwsClient()->getOptions());
+        return new RdsClient($this->getAwsClient()->getOptions());
     }
 
     /**
-     * @param string $redisHost
+     * @param string $rdsHost
      * @return string
      * @throws SystemCheckException
      */
-    private function getStackId(string $redisHost)
+    private function getStackId(string $rdsHost) : string
     {
-        $hostParts = explode('.', $redisHost);
+        $hostParts = explode('.', $rdsHost);
         if (!isset($hostParts[2])) {
-            throw new SystemCheckException('Cannot get stack id by redis host');
+            throw new SystemCheckException('Cannot get stack id by rds host');
         }
         return $hostParts[2];
     }
@@ -139,15 +139,15 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     /**
      * @return null|string
      */
-    private function getRedisHost()
+    private function getRDSHost() : string
     {
-        $persistences = $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID)
+        $persistences = $this->getPersistenceManager()
             ->getOption(PersistenceManager::OPTION_PERSISTENCES);
 
         $host = null;
         foreach ($persistences as $persistence) {
-            if (isset($persistence['driver']) && $persistence['driver'] === 'phpredis') {
-                $host = $persistence['host'];
+            if (isset($persistence['driver']) && $persistence['driver'] === 'dbal') {
+                $host = $persistence['connection']['host'];
             }
         }
         return $host;
@@ -172,11 +172,11 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
                     'Id' => 'free',
                     'MetricStat' => [
                         'Metric' => [
-                            'Namespace' => 'AWS/ElastiCache',
-                            'MetricName' => 'FreeableMemory',
+                            'Namespace' => 'AWS/RDS',
+                            'MetricName' => 'FreeStorageSpace',
                             'Dimensions' => [
                                 [
-                                    'Name' => 'CacheClusterId',
+                                    'Name' => 'DBInstanceIdentifier',
                                     'Value' => $clusterId
                                 ]
                             ]
@@ -189,11 +189,11 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
                     'Id' => 'used',
                     'MetricStat' => [
                         'Metric' => [
-                            'Namespace' => 'AWS/ElastiCache',
-                            'MetricName' => 'BytesUsedForCache',
+                            'Namespace' => 'AWS/RDS',
+                            'MetricName' => 'FreeStorageSpace',
                             'Dimensions' => [
                                 [
-                                    'Name' => 'CacheClusterId',
+                                    'Name' => 'DBInstanceIdentifier',
                                     'Value' => $clusterId
                                 ]
                             ]
@@ -216,7 +216,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             }
         }
         if ($usedBytes === null || $freeBytes === null) {
-            throw new SystemCheckException('Cannot get redis cluster metrics');
+            throw new SystemCheckException('Cannot get rds instance metrics');
         }
         return $freeBytes / (($usedBytes + $freeBytes) / 100);
     }
@@ -226,6 +226,16 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     private function getAwsClient(): AwsClient
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get('generis/awsClient');
+    }
+
+    /**
+     * @return PersistenceManager
+     */
+    private function getPersistenceManager() : PersistenceManager
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID);
     }
 }
