@@ -87,7 +87,7 @@ class HeartBeatCheck extends AbstractCheck
         $config = $this->getTestRunnerService()->getConfig('testRunner');
         $heartbeatConfig = $config['plugins']['heartbeat'] ?? null;
         if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
-            return new Report(Report::TYPE_WARNING, __('Heart beat not correctly configured. Frequency <= 20 seconds.'));
+            return new Report(Report::TYPE_WARNING, __('Heartbeats configured to %d seconds frequency. This may have negative impact on performance', $heartbeatConfig['frequency']));
         }
         return new Report(Report::TYPE_SUCCESS, __('Heart beat correctly configured.'));
     }
