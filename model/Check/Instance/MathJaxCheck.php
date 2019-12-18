@@ -26,7 +26,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
  * Class MathJaxCheck
- * @package oat\taoSystemStatus\model\Check\System
+ * @package oat\taoSystemStatus\model\Check\Instance
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
 class MathJaxCheck extends AbstractCheck
