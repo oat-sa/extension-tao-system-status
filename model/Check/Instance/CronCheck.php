@@ -191,7 +191,7 @@ class CronCheck extends AbstractCheck
         $result = [];
 
         foreach ($cronDirIterator as $fileInfo) {
-            if ($fileInfo->isDot()) {
+            if ($fileInfo->isDot() || $fileInfo->isDir()) {
                 continue;
             }
             $cronFile = $fileInfo->openFile('r');
