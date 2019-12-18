@@ -97,22 +97,22 @@ class AutoSystemTerminationCheck extends AbstractCheck
             $params = $job->getParams();
             if (in_array(TerminatePausedAssessment::class, $params, true)) {
                 $cancellationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_CANCELLATION_DELAY);
-                $reportText .= __('TerminatePausedAssessment with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+                $reportText .= __('TerminatePausedAssessment with execution TTL %s.'. PHP_EOL, $this->getHumanInterval($cancellationDelay));
             }
 
             if (in_array(TerminateNotStartedAssessment::class, $params, true)) {
                 $terminationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_TERMINATION_DELAY_AFTER_PAUSE);
-                $reportText .= __('TerminateNotStartedAssessment with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($terminationDelay)));
+                $reportText .= __('TerminateNotStartedAssessment with execution TTL %s.'. PHP_EOL, $this->getHumanInterval($terminationDelay));
             }
 
             if (in_array(TerminateDeliveryExecutionsTask::class, $params, true)) {
                 $cancellationDelay = $this->getTerminateDeliveryExecutionsService()->getOption(TerminateDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
-                $reportText .= __('TerminateDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+                $reportText .= __('TerminateDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, $this->getHumanInterval($cancellationDelay));
             }
 
             if (in_array(FinishDeliveryExecutionsTask::class, $params, true)) {
                 $cancellationDelay = $this->getFinishDeliveryExecutionsService()->getOption(FinishDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
-                $reportText .= __('FinishDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+                $reportText .= __('FinishDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, $this->getHumanInterval($cancellationDelay));
             }
         }
 
@@ -166,5 +166,15 @@ class AutoSystemTerminationCheck extends AbstractCheck
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(FinishDeliveryExecutionsService::SERVICE_ID);
+    }
+
+    /**
+     * @param string $interval
+     * @return string
+     * @throws Exception
+     */
+    private function getHumanInterval($interval) : string
+    {
+        return \tao_helpers_Date::displayInterval(new \DateInterval($interval));
     }
 }
