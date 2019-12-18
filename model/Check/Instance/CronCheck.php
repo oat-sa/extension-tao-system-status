@@ -35,6 +35,8 @@ class CronCheck extends AbstractCheck
     const DEFAULT_CRON_PATH = '/etc/cron.d';
 
     private $cronPath;
+
+    /** @var string regular expression to check if string contains CRON rule */
     private $cronRegEx = '/(\*|(\d|1\d|2\d|3\d|4\d|5\d)|\*\/(\d|1\d|2\d|3\d|4\d|5\d)) (\*|(\d|1\d|2[0-3])|\*\/(\d|1\d|2[0-3])) (\*|([1-9]|1\d|2\d|3[0-1])|\*\/([1-9]|1\d|2\d|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))/';
 
     /**
