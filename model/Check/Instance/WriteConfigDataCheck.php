@@ -25,7 +25,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
  * Class WriteConfigDataCheck
- * @package oat\taoSystemStatus\model\Check\System
+ * @package oat\taoSystemStatus\model\Check\Instance
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
 class WriteConfigDataCheck extends AbstractCheck

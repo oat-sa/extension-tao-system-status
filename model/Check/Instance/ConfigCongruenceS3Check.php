@@ -27,7 +27,7 @@ use oat\oatbox\log\loggerawaretrait;
 
 /**
  * Class ConfigCongruenceS3Check
- * @package oat\taoSystemStatus\model\Check\System
+ * @package oat\taoSystemStatus\model\Check\Instance
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
 class ConfigCongruenceS3Check extends AbstractCheck

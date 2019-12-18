@@ -27,7 +27,7 @@ use common_ext_ExtensionException;
 
 /**
  * Class WkhtmltopdfCheck 
- * @package oat\taoSystemStatus\model\Check\System
+ * @package oat\taoSystemStatus\model\Check\Instance
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
 class WkhtmltopdfCheck extends AbstractCheck
