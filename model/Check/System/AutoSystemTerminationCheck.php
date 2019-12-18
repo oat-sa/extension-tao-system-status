@@ -22,7 +22,14 @@ namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
 use Exception;
+use oat\taoProctoring\model\FinishDeliveryExecutionsService;
 use oat\taoProctoring\model\implementation\DeliveryExecutionStateService;
+use oat\taoProctoring\model\Tasks\FinishDeliveryExecutionsTask;
+use oat\taoProctoring\model\Tasks\TerminateDeliveryExecutionsTask;
+use oat\taoProctoring\model\TerminateDeliveryExecutionsService;
+use oat\taoProctoring\scripts\TerminateNotStartedAssessment;
+use oat\taoProctoring\scripts\TerminatePausedAssessment;
+use oat\taoScheduler\model\scheduler\SchedulerService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
@@ -51,7 +58,7 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-       return $this->ifTaoProctoringIsInstalled();
+       return $this->ifTaoSchedulerIsInstalled();
     }
 
     /**
@@ -84,22 +91,36 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     private function checkAutoTerminationTime() : Report
     {
-        $cancellationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_CANCELLATION_DELAY);
-        $terminationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_TERMINATION_DELAY_AFTER_PAUSE);
+        $jobs = $this->getSchedulerService()->getJobs();
+        $reportText = '';
+        foreach ($jobs as $job) {
+            $params = $job->getParams();
+            if (in_array(TerminatePausedAssessment::class, $params, true)) {
+                $cancellationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_CANCELLATION_DELAY);
+                $reportText .= __('TerminatePausedAssessment with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+            }
 
-        if (!$cancellationDelay) {
-            return new Report(Report::TYPE_WARNING, __('Auto cancellation not correctly configured.'));
+            if (in_array(TerminateNotStartedAssessment::class, $params, true)) {
+                $terminationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_TERMINATION_DELAY_AFTER_PAUSE);
+                $reportText .= __('TerminateNotStartedAssessment with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($terminationDelay)));
+            }
+
+            if (in_array(TerminateDeliveryExecutionsTask::class, $params, true)) {
+                $cancellationDelay = $this->getTerminateDeliveryExecutionsService()->getOption(TerminateDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
+                $reportText .= __('TerminateDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+            }
+
+            if (in_array(FinishDeliveryExecutionsTask::class, $params, true)) {
+                $cancellationDelay = $this->getFinishDeliveryExecutionsService()->getOption(FinishDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
+                $reportText .= __('FinishDeliveryExecutionsTask with execution TTL %s.'. PHP_EOL, \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)));
+            }
         }
-        if (!$terminationDelay) {
-            return new Report(Report::TYPE_WARNING, __('Auto termination after pause not correctly configured.'));
+
+        if (!$reportText) {
+            return new Report(Report::TYPE_WARNING, __('No termination tasks.'));
         }
-        return new Report(Report::TYPE_SUCCESS,
-            __(
-                'Auto cancellation will be every %s. Auto termination after pause will be every %s',
-                \tao_helpers_Date::displayInterval(new \DateInterval($cancellationDelay)),
-                \tao_helpers_Date::displayInterval(new \DateInterval($terminationDelay))
-            )
-        );
+
+        return new Report(Report::TYPE_SUCCESS, $reportText);
     }
 
     /**
@@ -114,9 +135,36 @@ class AutoSystemTerminationCheck extends AbstractCheck
     /**
      * @return bool
      */
-    private function ifTaoProctoringIsInstalled() : bool
+    private function ifTaoSchedulerIsInstalled() : bool
     {
         $extensionManagerService = $this->getExtensionsManagerService();
-        return $extensionManagerService->isInstalled('taoProctoring');
+        return $extensionManagerService->isInstalled('taoScheduler');
+    }
+
+    /**
+     * @return SchedulerService
+     */
+    private function getSchedulerService() : SchedulerService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(SchedulerService::SERVICE_ID);
+    }
+
+    /**
+     * @return TerminateDeliveryExecutionsService
+     */
+    private function getTerminateDeliveryExecutionsService() : TerminateDeliveryExecutionsService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(TerminateDeliveryExecutionsService::SERVICE_ID);
+    }
+
+    /**
+     * @return FinishDeliveryExecutionsService
+     */
+    private function getFinishDeliveryExecutionsService() : FinishDeliveryExecutionsService
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getServiceLocator()->get(FinishDeliveryExecutionsService::SERVICE_ID);
     }
 }
