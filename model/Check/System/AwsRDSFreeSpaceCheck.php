@@ -194,7 +194,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
 
         foreach ($result->toArray()['MetricDataResults'] as $metric) {
             if ($metric['Id'] === 'free') {
-                $freeGB = $metric['Values'][0] / 1073741824;
+                $freeGB = $metric['Values'][0] / (1024*1024*1024);
             }
         }
         $allocatedStorage = $instanceData['AllocatedStorage'];
