@@ -89,7 +89,7 @@ class HeartBeatCheck extends AbstractCheck
         if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
             return new Report(Report::TYPE_WARNING, __('Heartbeats configured to %d seconds frequency. This may have negative impact on performance', $heartbeatConfig['frequency']));
         }
-        return new Report(Report::TYPE_SUCCESS, __('Heart beat correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('Heart beat correctly configured. Frequency: %d', $heartbeatConfig['frequency']));
     }
 
     /**
