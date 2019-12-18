@@ -130,7 +130,7 @@ class CronCheck extends AbstractCheck
         if ($cronJobExists) {
             return new Report(Report::TYPE_SUCCESS, __('CRON job for Scheduler Job Runner correctly configured'));
         }
-        return new Report(Report::TYPE_SUCCESS, __('CRON job for Scheduler Job Runner is missed'));
+        return new Report(Report::TYPE_ERROR, __('CRON job for Scheduler Job Runner is missed'));
     }
 
 
