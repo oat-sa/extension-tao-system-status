@@ -89,7 +89,7 @@ class TaskQueueMonitoring extends AbstractCheck
         /** @var TaskLogInterface $taskQueueLog */
         $taskQueueLog = $this->getServiceLocator()->get(TaskLogInterface::SERVICE_ID);
         $filter = new TaskLogFilter();
-        $filter->eq(TaskLogBrokerInterface::COLUMN_STATUS, TaskLogInterface::STATUS_ENQUEUED);
+        $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_ENQUEUED, TaskLogInterface::STATUS_RUNNING]);
         return $taskQueueLog->search($filter)->count();
     }
 }
