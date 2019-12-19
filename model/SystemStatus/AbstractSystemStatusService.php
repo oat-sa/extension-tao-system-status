@@ -89,16 +89,16 @@ abstract class AbstractSystemStatusService extends ConfigurableService implement
     protected function prepareReport(Report $report): Report
     {
         $report->setType(Report::TYPE_SUCCESS);
-        $report->setMessage(__('All Systems Operational'));
+        $report->setMessage(__('All Systems Operational:'));
 
         if ($report->contains(Report::TYPE_WARNING)) {
             $report->setType(Report::TYPE_WARNING);
-            $report->setMessage(__('Partially Degraded Service'));
+            $report->setMessage(__('Partially Degraded Service:'));
         }
 
         if ($report->contains(Report::TYPE_ERROR)) {
             $report->setType(Report::TYPE_ERROR);
-            $report->setMessage(__('We\'re noticing an increased rate of errors'));
+            $report->setMessage(__('System errors found:'));
         }
 
         return $report;

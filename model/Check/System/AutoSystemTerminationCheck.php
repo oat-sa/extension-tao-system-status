@@ -74,7 +74,7 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -82,7 +82,7 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check auto cancellation/termination configuration.');
+        return __('Auto cancellation/termination configuration');
     }
 
     /**
@@ -97,30 +97,30 @@ class AutoSystemTerminationCheck extends AbstractCheck
             $params = $job->getParams();
             if (in_array(TerminatePausedAssessment::class, $params, true)) {
                 $cancellationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_CANCELLATION_DELAY);
-                $reportText .= __('TerminatePausedAssessment job is scheduled with delivery execution TTL = %s.', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
+                $reportText .= __('TerminatePausedAssessment job is scheduled with delivery execution TTL = %s', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
             }
 
             if (in_array(TerminateNotStartedAssessment::class, $params, true)) {
                 $terminationDelay = $this->getDeliveryExecutionStateService()->getOption(DeliveryExecutionStateService::OPTION_TERMINATION_DELAY_AFTER_PAUSE);
-                $reportText .= __('TerminateNotStartedAssessment job is scheduled with delivery execution TTL = %s.', $this->getHumanInterval($terminationDelay)). PHP_EOL;
+                $reportText .= __('TerminateNotStartedAssessment job is scheduled with delivery execution TTL = %s', $this->getHumanInterval($terminationDelay)). PHP_EOL;
             }
 
             if (in_array(TerminateDeliveryExecutionsTask::class, $params, true)) {
                 $cancellationDelay = $this->getTerminateDeliveryExecutionsService()->getOption(TerminateDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
-                $reportText .= __('TerminateDeliveryExecutionsTask job is scheduled with delivery execution TTL = %s.', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
+                $reportText .= __('TerminateDeliveryExecutionsTask job is scheduled with delivery execution TTL = %s', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
             }
 
             if (in_array(FinishDeliveryExecutionsTask::class, $params, true)) {
                 $cancellationDelay = $this->getFinishDeliveryExecutionsService()->getOption(FinishDeliveryExecutionsService::OPTION_TTL_AS_ACTIVE);
-                $reportText .= __('FinishDeliveryExecutionsTask job is scheduled with delivery execution TTL = %s.', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
+                $reportText .= __('FinishDeliveryExecutionsTask job is scheduled with delivery execution TTL = %s', $this->getHumanInterval($cancellationDelay)). PHP_EOL;
             }
         }
 
         if (!$reportText) {
-            return new Report(Report::TYPE_WARNING, __('No termination tasks.'));
+            return new Report(Report::TYPE_INFO, __('No termination tasks.'));
         }
 
-        return new Report(Report::TYPE_SUCCESS, $reportText);
+        return new Report(Report::TYPE_INFO, $reportText);
     }
 
     /**

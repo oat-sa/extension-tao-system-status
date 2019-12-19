@@ -61,7 +61,7 @@ class TaskQueueFailsCheck extends AbstractCheck
             return $this->prepareReport(new Report(Report::TYPE_SUCCESS, __('No failed tasks in the task queue log')));
         }
 
-        $report = new Report(Report::TYPE_WARNING, __('Last %n failed tasks:', $limit));
+        $report = new Report(Report::TYPE_WARNING, __('Last %d failed tasks:', $tasks->count()));
 
         foreach ($tasks as $task) {
             $report->add($task->getReport());
@@ -91,7 +91,7 @@ class TaskQueueFailsCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Task Queue Status');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -99,7 +99,7 @@ class TaskQueueFailsCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show last failed tasks in the task queue');
+        return __('Last failed tasks in the task queue');
     }
 
     /**

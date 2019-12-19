@@ -72,11 +72,11 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
         $freeSpacePercentage = $this->getFreePercentage($clusterData['CacheClusterId']);
 
         if ($freeSpacePercentage < 30) {
-            $report = new Report(Report::TYPE_ERROR, __('Redis storage has less than 30% of free space'));
+            $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
         } elseif ($freeSpacePercentage < 50) {
-            $report = new Report(Report::TYPE_WARNING, __('Redis storage has less than 50% of free space'));
+            $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage) . '%');
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, __('Redis storage has %s%% of free space', round($freeSpacePercentage)));
+            $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage) . '%');
         }
 
         return $this->prepareReport($report);
@@ -103,7 +103,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Environment health');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -111,7 +111,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check free space on ElastiCache storage');
+        return __('Free space on ElastiCache storage');
     }
 
     /**

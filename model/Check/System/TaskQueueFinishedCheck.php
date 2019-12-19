@@ -46,7 +46,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
     /**
      * @param array $params
      * @return Report
-     * @throws common_exception_Error
+     * @throws Exception
      */
     public function __invoke($params = []): Report
     {
@@ -56,9 +56,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
         $statistics = $this->getTasksStatistics();
 
         $report = new Report(Report::TYPE_SUCCESS, __('Task Queue statistics:'));
-        $childReport = new Report(Report::TYPE_SUCCESS, __('Completed and archived tasks:'));
-        $childReport->setData($statistics);
-        $report->add($childReport);
+        $report->setData($statistics);
 
         return $this->prepareReport($report);
     }
@@ -84,7 +82,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Task Queue Status');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -92,7 +90,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Statistics of processed tasks:');
+        return __('Statistics of processed tasks');
     }
 
     /**
@@ -102,15 +100,11 @@ class TaskQueueFinishedCheck extends AbstractCheck
      */
     public function renderReport(Report $report): string
     {
-        $result = parent::renderReport($report);
         /** @var Report $taskReport */
-        foreach ($report->getChildren() as $taskReport) {
-            $renderer = new \Renderer(Template::getTemplate('Reports/taskStatisticsReport.tpl', 'taoSystemStatus'));
-            $renderer->setData('task-report', $taskReport);
-            $renderer->setData('task-statistics', json_encode($taskReport->getData()));
-            $result .= $renderer->render();
-        }
-        return $result;
+        $renderer = new \Renderer(Template::getTemplate('Reports/taskStatisticsReport.tpl', 'taoSystemStatus'));
+        $renderer->setData('task-report', $report);
+        $renderer->setData('task-statistics', json_encode($report->getData()));
+        return $renderer->render();
     }
 
     /**

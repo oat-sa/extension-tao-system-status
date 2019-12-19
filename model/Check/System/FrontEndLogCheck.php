@@ -46,9 +46,9 @@ class FrontEndLogCheck extends AbstractCheck
             in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);
 
         if ($enabled) {
-            $report = new Report(Report::TYPE_SUCCESS, __('Front end log enabled'));
+            $report = new Report(Report::TYPE_SUCCESS, __('Enabled'));
         } else {
-            $report = new Report(Report::TYPE_ERROR, __('Front end log disabled'));
+            $report = new Report(Report::TYPE_ERROR, __('Disabled'));
         }
 
         return $this->prepareReport($report);
@@ -75,7 +75,7 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -83,6 +83,6 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if frontend log correctly configured');
+        return __('Frontend log service status');
     }
 }

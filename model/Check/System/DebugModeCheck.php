@@ -64,7 +64,7 @@ class DebugModeCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -72,7 +72,7 @@ class DebugModeCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check Debug Mode');
+        return __('Debug Mode status');
     }
 
     /**
@@ -81,6 +81,6 @@ class DebugModeCheck extends AbstractCheck
     private function checkDebugMode() : Report
     {
         $type = DEBUG_MODE ? Report::TYPE_WARNING : Report::TYPE_SUCCESS;
-        return new Report($type, __('Debug Mode is '. (DEBUG_MODE ? 'On' : 'Off')));
+        return new Report($type, DEBUG_MODE ? __('On') : __('Off'));
     }
 }

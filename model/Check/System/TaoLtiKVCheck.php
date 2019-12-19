@@ -81,7 +81,7 @@ class TaoLtiKVCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -89,7 +89,7 @@ class TaoLtiKVCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if taoLTI services correctly configured to KV implementations');
+        return __('LTI Link and Lti User Service configuration');
     }
 
     /**

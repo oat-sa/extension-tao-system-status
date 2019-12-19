@@ -68,7 +68,7 @@ class SNSCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -76,7 +76,7 @@ class SNSCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check configuration of SNS messaging service.');
+        return __('SNS messaging service configuration');
     }
 
     /**
@@ -86,10 +86,10 @@ class SNSCheck extends AbstractCheck
     {
         $snsOptions = $this->getSnsService()->getOptions();
         if ($search = array_keys($snsOptions, AmazonSimpleNotificationService::ARN_NOT_CONFIGURED_VALUE)) {
-            return new Report(Report::TYPE_WARNING, __('SNS messaging service not correctly configured. Next options have default values: '.PHP_EOL. implode(PHP_EOL, $search)));
+            return new Report(Report::TYPE_ERROR, __('SNS messaging service is not correctly configured. The following options have default values: ' . implode(', ', $search)));
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('SNS messaging service correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('SNS messaging service is configured correctly'));
     }
 
     /**

@@ -96,7 +96,7 @@ class ConfigCongruenceS3Check extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -104,7 +104,7 @@ class ConfigCongruenceS3Check extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Verifying Configuration Files Compliance.');
+        return __('Configuration Files Compliance');
     }
 
     /**

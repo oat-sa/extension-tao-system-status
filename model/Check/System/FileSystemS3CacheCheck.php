@@ -67,7 +67,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Tao Configuration');
     }
 
     /**
@@ -75,7 +75,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check that filesystem adapters configured to S3 have cache enabled');
+        return __('Status of S3 filesystem adapters');
     }
 
     /**
@@ -88,7 +88,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
             if ($this->isAdapterForCheck($name)) {
                 $options = array_pop($adapter['options']);
                 if (!isset($options['cache'])) {
-                    return new Report(Report::TYPE_WARNING, __('File System adapter %s should be cacheable.', $name));
+                    return new Report(Report::TYPE_WARNING, __('Cache is disabled for `%s` File System adapter', $name));
                 }
             }
         }

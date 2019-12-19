@@ -66,7 +66,7 @@ class LoginQueueCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -74,7 +74,7 @@ class LoginQueueCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check login queue configuration.');
+        return __('Login Queue service configuration');
     }
 
     /**
@@ -91,9 +91,9 @@ class LoginQueueCheck extends AbstractCheck
         $restrictionsOptions = '';
         foreach ($restrictions as $restriction => $property) {
             $restrictionName = explode('\\', $restriction);
-            $restrictionsOptions .= end($restrictionName) .': '.$property . PHP_EOL;
+            $restrictionsOptions .= end($restrictionName) .'='.$property . PHP_EOL;
         }
-        return new Report(Report::TYPE_INFO, __('Current implementation of Login Queue is: GetActiveDeliveryExecution, with options:' . PHP_EOL . $restrictionsOptions));
+        return new Report(Report::TYPE_INFO, __('Implementation: GetActiveDeliveryExecution') . PHP_EOL . __('Options:') . ' '. $restrictionsOptions);
 
     }
 

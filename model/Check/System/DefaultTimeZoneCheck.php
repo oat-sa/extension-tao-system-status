@@ -65,7 +65,7 @@ class DefaultTimeZoneCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -73,7 +73,7 @@ class DefaultTimeZoneCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show Time Zone');
+        return __('Time Zone');
     }
 
     /**
@@ -81,6 +81,6 @@ class DefaultTimeZoneCheck extends AbstractCheck
      */
     private function checkDefaultTimeZone() : Report
     {
-        return new Report(Report::TYPE_SUCCESS, __('Time Zone is %s.', TIME_ZONE));
+        return new Report(Report::TYPE_SUCCESS, TIME_ZONE);
     }
 }

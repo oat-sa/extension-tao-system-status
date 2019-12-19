@@ -67,7 +67,7 @@ class HeartBeatCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -75,7 +75,7 @@ class HeartBeatCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check heart beat timing.');
+        return __('Heartbeat timing');
     }
 
     /**
@@ -87,9 +87,9 @@ class HeartBeatCheck extends AbstractCheck
         $config = $this->getTestRunnerService()->getConfig('testRunner');
         $heartbeatConfig = $config['plugins']['heartbeat'] ?? null;
         if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
-            return new Report(Report::TYPE_WARNING, __('Heartbeats configured to %d seconds frequency. This may have negative impact on performance', $heartbeatConfig['frequency']));
+            return new Report(Report::TYPE_WARNING, __('Heartbeat frequency: %d seconds. This may have negative impact on performance', $heartbeatConfig['frequency']));
         }
-        return new Report(Report::TYPE_SUCCESS, __('Heart beat correctly configured. Frequency: %d', $heartbeatConfig['frequency']));
+        return new Report(Report::TYPE_SUCCESS, __('Frequency: %d', $heartbeatConfig['frequency']));
     }
 
     /**

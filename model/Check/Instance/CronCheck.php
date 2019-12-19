@@ -104,7 +104,7 @@ class CronCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -112,7 +112,7 @@ class CronCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check CRON jobs configuration');
+        return __('CRON jobs configuration');
     }
 
     /**
