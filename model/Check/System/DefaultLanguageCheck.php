@@ -81,6 +81,6 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     private function checkDefaultLanguage() : Report
     {
-        return new Report(Report::TYPE_SUCCESS, __('Global language: %s. Anonymous user language: %s', DEFAULT_LANG, DEFAULT_ANONYMOUS_INTERFACE_LANG));
+        return new Report(Report::TYPE_SUCCESS, __('Global language: %s', DEFAULT_LANG) . PHP_EOL . __('Anonymous user language: %s', DEFAULT_ANONYMOUS_INTERFACE_LANG));
     }
 }

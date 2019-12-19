@@ -86,10 +86,10 @@ class LockServiceCheck extends AbstractCheck
         $storage = $lockService->getOption(LockService::OPTION_PERSISTENCE_CLASS);
 
         if ($storage === NoLockStorage::class) {
-            return new Report(Report::TYPE_WARNING, __('Lock service is disabled'));
+            return new Report(Report::TYPE_WARNING, __('Disabled'));
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('Lock service is enabled'));
+        return new Report(Report::TYPE_SUCCESS, __('Enabled'));
     }
 
     /**

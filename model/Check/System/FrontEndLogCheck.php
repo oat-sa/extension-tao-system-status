@@ -46,9 +46,9 @@ class FrontEndLogCheck extends AbstractCheck
             in_array($config['core/logger']['loggers']['core/logger/http']['level'], ['error', 'warn']);
 
         if ($enabled) {
-            $report = new Report(Report::TYPE_SUCCESS, __('Front end log enabled'));
+            $report = new Report(Report::TYPE_SUCCESS, __('Enabled'));
         } else {
-            $report = new Report(Report::TYPE_ERROR, __('Front end log disabled'));
+            $report = new Report(Report::TYPE_ERROR, __('Disabled'));
         }
 
         return $this->prepareReport($report);
