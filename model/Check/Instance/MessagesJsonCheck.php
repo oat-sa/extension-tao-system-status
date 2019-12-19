@@ -70,7 +70,7 @@ class MessagesJsonCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -78,7 +78,7 @@ class MessagesJsonCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if messages.json is exist');
+        return __('messages.json language file presence and correctness');
     }
 
     /**
@@ -101,7 +101,7 @@ class MessagesJsonCheck extends AbstractCheck
         if (!$isDir) {
             return new Report(Report::TYPE_WARNING, __('Locales folder is empty'));
         }
-        return new Report(Report::TYPE_SUCCESS, __('All messages.json exists'));
+        return new Report(Report::TYPE_SUCCESS, __('All messages.json exist'));
 
     }
 }

@@ -76,7 +76,7 @@ class TaoUpdateCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -84,6 +84,6 @@ class TaoUpdateCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if extensions require update');
+        return __('Extension updates');
     }
 }

@@ -66,7 +66,7 @@ class LoginQueueCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -74,7 +74,7 @@ class LoginQueueCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check login queue configuration.');
+        return __('Login Queue service configuration');
     }
 
     /**

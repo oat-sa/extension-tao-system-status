@@ -105,7 +105,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Environment health');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -113,7 +113,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check free space on RDS instance');
+        return __('Free space on RDS instance');
     }
 
     /**

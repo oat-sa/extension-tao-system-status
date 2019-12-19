@@ -3,7 +3,7 @@ $report = get_data('task-report');
 $statistics = get_data('task-statistics');
 ?>
 
-<div class="taskqueue_log_report js-report">
+<div class="js-report">
     <div class="feedback-<?= mb_strtolower($report->getType()) ?> feedback-nesting-1 leaf tao-scope">
         <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div>
         <span class="formatted-feedback-message"><?= $report->getMessage() ?></span>

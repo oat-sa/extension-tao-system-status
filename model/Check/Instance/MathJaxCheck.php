@@ -68,7 +68,7 @@ class MathJaxCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -76,7 +76,7 @@ class MathJaxCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if MathJax correctly configured');
+        return __('MathJax presence');
     }
 
     /**
@@ -91,10 +91,10 @@ class MathJaxCheck extends AbstractCheck
         }
 
         if (!$this->isMathJaxJsExists($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX.'/MathJax.js')) {
-            return new Report(Report::TYPE_WARNING, __('MathJax.js is not exist.'));
+            return new Report(Report::TYPE_WARNING, __('MathJax.js does not exist'));
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('MathJax correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('MathJax is configured correctly'));
     }
 
     /**

@@ -73,7 +73,7 @@ class WkhtmltopdfCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -81,7 +81,7 @@ class WkhtmltopdfCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if wkhtmltopdf lib is installed and correctly configured');
+        return __('wkhtmltopdf library presence and version');
     }
 
     /**

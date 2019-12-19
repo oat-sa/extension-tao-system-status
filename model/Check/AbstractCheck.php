@@ -114,6 +114,7 @@ abstract class AbstractCheck implements CheckInterface
         $data[self::PARAM_CATEGORY] = $this->getCategory();
         $data[self::PARAM_DETAILS] = $this->getDetails();
         $data[self::PARAM_CHECK_ID] = $this->getId();
+        $data[self::PARAM_DATE] = time();
         $report->setData($data);
         return $report;
     }

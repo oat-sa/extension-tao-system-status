@@ -66,7 +66,7 @@ class LocalNamespaceCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -74,7 +74,7 @@ class LocalNamespaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check LOCAL_NAMESPACE and URI provider configuration.');
+        return __('LOCAL_NAMESPACE and URI provider configuration');
     }
 
     /**
@@ -85,12 +85,12 @@ class LocalNamespaceCheck extends AbstractCheck
         $uriProvider = $this->getUriProviderService();
         $namespace = trim($uriProvider->getOption('namespace'), ' #');
         if (!$namespace) {
-            return new Report(Report::TYPE_WARNING, 'Namespace option for UriProvider does not exist');
+            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider does not exist'));
         }
         if ($namespace !== LOCAL_NAMESPACE) {
-            return new Report(Report::TYPE_WARNING, 'Namespace option for UriProvider is not equal to LOCAL_NAMESPACE.');
+            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE'));
         }
-        return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured'));
     }
 
     /**

@@ -91,7 +91,7 @@ class TaskQueueFailsCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Task Queue Status');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -99,7 +99,7 @@ class TaskQueueFailsCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show last failed tasks in the task queue');
+        return __('Last failed tasks in the task queue');
     }
 
     /**

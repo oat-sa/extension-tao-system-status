@@ -64,7 +64,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Instance configuration');
+        return __('Health/Readiness check');
     }
 
     /**
@@ -72,7 +72,7 @@ class WriteConfigDataCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if TAO has permissions to write into \'config\' and \'data\' folders');
+        return __('Permissions to write into \'config\' and \'data\' folders');
     }
 
     /**

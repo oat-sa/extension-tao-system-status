@@ -67,7 +67,7 @@ class TaoLtiDeliveryKVCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -75,7 +75,7 @@ class TaoLtiDeliveryKVCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if Lti DeliveryExecution Service correctly configured to KV implementations');
+        return __('Lti Delivery Execution Service configuration');
     }
 
     /**

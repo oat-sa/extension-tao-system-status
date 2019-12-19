@@ -65,7 +65,7 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -73,7 +73,7 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show Default Languages');
+        return __('Default Language');
     }
 
     /**
@@ -81,6 +81,6 @@ class DefaultLanguageCheck extends AbstractCheck
      */
     private function checkDefaultLanguage() : Report
     {
-        return new Report(Report::TYPE_SUCCESS, __('Global language is %s. Anonymous interface language is %s', DEFAULT_LANG, DEFAULT_ANONYMOUS_INTERFACE_LANG));
+        return new Report(Report::TYPE_SUCCESS, __('Global language: %s. Anonymous user language: %s', DEFAULT_LANG, DEFAULT_ANONYMOUS_INTERFACE_LANG));
     }
 }

@@ -75,7 +75,7 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -83,6 +83,6 @@ class FrontEndLogCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if frontend log correctly configured');
+        return __('Frontend log service status');
     }
 }

@@ -74,7 +74,7 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('Configuration Values');
     }
 
     /**
@@ -82,7 +82,7 @@ class AutoSystemTerminationCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check auto cancellation/termination configuration.');
+        return __('Auto cancellation/termination configuration');
     }
 
     /**
@@ -117,10 +117,10 @@ class AutoSystemTerminationCheck extends AbstractCheck
         }
 
         if (!$reportText) {
-            return new Report(Report::TYPE_WARNING, __('No termination tasks.'));
+            return new Report(Report::TYPE_INFO, __('No termination tasks.'));
         }
 
-        return new Report(Report::TYPE_SUCCESS, $reportText);
+        return new Report(Report::TYPE_INFO, $reportText);
     }
 
     /**

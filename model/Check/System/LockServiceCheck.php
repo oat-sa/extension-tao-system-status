@@ -66,7 +66,7 @@ class LockServiceCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -74,7 +74,7 @@ class LockServiceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if Lock service correctly configured.');
+        return __('Lock Service status');
     }
 
     /**
@@ -86,10 +86,10 @@ class LockServiceCheck extends AbstractCheck
         $storage = $lockService->getOption(LockService::OPTION_PERSISTENCE_CLASS);
 
         if ($storage === NoLockStorage::class) {
-            return new Report(Report::TYPE_WARNING, __('Lock service is disabled.'));
+            return new Report(Report::TYPE_WARNING, __('Lock service is disabled'));
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('Lock service correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('Lock service is enabled'));
     }
 
     /**

@@ -174,7 +174,7 @@ class OdsConfigurationCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('System configuration');
+        return __('TAO Configuration');
     }
 
     /**
@@ -182,7 +182,7 @@ class OdsConfigurationCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check if ODS/LEAP services are correctly configured');
+        return __('ODS/LEAP services configuration');
     }
 
     /**

@@ -44,7 +44,7 @@ class TaskQueueMonitoring extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
 
-        $report = new Report(Report::TYPE_INFO, __('Tasks in the queue: %d', $this->getAmountOfTasks()));
+        $report = new Report(Report::TYPE_INFO, $this->getAmountOfTasks());
 
         return $this->prepareReport($report);
     }
@@ -70,7 +70,7 @@ class TaskQueueMonitoring extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Task Queue Status');
+        return __('Monitoring / Statistics');
     }
 
     /**
@@ -78,7 +78,7 @@ class TaskQueueMonitoring extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Show number of tasks in the task queue');
+        return __('Number of tasks in the task queue');
     }
 
     /**
