@@ -38,9 +38,9 @@ use common_exception_Error;
 class TaskQueueFinishedCheck extends AbstractCheck
 {
     const OPTIONS_INTERVAL = [
-        'P1D' => 'PT1H',
-        'P1M' => 'P1D',
-        'P1W' => 'P1D'
+        'P1D' => 'PT10M',
+        'P1W' => 'PT1H',
+        'P1M' => 'PT4H'
     ];
 
     /**
@@ -124,11 +124,14 @@ class TaskQueueFinishedCheck extends AbstractCheck
         $result = [];
         foreach (self::OPTIONS_INTERVAL as $name => $interval) {
             $intervalObj = new \DateInterval($interval);
+            $period = new \DateInterval($name);
+
+            $points = round($this->getIntervalSeconds($period) / $this->getIntervalSeconds($intervalObj));
 
             $timeKeys = \tao_helpers_Date::getTimeKeys(
                 new \DateInterval($interval),
-                new \DateTime('now', new \DateTimeZone('UTC'))
-                , $name === 'P1W' ? 7 : null
+                new \DateTime('now', new \DateTimeZone('UTC')),
+                $points
             );
 
             foreach ($timeKeys as $timeKey) {
@@ -152,6 +155,19 @@ class TaskQueueFinishedCheck extends AbstractCheck
             }
         }
         return $result;
+    }
+
+    /**
+     * @param \DateInterval $interval
+     * @return int
+     * @throws Exception
+     */
+    private function getIntervalSeconds(\DateInterval $interval)
+    {
+        $reference = new \DateTimeImmutable;
+        $endTime = $reference->add($interval);
+
+        return $endTime->getTimestamp() - $reference->getTimestamp();
     }
 
     /**

@@ -55,7 +55,7 @@ class TaskQueueFailsCheck extends AbstractCheck
         }
 
         $limit = $params[self::PARAM_LIMIT] ?? self::PARAM_DEFAULT_LIMIT;
-        $tasks = $this->getLaskFailedTasks($limit);
+        $tasks = $this->getLastFailedTasks($limit);
 
         if ($tasks->isEmpty()) {
             return $this->prepareReport(new Report(Report::TYPE_SUCCESS, __('No failed tasks in the task queue log')));
@@ -128,7 +128,7 @@ class TaskQueueFailsCheck extends AbstractCheck
      * @param int $amount
      * @return CollectionInterface|EntityInterface[]
      */
-    private function getLaskFailedTasks(int $amount)
+    private function getLastFailedTasks(int $amount)
     {
         /** @var TaskLogInterface $taskQueueLog */
         $taskQueueLog = $this->getServiceLocator()->get(TaskLogInterface::SERVICE_ID);
