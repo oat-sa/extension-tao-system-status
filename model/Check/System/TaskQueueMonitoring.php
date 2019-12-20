@@ -103,7 +103,7 @@ class TaskQueueMonitoring extends AbstractCheck
     public function renderReport(Report $report): string
     {
         $label = $report->getData()[self::PARAM_DETAILS];
-        $val = 100-$report->getData()[self::REPORT_VALUE];
+        $val = $report->getData()[self::REPORT_VALUE];
         return "
         <div class='system_status_info_block'>
         <span class='system_status_info_block__label'>$label</span>
