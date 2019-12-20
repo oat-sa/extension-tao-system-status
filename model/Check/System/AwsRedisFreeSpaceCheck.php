@@ -29,6 +29,7 @@ use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
+use oat\tao\helpers\Template;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -41,6 +42,8 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;
+
+    const REPORT_VALUE = 'report_value';
 
     /**
      * @param array $params
@@ -79,6 +82,8 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage) . '%');
         }
 
+        $report->setData([self::REPORT_VALUE => round($freeSpacePercentage)]);
+
         return $this->prepareReport($report);
     }
 
@@ -111,7 +116,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Free space on ElastiCache storage');
+        return __('Used space on ElastiCache storage');
     }
 
     /**
@@ -227,5 +232,20 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     private function getAwsClient(): AwsClient
     {
         return $this->getServiceLocator()->get('generis/awsClient');
+    }
+
+    /**
+     * @param Report $report
+     * @return string
+     * @throws \common_Exception
+     */
+    public function renderReport(Report $report): string
+    {
+        $label = $report->getData()[self::PARAM_DETAILS];
+        $val = 100-$report->getData()[self::REPORT_VALUE];
+        $renderer = new \Renderer(Template::getTemplate('Reports/pieChart.tpl', 'taoSystemStatus'));
+        $renderer->setData('label', $label);
+        $renderer->setData('val', $val);
+        return $renderer->render();
     }
 }

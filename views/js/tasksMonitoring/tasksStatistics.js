@@ -35,7 +35,7 @@ define([
             bindto: '.js-tasks-graph',
             padding: {
                 bottom: 0,
-                left: 35
+                left: 0
             },
             data: {
                 x: 'time',

@@ -29,6 +29,7 @@ use DateInterval;
 use DateTime;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
+use oat\tao\helpers\Template;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -41,6 +42,8 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;
+
+    const REPORT_VALUE = 'report_value';
 
     /**
      * @param array $params
@@ -80,7 +83,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
         } else {
             $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage).'%');
         }
-
+        $report->setData([self::REPORT_VALUE => round($freeSpacePercentage)]);
         return $this->prepareReport($report);
     }
 
@@ -113,7 +116,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Free space on RDS instance');
+        return __('Used space on RDS storage');
     }
 
     /**
@@ -221,5 +224,20 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID);
+    }
+
+    /**
+     * @param Report $report
+     * @return string
+     * @throws \common_Exception
+     */
+    public function renderReport(Report $report): string
+    {
+        $label = $report->getData()[self::PARAM_DETAILS];
+        $val = 100-$report->getData()[self::REPORT_VALUE];
+        $renderer = new \Renderer(Template::getTemplate('Reports/pieChart.tpl', 'taoSystemStatus'));
+        $renderer->setData('label', $label);
+        $renderer->setData('val', $val);
+        return $renderer->render();
     }
 }
