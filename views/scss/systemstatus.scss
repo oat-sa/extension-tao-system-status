@@ -57,6 +57,57 @@
     display: block;
   }
 }
+.system_check_progress_circle.success {
+    color: #269c5d;
+  .progress-circle.over50 {
+    .first50-bar {
+      background-color: #269c5d;
+    }
+  }
+  .progress-circle {
+    .value-bar {
+      border: 0.45em solid #269c5d;
+      color: #269c5d;
+    }
+  }
+  .progress-circle span {
+    color: #269c5d;
+  }
+}
+.system_check_progress_circle.warning {
+    color: #c76908;
+  .progress-circle.over50 {
+    .first50-bar {
+      background-color: #c76908;
+    }
+  }
+  .progress-circle {
+    .value-bar {
+      border: 0.45em solid #c76908;
+      color: #c76908;
+    }
+  }
+  .progress-circle span {
+    color: #c76908;
+  }
+}
+.system_check_progress_circle.error {
+  color: #c12a40;
+  .progress-circle.over50 {
+    .first50-bar {
+      background-color: #c12a40;
+    }
+  }
+  .progress-circle {
+    .value-bar {
+      border: 0.45em solid #c12a40;
+      color: #c12a40;
+    }
+  }
+  .progress-circle span {
+    color: #c12a40;
+  }
+}
 
 .progress-circle {
   font-size: 20px;

@@ -72,7 +72,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             throw new SystemCheckException('ElastiCache cluster not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($clusterData['CacheClusterId']);
+        $freeSpacePercentage = ;$this->getFreePercentage($clusterData['CacheClusterId']);
 
         if ($freeSpacePercentage < 30) {
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
@@ -242,10 +242,12 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     public function renderReport(Report $report): string
     {
         $label = $report->getData()[self::PARAM_DETAILS];
+        //to show used space instead of free space
         $val = 100-$report->getData()[self::REPORT_VALUE];
         $renderer = new \Renderer(Template::getTemplate('Reports/pieChart.tpl', 'taoSystemStatus'));
         $renderer->setData('label', $label);
         $renderer->setData('val', $val);
+        $renderer->setData('type', $report->getType());
         return $renderer->render();
     }
 }
