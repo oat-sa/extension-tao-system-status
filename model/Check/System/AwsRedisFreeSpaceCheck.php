@@ -29,7 +29,7 @@ use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
-use oat\tao\helpers\Template;
+use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -39,11 +39,10 @@ use oat\tao\helpers\Template;
 class AwsRedisFreeSpaceCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
+    use PieChartReportRenderer;
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;
-
-    const REPORT_VALUE = 'report_value';
 
     /**
      * @param array $params
@@ -82,7 +81,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage) . '%');
         }
 
-        $report->setData([self::REPORT_VALUE => round($freeSpacePercentage)]);
+        $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
 
         return $this->prepareReport($report);
     }
@@ -232,22 +231,5 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     private function getAwsClient(): AwsClient
     {
         return $this->getServiceLocator()->get('generis/awsClient');
-    }
-
-    /**
-     * @param Report $report
-     * @return string
-     * @throws \common_Exception
-     */
-    public function renderReport(Report $report): string
-    {
-        $label = $report->getData()[self::PARAM_DETAILS];
-        //to show used space instead of free space
-        $val = 100-$report->getData()[self::REPORT_VALUE];
-        $renderer = new \Renderer(Template::getTemplate('Reports/pieChart.tpl', 'taoSystemStatus'));
-        $renderer->setData('label', $label);
-        $renderer->setData('val', $val);
-        $renderer->setData('type', $report->getType());
-        return $renderer->render();
     }
 }
