@@ -86,6 +86,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\Act\SNSCheck([]),
             new \oat\taoSystemStatus\model\Check\Instance\CronCheck([]),
             new \oat\taoSystemStatus\model\Check\System\TaskQueueMonitoring([]),
+            new \oat\taoSystemStatus\model\Check\System\WebSourceTTLCheck([]),
         ];
     }
 
