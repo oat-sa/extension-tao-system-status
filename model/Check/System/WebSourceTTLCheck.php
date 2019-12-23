@@ -68,7 +68,7 @@ class WebSourceTTLCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Configuration Values');
+        return __('TAO Configuration');
     }
 
     /**
