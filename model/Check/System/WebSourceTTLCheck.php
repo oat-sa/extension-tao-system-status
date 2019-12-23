@@ -97,7 +97,7 @@ class WebSourceTTLCheck extends AbstractCheck
                     if (isset($options['options'])) {
                         $ttl = $options['options']['ttl'] ?? 0;
                         if ($ttl > 0 && $ttl < 7200) {
-                            $errorReport .= __('Web Source config %s has wrong configuration for ttl. Should be 7200. Current value is %s.', $configName, $ttl ?? 0) . PHP_EOL;
+                            $errorReport .= __('Web Source config %s has no TTL value.', $configName) . PHP_EOL;
                         }
                     }
                 }
