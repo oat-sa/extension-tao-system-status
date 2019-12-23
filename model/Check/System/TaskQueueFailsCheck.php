@@ -42,10 +42,13 @@ class TaskQueueFailsCheck extends AbstractCheck
 
     const PARAM_LIMIT = 'limit';
     const PARAM_DEFAULT_LIMIT = 10;
+    const TASK_REPORT_TIME = 'task_report_time';
+    const TASK_LABEL = 'task_label';
 
     /**
      * @param array $params
      * @return Report
+     * @throws common_Exception
      * @throws common_exception_Error
      */
     public function __invoke($params = []): Report
@@ -64,7 +67,12 @@ class TaskQueueFailsCheck extends AbstractCheck
         $report = new Report(Report::TYPE_WARNING, __('Last %d failed tasks:', $tasks->count()));
 
         foreach ($tasks as $task) {
-            $report->add($task->getReport());
+            $taskReport = $task->getReport();
+            $data = $taskReport->getData();
+            $data[self::TASK_REPORT_TIME] = \tao_helpers_Date::displayeDate($task->getCreatedAt());
+            $data[self::TASK_LABEL] = $task->getLabel();
+            $taskReport->setData($data);
+            $report->add($taskReport);
         }
 
         return $this->prepareReport($report);
@@ -109,19 +117,20 @@ class TaskQueueFailsCheck extends AbstractCheck
      */
     public function renderReport(Report $report): string
     {
-        $result = parent::renderReport($report);
+        $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
+        $taskReports = [];
         foreach ($report->getChildren() as $taskReport) {
             $flat = [];
             foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
                 $flat[] = $child;
             }
-            $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
-            $renderer->setData('task-report', $taskReport);
-            $renderer->setData('reports', $flat);
-            $result .= $renderer->render();
+            $taskReports[] = [
+                'task-report' => $taskReport,
+                'task-report-flat' => $flat
+            ];
         }
-
-        return $result;
+        $renderer->setData('reports', $taskReports);
+        return $renderer->render();
     }
 
     /**

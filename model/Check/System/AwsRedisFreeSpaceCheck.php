@@ -29,6 +29,7 @@ use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
+use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -38,6 +39,7 @@ use oat\awsTools\AwsClient;
 class AwsRedisFreeSpaceCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
+    use PieChartReportRenderer;
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;
@@ -79,6 +81,8 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
             $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage) . '%');
         }
 
+        $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
+
         return $this->prepareReport($report);
     }
 
@@ -111,7 +115,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Free space on ElastiCache storage');
+        return __('Used space on ElastiCache storage');
     }
 
     /**

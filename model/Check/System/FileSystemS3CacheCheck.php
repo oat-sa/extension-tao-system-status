@@ -67,7 +67,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Tao Configuration');
+        return __('TAO Configuration');
     }
 
     /**

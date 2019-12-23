@@ -32,11 +32,7 @@ define([
             });
 
             tasksStatistics = tasksStatisticsFactory();
-            $container.on('click', '.taskqueue_log_report-statistics-button', function () {
-                $('.js-tasks-statistics-modal').modal().on('opened.modal', function () {
-                         tasksStatistics.render();
-                     });
-            });
+            tasksStatistics.render();
 
         }
     }

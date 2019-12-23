@@ -104,7 +104,7 @@ class TaoLtiKVCheck extends AbstractCheck
             return true;
         }
 
-        $this->report->setMessage($this->getMessageFromReport() . __('The LTI Link Service (\'taoLti/ResourceLink\') is not configured optimally. There may be performance issues.'));
+        $this->report->setMessage($this->getMessageFromReport() . __('The LTI Link Service (\'taoLti/ResourceLink\') is not configured optimally. There may be performance issues.').PHP_EOL);
         return false;
     }
 
@@ -119,7 +119,7 @@ class TaoLtiKVCheck extends AbstractCheck
             $this->report->setMessage($this->getMessageFromReport() . __('The LTI User Service (\'taoLti/LtiUserService\') is configured correctly.'));
             return true;
         }
-        $this->report->setMessage($this->getMessageFromReport()  . __('The LTI User Service (\'taoLti/LtiUserService\') is not configured optimally. There may be performance issues.'));
+        $this->report->setMessage($this->getMessageFromReport()  . __('The LTI User Service (\'taoLti/LtiUserService\') is not configured optimally. There may be performance issues.').PHP_EOL);
         return false;
     }
 

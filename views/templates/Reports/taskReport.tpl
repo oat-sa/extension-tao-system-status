@@ -1,52 +1,58 @@
 <?php
+use oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck;
+
 $reports = get_data('reports');
-$report = get_data('task-report');
 ?>
 
-<div class="taskqueue_log_report js-report">
-    <div class="feedback-<?= mb_strtolower($report->getType()) ?> feedback-nesting-1 leaf tao-scope">
-        <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div>
-        <span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
-        <?php if (isset($report->getData()['details'])): ?>
-        <span style="float: right;">
-            <span class="icon-help r tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info"></span>
-            <span class="tooltip-content" ><?= $report->getData()['details'] ?></span>
-        </span>
-        <?php endif; ?>
-        <span style="float: right;">
-              <button class="btn-info small js-feedback-details-button" type="button">Details</button>
-        </span>
-    </div>
-    <div class="js-feedback-details feedback-details">
-        <table class="matrix">
-            <thead>
-            <tr>
+<h3><?= __('Last %d failed tasks', count($reports)) ?></h3>
+<table class="matrix taskqueue_log_table">
+    <thead>
+        <tr>
+            <th><?= __('Label') ?></th>
+            <th><?= __('Creted At') ?></th>
+            <th><?= __('Details') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($reports as $report): ?>
+            <tr class="js-report taskqueue_log_report">
+                <th><?= $report['task-report']->getData()[TaskQueueFailsCheck::TASK_LABEL] ?></th>
+                <td><?= $report['task-report']->getData()[TaskQueueFailsCheck::TASK_REPORT_TIME] ?></td>
                 <td>
-                    Message
-                </td>
-                <td>
-                    Data
-                </td>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach($reports as $report): ?>
-            <tr>
-                <td>
-                    <div class="feedback-<?= mb_strtolower($report->getType()) ?> small">
-                        <div class="icon-<?= mb_strtolower($report->getType()) ?>"></div><span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
+                    <button class="btn-info small js-feedback-details-button" type="button">Details</button>
+                    <div class="js-feedback-details feedback-details">
+                        <table class="matrix">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        <?= __('Message') ?>
+                                    </td>
+                                    <td>
+                                        <?= __('Data') ?>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($report['task-report-flat'] as $taskReport): ?>
+                                <tr>
+                                    <td>
+                                        <div class="feedback-<?= mb_strtolower($taskReport->getType()) ?> small">
+                                            <div class="icon-<?= mb_strtolower($taskReport->getType()) ?>"></div><span class="formatted-feedback-message"><?= $taskReport->getMessage() ?></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if($taskReport->getData()): ?>
+                                        <pre><?= json_encode($taskReport->getData(), JSON_PRETTY_PRINT) ?></pre>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </td>
-                <td>
-                    <?php if($report->getData()): ?>
-                    <pre>
-        <?= json_encode($report->getData(), JSON_PRETTY_PRINT) ?>
-                    </pre>
-                    <?php endif; ?>
-                </td>
             </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
