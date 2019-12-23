@@ -96,7 +96,7 @@ class WebSourceTTLCheck extends AbstractCheck
                     $options = $ext->getConfig($configName);
                     if (isset($options['options'])) {
                         $ttl = $options['options']['ttl'] ?? 0;
-                        if ($ttl > 0 && $ttl < 7200) {
+                        if ($ttl === 0) {
                             $errorReport .= __('Web Source config %s has no TTL value.', $configName) . PHP_EOL;
                         }
                     }
