@@ -76,7 +76,7 @@ class WebSourceTTLCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Check Web Source config.');
+        return __('Web sources configuration');
     }
 
     /**
