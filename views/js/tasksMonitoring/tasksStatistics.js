@@ -20,9 +20,9 @@ define([
     'lodash',
     'i18n',
     'ui/component',
-    'util/url',
-    'c3'
-], function ($, _, __, component, url, c3) {
+    'c3',
+    'tpl!taoSystemStatus/tasksMonitoring/tasksStatistics'
+], function ($, _, __, component, c3, template) {
     'use strict';
 
     /**
@@ -30,8 +30,8 @@ define([
      * @type {Object}
      * @private
      */
-    var _defaults = {
-        graphConfig : {
+    const _defaults = {
+        graphConfig: {
             bindto: '.js-tasks-graph',
             padding: {
                 bottom: 0,
@@ -49,8 +49,8 @@ define([
             },
             tooltip: {
                 format: {
-                    title: function (x, y) {
-                       return new Date(Date.parse(x)).toUTCString();
+                    title: function (x) {
+                        return new Date(Date.parse(x)).toUTCString();
                     }
                 }
             },
@@ -75,83 +75,69 @@ define([
     };
 
     /**
-     * Get interval to build statistics
-     * @return string
+     * Get chart config
+     * @return {Object}
      */
-    function getInterval() {
-       return $('.js-tasks-statistics-interval').val();
-    }
-
-    function getData(period) {
-        return $('.js-tasks-graph').data('statistics')[period];
-    }
+    const getChartConfig = (interval, data) => _.merge({}, _defaults, {
+        graphConfig: {
+            data: {
+                json: data
+            },
+            axis: {
+                x: {
+                    tick: {
+                        format: interval === 'P1D' ? '%H:%M' : '%m-%d'
+                    },
+                    label: {
+                        text: interval === 'P1D' ? __('Hours') : __('Days')
+                    }
+                }
+            }
+        }
+    });
 
     /**
      * @param {Object} config
-     * @param {String} [config.graphConfig] - configuration of c3 chart
-     * @param {String} [config.autoRefresh] - interval of auto refresh
-     * @param {String} [config.autoRefreshBar] - show auto refresh bar
      */
     function tasksGraphFactory(config) {
-        var initConfig = _.merge({}, _defaults, config);
-        var chart;
-        var activityGraph = {
+        let initConfig = _.merge(
+            {},
+            getChartConfig(config.defaultInterval, config.data[config.defaultInterval]),
+            config,
+        );
+        let chart;
+
+        const activityGraph = {
             /**
              * Refresh the graph
              * @param {Object} newConfig
              */
-            refresh: function refresh(newConfig) {
-                if (chart) {
-                    initConfig = _.merge({}, initConfig, newConfig);
-                    //there is no way to update graph with new config
-                    chart.internal.config.axis_x_tick_format = initConfig.graphConfig.axis.x.tick.format;
-                    chart.axis.labels({
-                        x: initConfig.graphConfig.axis.x.label.text
-                    });
-                    chart.load(newConfig.graphConfig.data);
-                }
-            }
-        };
-        /**
-         * Get chart config
-         * @return {Object}
-         */
-        function getChartConfig() {
-            var interval = getInterval();
-            var newConfig;
-            var data = getData(interval);
-            newConfig = _.merge({}, _defaults, {
-                graphConfig: {
-                    data: {
-                        json: data
-                    },
-                    axis: {
-                        x : {
-                            tick : {
-                                format: interval === 'P1D' ? '%H:%M' : '%m-%d'
-                            },
-                            label : {
-                                text:  interval === 'P1D' ? __('Hours') : __('Days')
-                            }
-                        }
-                    }
-                }
-            });
-            return newConfig;
-        }
+            refresh: function refresh(interval, data) {
+                const newConfig = getChartConfig(interval, data);
 
-        $('.js-tasks-statistics-interval').on('change', function () {
-            activityGraph.refresh(getChartConfig());
-        });
+                initConfig = _.merge({}, initConfig, newConfig);
+                //there is no way to update graph with new config
+                chart.internal.config.axis_x_tick_format = initConfig.graphConfig.axis.x.tick.format;
+                chart.axis.labels({
+                    x: initConfig.graphConfig.axis.x.label.text
+                });
+                chart.load(newConfig.graphConfig.data);
+            },
+        };
 
         return component(activityGraph)
-            .on('render', function() {
-                $('.modal .js-tasks-graph-container').show();
-                chart = c3.generate(getChartConfig().graphConfig);
+            .setTemplate(template)
+            .on('render', function () {
+                const $element = this.getElement();
+                const $intervalSelect = $element.find('.statistics-chart__interval-select');
 
+                chart = c3.generate(this.config.graphConfig);
+
+                $intervalSelect.on('change',
+                    ({ target: { value } }) => this.refresh(value, this.config.data[value])
+                );
             })
-            .on('destroy', function() {
-                $('.js-tasks-graph-container').hide();
+            .on('destroy', function () {
                 chart.destroy();
                 chart = null;
             })
