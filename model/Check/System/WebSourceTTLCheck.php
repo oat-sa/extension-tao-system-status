@@ -21,26 +21,29 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
-use oat\oatbox\filesystem\FileSystemService;
+use oat\tao\model\websource\WebsourceManager;
+use common_ext_ExtensionException;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
+
 /**
- * Class FileSystemS3CacheCheck
+ * Class WebSourceTTLCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class FileSystemS3CacheCheck extends AbstractCheck
+class WebSourceTTLCheck extends AbstractCheck
 {
     /**
      * @param array $params
      * @return Report
+     * @throws common_ext_ExtensionException
      */
     public function __invoke($params = []): Report
     {
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $report = $this->checkFileSystemConfig();
+        $report = $this->checkWebSourceTTL();
         return $this->prepareReport($report);
     }
 
@@ -49,9 +52,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        $fileSystem = $this->getFileSystemService();
-        return class_exists('oat\awsTools\AwsFileSystemService')
-            && get_class($fileSystem) === 'oat\awsTools\AwsFileSystemService';
+       return true;
     }
 
     /**
@@ -75,49 +76,36 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Status of S3 filesystem adapters');
+        return __('Web sources configuration');
     }
 
     /**
      * @return Report
+     * @throws common_ext_ExtensionException
      */
-    private function checkFileSystemConfig() : Report
+    private function checkWebSourceTTL() : Report
     {
-        $adapters = $this->getFileSystemService()->getOption('adapters');
-        foreach ($adapters as $name => $adapter) {
-            if ($this->isAdapterForCheck($name)) {
-                $options = array_pop($adapter['options']);
-                if (!isset($options['cache'])) {
-                    return new Report(Report::TYPE_WARNING, __('Cache is disabled for `%s` File System adapter', $name));
+        $configDir = ROOT_PATH.'config/tao';
+        $dirIterator = new \DirectoryIterator($configDir);
+        $errorReport = null;
+        foreach ($dirIterator as $config) {
+            if (!$config->isDir()|| !$config->isDot()) {
+                if(strpos($config->getFilename() , WebsourceManager::CONFIG_PREFIX) === 0) {
+                    $ext = $this->getExtensionsManagerService()->getExtensionById('tao');
+                    $configName = explode('.', $config->getFilename(), 2)[0];
+                    $options = $ext->getConfig($configName);
+                    if (isset($options['options'])) {
+                        $ttl = $options['options']['ttl'] ?? 0;
+                        if ($ttl === 0) {
+                            $errorReport .= __('Web Source config %s has no TTL value.', $configName) . PHP_EOL;
+                        }
+                    }
                 }
             }
         }
-        return new Report(Report::TYPE_SUCCESS, __('Filesystem adapters correctly configured.'));
-    }
-
-    /**
-     * @return FileSystemService
-     */
-    private function getFileSystemService() : FileSystemService
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
-    }
-
-    /**
-     * @param $adapter
-     * @return bool
-     */
-    private function isAdapterForCheck($adapter) : bool
-    {
-        $adapters = [
-            'public',
-            'private',
-            'qtiItemPci',
-            'qtiItemImsPci',
-            'portableElementStorage'
-        ];
-
-        return in_array($adapter, $adapters, true);
+        if ($errorReport) {
+            return new Report(Report::TYPE_WARNING, $errorReport);
+        }
+        return new Report(Report::TYPE_SUCCESS, __('Web Source is configured correctly.'));
     }
 }

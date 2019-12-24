@@ -28,7 +28,6 @@ use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\helpers\Template;
 use common_Exception;
 use Exception;
-use common_exception_Error;
 
 /**
  * Class TaskQueueFinishedCheck
