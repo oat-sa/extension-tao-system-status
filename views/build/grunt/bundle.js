@@ -32,6 +32,7 @@ module.exports = function(grunt) {
                     bundles : [{
                         name : 'taoSystemStatus',
                         default : true,
+                        babel : true,
                     }]
                 }
             }
