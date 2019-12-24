@@ -1,0 +1,81 @@
+$status-table-head-background-color: #949494;
+$status-table-head-color: #fff;
+$status-table-row-even-background-color: #fff;
+$status-table-row-odd-background-color: #f9f9f9;
+
+.system-status-table-wrapper {
+    margin-bottom: 20px;
+    width: 100%;
+
+    .system-status-table {
+        width: 100%;
+
+        .system-status-table-row {
+            border: 1px solid $websiteBorder;
+            border-top: none;
+            height: 40px;
+            padding: 5px 0;
+            text-align: center;
+
+            td {
+                min-width: 280px;
+                padding: 0 10px;
+            }
+
+            &.system-status-table-row--head.system-status-table-row--head {
+                background-color: $status-table-head-background-color;
+
+                th {
+                    color: $status-table-head-color;
+                }
+            }
+
+            .system-status-table-status-cell {
+                min-width: unset;
+                padding: 0;
+                width: 60px;
+            }
+
+            &:nth-child(even) {
+                background-color: $status-table-row-even-background-color;
+            }
+
+            &:nth-child(odd) {
+                background-color: $status-table-row-odd-background-color;
+            }
+        }
+    }
+}
+
+.status-report-configuration-tables {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .system-status-table-wrapper {
+        margin-bottom: 0;
+        width: 48%;
+    }
+}
+
+.system-status-table-title {
+  font-size: 28px;
+  margin-bottom: 10px
+}
+
+.system-status-table__details-button {
+    background-color: transparent;
+    border: 1px solid $textColor;
+    color: $textColor;
+    height: 30px;
+}
+
+@media (max-width: 1335px) {
+    .status-report-configuration-tables {
+        flex-wrap: wrap;
+
+        .system-status-table-wrapper {
+            width: 100%;
+        }
+    }
+}

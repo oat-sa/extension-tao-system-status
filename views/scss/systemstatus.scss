@@ -1,17 +1,5 @@
 @import "inc/bootstrap";
- .taskqueue_log_report {
-   padding-left: 40px;
-   .feedback-info {
-     margin: 5px 0 0px 0;
-   }
-   .feedback-details {
-     display: none;
-   }
- }
-.report-details-modal {
-  height: 600px;
-  overflow: auto;
-}
-.formatted-feedback-message {
-  white-space: pre;
-}
+
+@import "inc/icons";
+@import "inc/systemStatusTable";
+@import "inc/statisticsMonitoring";
