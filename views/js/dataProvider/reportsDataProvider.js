@@ -19,7 +19,8 @@
 define([
     'util/url',
     'core/request',
-], function (urlHelper, request) {
+    'json!./data.json'
+], function (urlHelper, request, data) {
 
     request({
         url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
@@ -28,10 +29,14 @@ define([
 
     return {
         getReports: () => {
-            return request({
+            return new Promise((resolve) => {
+              resolve(data)
+            });
+
+            /*return request({
                 url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
                 method: 'GET'
-            });
+            });*/
         }
     }
 })
