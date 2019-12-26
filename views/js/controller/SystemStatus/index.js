@@ -102,15 +102,23 @@ define([
                         }
 
                         if (taskQueueFails[0]) {
-                            $container.append($(reportTableTpl({
+                            const $table = $(reportTableTpl({
                                 category: __('Last failed tasks in the task queue'),
                                 columns: [__('Task'), __('Date'), ''],
                                 data: taskQueueFails[0].children
-                                    .map(({ data: { task_label, task_report_time } }) => ({
-                                        rows: [task_label, task_report_time],
+                                    .map(({ children, data: { task_label, task_report_time } }) => ({
+                                        reportData: JSON.stringify(children),
                                         detailsButton: true,
-                                    }))
-                            })));
+                                        rows: [task_label, task_report_time],
+                                    })),
+                            }));
+
+                            $container.append($table);
+
+                            $('.system-status-table__details-button', $table)
+                                .on('click', ({ target }) => {
+                                    console.log($(target).data('report'));
+                                });
                         }
 
                         if (taskQueueFinished[0]) {

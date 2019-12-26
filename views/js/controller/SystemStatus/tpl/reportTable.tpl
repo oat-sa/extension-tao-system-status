@@ -44,7 +44,7 @@
                     {{/each}}
                     {{#if detailsButton}}
                         <th>
-                            <button class="system-status-table__details-button" type="button">{{__ "View Report"}}</button>
+                            <button class="system-status-table__details-button" type="button" data-report="{{reportData}}">{{__ "View Report"}}</button>
                         </th>
                     {{/if}}
                 </tr>
