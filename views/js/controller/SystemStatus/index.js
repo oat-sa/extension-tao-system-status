@@ -1,3 +1,22 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ *
+ *
+ */
 define([
     'jquery',
     'i18n',
@@ -23,83 +42,31 @@ define([
 ) {
         'use strict';
 
-        const reportCategories = {
-            configuration: 'TAO Configuration',
-            configurationValues: 'Configuration Values',
-            healthReadinessCheck: 'Health/Readiness check',
-            monitoringStatistics: 'Monitoring / Statistics',
-        }
-
         return {
             start: function () {
                 const $container = $('#system-status-report');
                 const $configurationTablesContainer = $('#system-status-configuration-tables');
-                const {
-                    configuration,
-                    configurationValues,
-                    healthReadinessCheck,
-                    monitoringStatistics,
-                } = reportCategories;
-
-                const renderMonitoringStatistics = {
-                    'oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFailsCheck': ({ children = [], data: { details } }) => {
-                        if (!children.length) {
-                            return;
-                        }
-
-                        $container.append($(reportTableTpl({
-                            category: details,
-                            columns: [__('Task'), __('Date'), ''],
-                            data: children
-                                .map(({ message }) => ({
-                                    rows: [message, new Date().toLocaleString()],
-                                    detailsButton: true,
-                                }))
-                        })));
-                    },
-                    'oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFinishedCheck': ({ data: { P1D = [], P1W = [], P1M = [] } }) => {
-                        const $graphContainer = $('<div></div>');
-                        $container.append($graphContainer);
-
-                        tasksStatistics({
-                            defaultInterval: 'P1D',
-                            intervals: [
-                                { label: __('Last Day'), value: 'P1D' },
-                                { label: __('Last Week'), value: 'P1W' },
-                                { label: __('Last Month'), value: 'P1M' }
-                            ],
-                            data: { P1D, P1W, P1M },
-                        })
-                            .render($graphContainer);
-                    }
-                };
 
                 loadingBar.start();
 
                 reportsDataProvider.getReports()
-                    .then(({ report: { children: reports } }) => {
-                        // Group reports by category
-                        const reportGroups = reports.reduce(
-                            (agg, item) => {
-                                const { data: { category } } = item;
+                    .then((reports) => {
+                        const {
+                            configuration,
+                            configurationValues,
+                            healthCheck,
+                            taskQueueFails,
+                            taskQueueFinished,
+                            taskQueueMonitoring,
+                            redisFreeSpace,
+                            rdsFreeSpace,
+                        } = reports;
 
-                                agg[category] && agg[category].push(item);
-
-                                return agg;
-                            },
-                            {
-                                [configuration]: [],
-                                [configurationValues]: [],
-                                [healthReadinessCheck]: [],
-                                [monitoringStatistics]: [],
-                            }
-                        );
-
-                        if (reportGroups[configuration].length) {
+                        if (configuration.length) {
                             $configurationTablesContainer.append($(reportTableTpl({
-                                category: configuration,
+                                category: __('TAO Configuration'),
                                 columns: [__('Status'), __('Description'), __('Date')],
-                                data: reportGroups[configuration]
+                                data: configuration
                                     .map(({ type, data: { details, date } }) => ({
                                         type,
                                         [`is${type}`]: true,
@@ -108,75 +75,97 @@ define([
                             })));
                         }
 
-                        if (reportGroups[configurationValues].length) {
+                        if (configurationValues.length) {
                             $configurationTablesContainer.append($(reportTableTpl({
-                                category: configurationValues,
+                                category: __('Configuration Values'),
                                 columns: [__('Status'), __('Description'), __('Value')],
-                                data: reportGroups[configurationValues]
+                                data: configurationValues
                                     .map(({ type, message, data: { details } }) => ({
                                         type,
                                         [`is${type}`]: true,
-                                        rows: [details, message],
+                                        rows: [details, message.replace(/\r?\n/g, '<br />')],
                                     }))
                             })));
                         }
 
-                        if (reportGroups[healthReadinessCheck].length) {
+                        if (healthCheck.length) {
                             $container.append($(reportTableTpl({
-                                category: healthReadinessCheck,
+                                category: __('Health/Readiness check'),
                                 columns: [__('Status'), __('Description'), __('Details')],
-                                data: reportGroups[healthReadinessCheck]
+                                data: healthCheck
                                     .map(({ type, message, data: { details } }) => ({
                                         type,
                                         [`is${type}`]: true,
-                                        rows: [details, message],
+                                        rows: [details, message.replace(/\r?\n/g, '<br />')],
                                     }))
                             })));
                         }
 
-                        reportGroups[monitoringStatistics]
-                            .forEach((check) => {
-                                const { data: { check_id } } = check;
+                        if (taskQueueFails[0]) {
+                            $container.append($(reportTableTpl({
+                                category: __('Last failed tasks in the task queue'),
+                                columns: [__('Task'), __('Date'), ''],
+                                data: taskQueueFails[0].children
+                                    .map(({ data: { task_label, task_report_time } }) => ({
+                                        rows: [task_label, task_report_time],
+                                        detailsButton: true,
+                                    }))
+                            })));
+                        }
 
-                                renderMonitoringStatistics[check_id] && renderMonitoringStatistics[check_id](check);
-                            });
+                        if (taskQueueFinished[0]) {
+                            const { data: { P1D, P1W, P1M } } = taskQueueFinished[0];
+                            const $graphContainer = $('<div></div>');
+                            $container.append($graphContainer);
+
+                            tasksStatistics({
+                                defaultInterval: 'P1D',
+                                intervals: [
+                                    { label: __('Last Day'), value: 'P1D' },
+                                    { label: __('Last Week'), value: 'P1W' },
+                                    { label: __('Last Month'), value: 'P1M' }
+                                ],
+                                data: { P1D, P1W, P1M },
+                            })
+                                .render($graphContainer);
+                        }
 
                         const $chartContainer = $(chartsContainerTpl());
                         $container.append($chartContainer);
 
-                        c3.generate({
-                            bindto: '.js-tasks-donut-2',
-                            data: {
-                                columns: [
-                                    ['data1', 30],
-                                    ['data2', 120],
-                                ],
-                                type: 'donut',
-                            },
-                            donut: {
-                                title: 'Iris Petal Width',
-                            },
-                            width: 500,
-                        });
+                        if (redisFreeSpace[0]) {
+                            c3.generate({
+                                bindto: '.js-tasks-donut-2',
+                                data: {
+                                    columns: [
+                                        [__('Free space'), redisFreeSpace[0].data.value],
+                                        [__('Used space'), 100 - redisFreeSpace[0].data.value],
+                                    ],
+                                    type: 'donut',
+                                },
+                                width: 500,
+                            });
+                        }
 
-                        c3.generate({
-                            bindto: '.js-tasks-donut-1',
-                            data: {
-                                columns: [
-                                    ['data1', 30],
-                                    ['data2', 120],
-                                ],
-                                type: 'donut',
-                            },
-                            donut: {
-                                title: 'Iris Petal Width'
-                            }
-                        });
+                        if (rdsFreeSpace[0]) {
+                            c3.generate({
+                                bindto: '.js-tasks-donut-1',
+                                data: {
+                                    columns: [
+                                        [__('Free space'), rdsFreeSpace[0].data.value],
+                                        [__('Used space'), 100 - rdsFreeSpace[0].data.value],
+                                    ],
+                                    type: 'donut',
+                                },
+                            });
+                        }
 
-                        const $taskQueue = $(taskQueueTpl());
-                        $chartContainer.append($taskQueue);
+                        if (taskQueueMonitoring[0]) {
+                            const $taskQueue = $(taskQueueTpl({ taskCount: taskQueueMonitoring[0].data.report_value }));
+                            $chartContainer.append($taskQueue);
+                        }
                     })
-                    .catch(() => feedback().error(__('Something went wrong.')))
+                    //.catch(() => feedback().error(__('Something went wrong.')))
                     .finally(() => loadingBar.stop());
             }
         }

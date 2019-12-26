@@ -23,6 +23,7 @@ $status-task-queue-color: #fff;
     border: 1px solid $websiteBorder;
     display: flex;
     height : 200px;
+    margin-left: 13px;
     width  : 250px;
 }
 
@@ -48,3 +49,7 @@ $status-task-queue-color: #fff;
     margin-bottom: 50px;
 }
 
+.system-status__chart-title {
+  font-size: 20px;
+  text-align: center;
+}

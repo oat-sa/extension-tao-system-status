@@ -4,6 +4,6 @@
   </div>
   <div class="task-queue-load-container__description">
     <div class="task-queue-load-container__description-title">{{__ "Tasks In the Queue"}}</div>
-    <div class="task-queue-load-container__description-amount">43</div>
+    <div class="task-queue-load-container__description-amount">{{taskCount}}</div>
   </div>
 </div>
