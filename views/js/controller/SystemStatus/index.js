@@ -28,6 +28,7 @@ define([
     'layout/loading-bar',
     'ui/feedback',
     'c3',
+    'ui/modal',
 ], function (
     $,
     __,
@@ -117,7 +118,30 @@ define([
 
                             $('.system-status-table__details-button', $table)
                                 .on('click', ({ target }) => {
-                                    console.log($(target).data('report'));
+                                    const reportDetails = $(target).data('report');
+
+                                    const $reportDetails = $(reportTableTpl({
+                                        category: __('Task details'),
+                                        columns: [__('Status'), __('Description')],
+                                        data: reportDetails
+                                            .map(({ type, message }) => ({
+                                                type,
+                                                [`is${type}`]: true,
+                                                rows: [message.replace(/\r?\n/g, '<br />')],
+                                            }))
+                                    }));
+
+                                    $container.append($reportDetails);
+                                    $reportDetails.modal({
+                                        startClosed: true,
+                                        minWidth: 450
+                                    });
+                                    $reportDetails.modal('open');
+
+                                    $reportDetails.on('closed.modal', function () {
+                                        $reportDetails.modal('destroy');
+                                        $($reportDetails).remove();
+                                    });
                                 });
                         }
 
