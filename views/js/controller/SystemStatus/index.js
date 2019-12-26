@@ -177,7 +177,7 @@ define([
                         $chartContainer.append($taskQueue);
                     })
                     .catch(() => feedback().error(__('Something went wrong.')))
-                    .loadingBar(() => loadingBar.stop());
+                    .finally(() => loadingBar.stop());
             }
         }
     });
