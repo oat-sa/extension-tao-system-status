@@ -11,7 +11,7 @@
           "category": "TAO Configuration",
           "details": "Frontend log service status",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\FrontEndLogCheck",
-          "date": 1577360188
+          "date": 1577430631
         },
         "children": []
       },
@@ -22,7 +22,7 @@
           "category": "TAO Configuration",
           "details": "LTI Link and Lti User Service configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaoLtiKVCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -33,7 +33,7 @@
           "category": "TAO Configuration",
           "details": "Lti Delivery Execution Service configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaoLtiDeliveryKVCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -44,7 +44,7 @@
           "category": "TAO Configuration",
           "details": "Lock Service status",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\LockServiceCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -55,7 +55,7 @@
           "category": "Configuration Values",
           "details": "Default Language",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\DefaultLanguageCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -66,7 +66,7 @@
           "category": "Configuration Values",
           "details": "Time Zone",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\DefaultTimeZoneCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -77,7 +77,7 @@
           "category": "TAO Configuration",
           "details": "LOCAL_NAMESPACE and URI provider configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\LocalNamespaceCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -88,7 +88,7 @@
           "category": "Configuration Values",
           "details": "Debug Mode status",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\DebugModeCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -99,7 +99,7 @@
           "category": "Monitoring \/ Statistics",
           "details": "Last failed tasks in the task queue",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFailsCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": [
           {
@@ -134,151 +134,141 @@
                   "label": null,
                   "comment": ""
                 },
-                "children": [
-                  {
-                    "type": "success",
-                    "message": "Items Compilation",
-                    "data": null,
-                    "children": [
-                      {
-                        "type": "success",
-                        "message": "Published I104_02488-02",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3935ab228232886973fff1c11496c1",
-                          "http:\/\/sample\/first.rdf#i5df393e6389db12536f58aab58cd751855+",
-                          "http:\/\/sample\/first.rdf#i5df393e638a901253633fad3071a75c505-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02488-09",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3939dd28723288f14d23e09ef82e7c",
-                          "http:\/\/sample\/first.rdf#i5df393e820cea1253634d505903fbb05f2+",
-                          "http:\/\/sample\/first.rdf#i5df393e820d921253610791529adf23033-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02471-12",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee393dce09423288381092b6ba26fa76",
-                          "http:\/\/sample\/first.rdf#i5df393e84542f12536bade3e7be48976d9+",
-                          "http:\/\/sample\/first.rdf#i5df393e8454ca125360602bff9ae673ead-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02471-18",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3941c318e23288027cbd3d4ba7f02b",
-                          "http:\/\/sample\/first.rdf#i5df393e86891f12536e4221bc78c2c392c+",
-                          "http:\/\/sample\/first.rdf#i5df393e868a1312536cc1052dc01a41ee8-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_22233",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3945afb5c23288047c84e2f1fe41b4",
-                          "http:\/\/sample\/first.rdf#i5df393e8898781253655b99b6147fdcd76+",
-                          "http:\/\/sample\/first.rdf#i5df393e88995012536536b93a9f73f063f-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_27421",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3948e185d232886bbd0dcc13d72bba",
-                          "http:\/\/sample\/first.rdf#i5df393e8e5afd125363c30eeee0c58f281+",
-                          "http:\/\/sample\/first.rdf#i5df393e8e5bb612536629da7cf5feb0225-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_29179",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee394c32f7b232887fc4a32b63b44e72",
-                          "http:\/\/sample\/first.rdf#i5df393e916768125360c351971acae4567+",
-                          "http:\/\/sample\/first.rdf#i5df393e91681c12536c14584e6177fedf4-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_31715",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee394f4327f232887da372ccaa3f9c67",
-                          "http:\/\/sample\/first.rdf#i5df393e940a7d12536025db85dcdd1965c+",
-                          "http:\/\/sample\/first.rdf#i5df393e940b15125365233bdfe784b62a3-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Items Compilation",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02488-02",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3935ab228232886973fff1c11496c1",
+                  "http:\/\/sample\/first.rdf#i5df393e6389db12536f58aab58cd751855+",
+                  "http:\/\/sample\/first.rdf#i5df393e638a901253633fad3071a75c505-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02488-09",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3939dd28723288f14d23e09ef82e7c",
+                  "http:\/\/sample\/first.rdf#i5df393e820cea1253634d505903fbb05f2+",
+                  "http:\/\/sample\/first.rdf#i5df393e820d921253610791529adf23033-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02471-12",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee393dce09423288381092b6ba26fa76",
+                  "http:\/\/sample\/first.rdf#i5df393e84542f12536bade3e7be48976d9+",
+                  "http:\/\/sample\/first.rdf#i5df393e8454ca125360602bff9ae673ead-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02471-18",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3941c318e23288027cbd3d4ba7f02b",
+                  "http:\/\/sample\/first.rdf#i5df393e86891f12536e4221bc78c2c392c+",
+                  "http:\/\/sample\/first.rdf#i5df393e868a1312536cc1052dc01a41ee8-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_22233",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3945afb5c23288047c84e2f1fe41b4",
+                  "http:\/\/sample\/first.rdf#i5df393e8898781253655b99b6147fdcd76+",
+                  "http:\/\/sample\/first.rdf#i5df393e88995012536536b93a9f73f063f-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_27421",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3948e185d232886bbd0dcc13d72bba",
+                  "http:\/\/sample\/first.rdf#i5df393e8e5afd125363c30eeee0c58f281+",
+                  "http:\/\/sample\/first.rdf#i5df393e8e5bb612536629da7cf5feb0225-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_29179",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee394c32f7b232887fc4a32b63b44e72",
+                  "http:\/\/sample\/first.rdf#i5df393e916768125360c351971acae4567+",
+                  "http:\/\/sample\/first.rdf#i5df393e91681c12536c14584e6177fedf4-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_31715",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee394f4327f232887da372ccaa3f9c67",
+                  "http:\/\/sample\/first.rdf#i5df393e940a7d12536025db85dcdd1965c+",
+                  "http:\/\/sample\/first.rdf#i5df393e940b15125365233bdfe784b62a3-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
               }
             ]
           },
@@ -294,14 +284,13 @@
                 "type": "success",
                 "message": "",
                 "data": null,
-                "children": [
-                  {
-                    "type": "success",
-                    "message": "Resource update task is completed",
-                    "data": null,
-                    "children": []
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Resource update task is completed",
+                "data": null,
+                "children": []
               }
             ]
           },
@@ -333,166 +322,164 @@
                 "type": "error",
                 "message": "The IMS QTI Test Package could not be imported.",
                 "data": null,
-                "children": [
-                  {
-                    "type": "error",
-                    "message": "The IMS QTI Test referenced as \"i153426037030363065\" in the IMS Manifest file could not be imported.",
-                    "data": {
-                      "manifestResource": [],
-                      "rdfsResource": {
-                        "uriResource": "http:\/\/sample\/first.rdf#i5dee3970b6448232887b8d8294c6076b01",
-                        "label": "Test 3",
-                        "comment": ""
-                      },
-                      "itemClass": {
-                        "uriResource": "http:\/\/sample\/first.rdf#i5dee3970c5a4c23288a7002c5a35388351",
-                        "label": "Test 3",
-                        "comment": ""
-                      },
-                      "items": [],
-                      "newItems": [],
-                      "overwrittenItems": [],
-                      "itemQtiResources": [],
-                      "testMetadata": [],
-                      "createdClasses": [],
-                      "uriResource": "http:\/\/sample\/first.rdf#i5dee3970b6448232887b8d8294c6076b01"
-                    },
-                    "children": [
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426037594663068\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426037853053071\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426038188393074\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426038439483077\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426038771843080\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426038981813083\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i15342603935303086\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426039515133089\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426039867923092\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426040125313095\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426040491193098\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426040712403101\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426041029893104\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426041356963107\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426041649733110\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426041840963113\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426042234133116\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426042524523119\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426042840693122\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426043193163125\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "Item metadata with identifier \"i153426043454723128\" is not valid: Missed IBN metadata",
-                        "data": null,
-                        "children": []
-                      },
-                      {
-                        "type": "error",
-                        "message": "One or more dependent IMS QTI Items could not be imported.",
-                        "data": null,
-                        "children": []
-                      }
-                    ]
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "The IMS QTI Test referenced as \"i153426037030363065\" in the IMS Manifest file could not be imported.",
+                "data": {
+                  "manifestResource": [],
+                  "rdfsResource": {
+                    "uriResource": "http:\/\/sample\/first.rdf#i5dee3970b6448232887b8d8294c6076b01",
+                    "label": "Test 3",
+                    "comment": ""
+                  },
+                  "itemClass": {
+                    "uriResource": "http:\/\/sample\/first.rdf#i5dee3970c5a4c23288a7002c5a35388351",
+                    "label": "Test 3",
+                    "comment": ""
+                  },
+                  "items": [],
+                  "newItems": [],
+                  "overwrittenItems": [],
+                  "itemQtiResources": [],
+                  "testMetadata": [],
+                  "createdClasses": [],
+                  "uriResource": "http:\/\/sample\/first.rdf#i5dee3970b6448232887b8d8294c6076b01"
+                },
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426037594663068\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426037853053071\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426038188393074\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426038439483077\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426038771843080\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426038981813083\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i15342603935303086\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426039515133089\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426039867923092\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426040125313095\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426040491193098\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426040712403101\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426041029893104\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426041356963107\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426041649733110\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426041840963113\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426042234133116\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426042524523119\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426042840693122\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426043193163125\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "Item metadata with identifier \"i153426043454723128\" is not valid: Missed IBN metadata",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "error",
+                "message": "One or more dependent IMS QTI Items could not be imported.",
+                "data": null,
+                "children": []
               }
             ]
           },
@@ -512,151 +499,141 @@
                   "label": null,
                   "comment": ""
                 },
-                "children": [
-                  {
-                    "type": "success",
-                    "message": "Items Compilation",
-                    "data": null,
-                    "children": [
-                      {
-                        "type": "success",
-                        "message": "Published I104_02488-02",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3935ab228232886973fff1c11496c1",
-                          "http:\/\/sample\/first.rdf#i5dee395d12b6023288daacbaeb571131c2+",
-                          "http:\/\/sample\/first.rdf#i5dee395d12bb723288c1cea336d48a5cc4-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02488-09",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3939dd28723288f14d23e09ef82e7c",
-                          "http:\/\/sample\/first.rdf#i5dee395d339882328896889259b5ea88c3+",
-                          "http:\/\/sample\/first.rdf#i5dee395d33a1d2328829dedbbb42f58002-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02471-12",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee393dce09423288381092b6ba26fa76",
-                          "http:\/\/sample\/first.rdf#i5dee395d4a32b23288a02fe0d1ff18b655+",
-                          "http:\/\/sample\/first.rdf#i5dee395d4a38723288ef1a5a36e65a17fe-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I104_02471-18",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3941c318e23288027cbd3d4ba7f02b",
-                          "http:\/\/sample\/first.rdf#i5dee395d60e7b2328833f2be9bf5e77980+",
-                          "http:\/\/sample\/first.rdf#i5dee395d60eda2328893acd47e7a47b4a9-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_22233",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3945afb5c23288047c84e2f1fe41b4",
-                          "http:\/\/sample\/first.rdf#i5dee395d76c0c23288a5e46e52a5cee7ea+",
-                          "http:\/\/sample\/first.rdf#i5dee395d76c7323288eebc61a8893ac4f8-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_27421",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee3948e185d232886bbd0dcc13d72bba",
-                          "http:\/\/sample\/first.rdf#i5dee395d92cb423288e1ddccb72edc51d6+",
-                          "http:\/\/sample\/first.rdf#i5dee395d92d0e23288d602e0822294846d-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_29179",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee394c32f7b232887fc4a32b63b44e72",
-                          "http:\/\/sample\/first.rdf#i5dee395dab6c92328820c35528e5cb51e3+",
-                          "http:\/\/sample\/first.rdf#i5dee395dab75623288bb87dda0d5f9e7d3-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published I105_31715",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dee394f4327f232887da372ccaa3f9c67",
-                          "http:\/\/sample\/first.rdf#i5dee395dc811223288f7491d35bbd24ba2+",
-                          "http:\/\/sample\/first.rdf#i5dee395dc818f232882078c9f01d530805-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Items Compilation",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02488-02",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3935ab228232886973fff1c11496c1",
+                  "http:\/\/sample\/first.rdf#i5dee395d12b6023288daacbaeb571131c2+",
+                  "http:\/\/sample\/first.rdf#i5dee395d12bb723288c1cea336d48a5cc4-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02488-09",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3939dd28723288f14d23e09ef82e7c",
+                  "http:\/\/sample\/first.rdf#i5dee395d339882328896889259b5ea88c3+",
+                  "http:\/\/sample\/first.rdf#i5dee395d33a1d2328829dedbbb42f58002-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02471-12",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee393dce09423288381092b6ba26fa76",
+                  "http:\/\/sample\/first.rdf#i5dee395d4a32b23288a02fe0d1ff18b655+",
+                  "http:\/\/sample\/first.rdf#i5dee395d4a38723288ef1a5a36e65a17fe-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I104_02471-18",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3941c318e23288027cbd3d4ba7f02b",
+                  "http:\/\/sample\/first.rdf#i5dee395d60e7b2328833f2be9bf5e77980+",
+                  "http:\/\/sample\/first.rdf#i5dee395d60eda2328893acd47e7a47b4a9-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_22233",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3945afb5c23288047c84e2f1fe41b4",
+                  "http:\/\/sample\/first.rdf#i5dee395d76c0c23288a5e46e52a5cee7ea+",
+                  "http:\/\/sample\/first.rdf#i5dee395d76c7323288eebc61a8893ac4f8-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_27421",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee3948e185d232886bbd0dcc13d72bba",
+                  "http:\/\/sample\/first.rdf#i5dee395d92cb423288e1ddccb72edc51d6+",
+                  "http:\/\/sample\/first.rdf#i5dee395d92d0e23288d602e0822294846d-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_29179",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee394c32f7b232887fc4a32b63b44e72",
+                  "http:\/\/sample\/first.rdf#i5dee395dab6c92328820c35528e5cb51e3+",
+                  "http:\/\/sample\/first.rdf#i5dee395dab75623288bb87dda0d5f9e7d3-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published I105_31715",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dee394f4327f232887da372ccaa3f9c67",
+                  "http:\/\/sample\/first.rdf#i5dee395dc811223288f7491d35bbd24ba2+",
+                  "http:\/\/sample\/first.rdf#i5dee395dc818f232882078c9f01d530805-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
               }
             ]
           },
@@ -676,181 +653,170 @@
                   "label": null,
                   "comment": ""
                 },
-                "children": [
-                  {
-                    "type": "success",
-                    "message": "Items Compilation",
-                    "data": null,
-                    "children": [
-                      {
-                        "type": "success",
-                        "message": "Published Example_0_Introduction",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefddd74e19828fbc5ba1a1f437f7c",
-                          "http:\/\/sample\/first.rdf#i5dee3269068db23288c758c25688a508af+",
-                          "http:\/\/sample\/first.rdf#i5dee32690696d232889900c3e6927e4f4c-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published example_1_TAO",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefde9ab8c98280510d7d4311381ab",
-                          "http:\/\/sample\/first.rdf#i5dee326b023c223288277b521ab99c05e6+",
-                          "http:\/\/sample\/first.rdf#i5dee326b0241a23288d6676ce300078ac5-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published example_2_Math",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefdf85fc198280b0a3e9eb0db8883",
-                          "http:\/\/sample\/first.rdf#i5dee326bbb7a823288db9dd7bcafb807d8+",
-                          "http:\/\/sample\/first.rdf#i5dee326bbb82f23288f75197cbe4123f05-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_3_Baudelaire",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe05810c9828bea7e30dc23d816c",
-                          "http:\/\/sample\/first.rdf#i5dee326c0ceae2328832a672230291910d+",
-                          "http:\/\/sample\/first.rdf#i5dee326c0cf0f232889bc8af144e50bea5-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_4_Appearance",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe1107a0982848ac7811d5593543",
-                          "http:\/\/sample\/first.rdf#i5dee326c48f3b2328899273205f1baaac8+",
-                          "http:\/\/sample\/first.rdf#i5dee326c48f9323288ef05f275d8d50733-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_5_picasso",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe1e1d339828f7b22df6951c3f02",
-                          "http:\/\/sample\/first.rdf#i5dee326c69aac23288f419f5f275913f35+",
-                          "http:\/\/sample\/first.rdf#i5dee326c69b0c2328871f4d97c630dcc91-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_6_Geography",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe2b0b8b9828c6ab09b6191871ec",
-                          "http:\/\/sample\/first.rdf#i5dee326ce3ff023288a3e9cfa04de58556+",
-                          "http:\/\/sample\/first.rdf#i5dee326ce4049232887f10a894d664df1f-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_7_Geo 2",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe37693298280118d0cb3d7290d9",
-                          "http:\/\/sample\/first.rdf#i5dee326d1321223288f3af750e34d2fdc5+",
-                          "http:\/\/sample\/first.rdf#i5dee326d1327323288ded83e33158ab1eb-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      },
-                      {
-                        "type": "success",
-                        "message": "Published Example_8_Geo 3",
-                        "data": [
-                          "http:\/\/sample\/first.rdf#i5dedefe4363f49828689fc32c34d6b08e",
-                          "http:\/\/sample\/first.rdf#i5dee326d341f423288cd4381cc08c8138e+",
-                          "http:\/\/sample\/first.rdf#i5dee326d3425e23288af31f1a0c6805721-"
-                        ],
-                        "children": [
-                          {
-                            "type": "success",
-                            "message": "Successfully compiled \"en-US\"",
-                            "data": null,
-                            "children": []
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Items Compilation",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_0_Introduction",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefddd74e19828fbc5ba1a1f437f7c",
+                  "http:\/\/sample\/first.rdf#i5dee3269068db23288c758c25688a508af+",
+                  "http:\/\/sample\/first.rdf#i5dee32690696d232889900c3e6927e4f4c-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published example_1_TAO",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefde9ab8c98280510d7d4311381ab",
+                  "http:\/\/sample\/first.rdf#i5dee326b023c223288277b521ab99c05e6+",
+                  "http:\/\/sample\/first.rdf#i5dee326b0241a23288d6676ce300078ac5-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published example_2_Math",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefdf85fc198280b0a3e9eb0db8883",
+                  "http:\/\/sample\/first.rdf#i5dee326bbb7a823288db9dd7bcafb807d8+",
+                  "http:\/\/sample\/first.rdf#i5dee326bbb82f23288f75197cbe4123f05-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_3_Baudelaire",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe05810c9828bea7e30dc23d816c",
+                  "http:\/\/sample\/first.rdf#i5dee326c0ceae2328832a672230291910d+",
+                  "http:\/\/sample\/first.rdf#i5dee326c0cf0f232889bc8af144e50bea5-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_4_Appearance",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe1107a0982848ac7811d5593543",
+                  "http:\/\/sample\/first.rdf#i5dee326c48f3b2328899273205f1baaac8+",
+                  "http:\/\/sample\/first.rdf#i5dee326c48f9323288ef05f275d8d50733-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_5_picasso",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe1e1d339828f7b22df6951c3f02",
+                  "http:\/\/sample\/first.rdf#i5dee326c69aac23288f419f5f275913f35+",
+                  "http:\/\/sample\/first.rdf#i5dee326c69b0c2328871f4d97c630dcc91-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_6_Geography",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe2b0b8b9828c6ab09b6191871ec",
+                  "http:\/\/sample\/first.rdf#i5dee326ce3ff023288a3e9cfa04de58556+",
+                  "http:\/\/sample\/first.rdf#i5dee326ce4049232887f10a894d664df1f-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_7_Geo 2",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe37693298280118d0cb3d7290d9",
+                  "http:\/\/sample\/first.rdf#i5dee326d1321223288f3af750e34d2fdc5+",
+                  "http:\/\/sample\/first.rdf#i5dee326d1327323288ded83e33158ab1eb-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Published Example_8_Geo 3",
+                "data": [
+                  "http:\/\/sample\/first.rdf#i5dedefe4363f49828689fc32c34d6b08e",
+                  "http:\/\/sample\/first.rdf#i5dee326d341f423288cd4381cc08c8138e+",
+                  "http:\/\/sample\/first.rdf#i5dee326d3425e23288af31f1a0c6805721-"
+                ],
+                "children": []
+              },
+              {
+                "type": "success",
+                "message": "Successfully compiled \"en-US\"",
+                "data": null,
+                "children": []
               }
             ]
           }
         ]
       },
       {
-        "type": "success",
-        "message": "All extensions are up to date",
+        "type": "warning",
+        "message": "The following extensions require update: generis",
         "data": {
           "category": "Health\/Readiness check",
           "details": "Extension updates",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaoUpdateCheck",
-          "date": 1577360189
+          "date": 1577430631
         },
         "children": []
       },
@@ -860,150 +826,150 @@
         "data": {
           "P1D": {
             "time": [
-              "2019-12-26 11:27:00",
-              "2019-12-26 11:17:00",
-              "2019-12-26 11:07:00",
-              "2019-12-26 10:57:00",
-              "2019-12-26 10:47:00",
-              "2019-12-26 10:37:00",
-              "2019-12-26 10:27:00",
-              "2019-12-26 10:17:00",
-              "2019-12-26 10:07:00",
-              "2019-12-26 09:57:00",
-              "2019-12-26 09:47:00",
-              "2019-12-26 09:37:00",
-              "2019-12-26 09:27:00",
-              "2019-12-26 09:17:00",
-              "2019-12-26 09:07:00",
-              "2019-12-26 08:57:00",
-              "2019-12-26 08:47:00",
-              "2019-12-26 08:37:00",
-              "2019-12-26 08:27:00",
-              "2019-12-26 08:17:00",
-              "2019-12-26 08:07:00",
-              "2019-12-26 07:57:00",
-              "2019-12-26 07:47:00",
-              "2019-12-26 07:37:00",
-              "2019-12-26 07:27:00",
-              "2019-12-26 07:17:00",
-              "2019-12-26 07:07:00",
-              "2019-12-26 06:57:00",
-              "2019-12-26 06:47:00",
-              "2019-12-26 06:37:00",
-              "2019-12-26 06:27:00",
-              "2019-12-26 06:17:00",
-              "2019-12-26 06:07:00",
-              "2019-12-26 05:57:00",
-              "2019-12-26 05:47:00",
-              "2019-12-26 05:37:00",
-              "2019-12-26 05:27:00",
-              "2019-12-26 05:17:00",
-              "2019-12-26 05:07:00",
-              "2019-12-26 04:57:00",
-              "2019-12-26 04:47:00",
-              "2019-12-26 04:37:00",
-              "2019-12-26 04:27:00",
-              "2019-12-26 04:17:00",
-              "2019-12-26 04:07:00",
-              "2019-12-26 03:57:00",
-              "2019-12-26 03:47:00",
-              "2019-12-26 03:37:00",
-              "2019-12-26 03:27:00",
-              "2019-12-26 03:17:00",
-              "2019-12-26 03:07:00",
-              "2019-12-26 02:57:00",
-              "2019-12-26 02:47:00",
-              "2019-12-26 02:37:00",
-              "2019-12-26 02:27:00",
-              "2019-12-26 02:17:00",
-              "2019-12-26 02:07:00",
-              "2019-12-26 01:57:00",
-              "2019-12-26 01:47:00",
-              "2019-12-26 01:37:00",
-              "2019-12-26 01:27:00",
-              "2019-12-26 01:17:00",
-              "2019-12-26 01:07:00",
-              "2019-12-26 00:57:00",
-              "2019-12-26 00:47:00",
-              "2019-12-26 00:37:00",
-              "2019-12-26 00:27:00",
-              "2019-12-26 00:17:00",
-              "2019-12-26 00:07:00",
-              "2019-12-25 23:57:00",
-              "2019-12-25 23:47:00",
-              "2019-12-25 23:37:00",
-              "2019-12-25 23:27:00",
-              "2019-12-25 23:17:00",
-              "2019-12-25 23:07:00",
-              "2019-12-25 22:57:00",
-              "2019-12-25 22:47:00",
-              "2019-12-25 22:37:00",
-              "2019-12-25 22:27:00",
-              "2019-12-25 22:17:00",
-              "2019-12-25 22:07:00",
-              "2019-12-25 21:57:00",
-              "2019-12-25 21:47:00",
-              "2019-12-25 21:37:00",
-              "2019-12-25 21:27:00",
-              "2019-12-25 21:17:00",
-              "2019-12-25 21:07:00",
-              "2019-12-25 20:57:00",
-              "2019-12-25 20:47:00",
-              "2019-12-25 20:37:00",
-              "2019-12-25 20:27:00",
-              "2019-12-25 20:17:00",
-              "2019-12-25 20:07:00",
-              "2019-12-25 19:57:00",
-              "2019-12-25 19:47:00",
-              "2019-12-25 19:37:00",
-              "2019-12-25 19:27:00",
-              "2019-12-25 19:17:00",
-              "2019-12-25 19:07:00",
-              "2019-12-25 18:57:00",
-              "2019-12-25 18:47:00",
-              "2019-12-25 18:37:00",
-              "2019-12-25 18:27:00",
-              "2019-12-25 18:17:00",
-              "2019-12-25 18:07:00",
-              "2019-12-25 17:57:00",
-              "2019-12-25 17:47:00",
-              "2019-12-25 17:37:00",
-              "2019-12-25 17:27:00",
-              "2019-12-25 17:17:00",
-              "2019-12-25 17:07:00",
-              "2019-12-25 16:57:00",
-              "2019-12-25 16:47:00",
-              "2019-12-25 16:37:00",
-              "2019-12-25 16:27:00",
-              "2019-12-25 16:17:00",
-              "2019-12-25 16:07:00",
-              "2019-12-25 15:57:00",
-              "2019-12-25 15:47:00",
-              "2019-12-25 15:37:00",
-              "2019-12-25 15:27:00",
-              "2019-12-25 15:17:00",
-              "2019-12-25 15:07:00",
-              "2019-12-25 14:57:00",
-              "2019-12-25 14:47:00",
-              "2019-12-25 14:37:00",
-              "2019-12-25 14:27:00",
-              "2019-12-25 14:17:00",
-              "2019-12-25 14:07:00",
-              "2019-12-25 13:57:00",
-              "2019-12-25 13:47:00",
-              "2019-12-25 13:37:00",
-              "2019-12-25 13:27:00",
-              "2019-12-25 13:17:00",
-              "2019-12-25 13:07:00",
-              "2019-12-25 12:57:00",
-              "2019-12-25 12:47:00",
-              "2019-12-25 12:37:00",
-              "2019-12-25 12:27:00",
-              "2019-12-25 12:17:00",
-              "2019-12-25 12:07:00",
-              "2019-12-25 11:57:00",
-              "2019-12-25 11:47:00",
-              "2019-12-25 11:37:00"
+              "2019-12-27 07:01:00",
+              "2019-12-27 06:51:00",
+              "2019-12-27 06:41:00",
+              "2019-12-27 06:31:00",
+              "2019-12-27 06:21:00",
+              "2019-12-27 06:11:00",
+              "2019-12-27 06:01:00",
+              "2019-12-27 05:51:00",
+              "2019-12-27 05:41:00",
+              "2019-12-27 05:31:00",
+              "2019-12-27 05:21:00",
+              "2019-12-27 05:11:00",
+              "2019-12-27 05:01:00",
+              "2019-12-27 04:51:00",
+              "2019-12-27 04:41:00",
+              "2019-12-27 04:31:00",
+              "2019-12-27 04:21:00",
+              "2019-12-27 04:11:00",
+              "2019-12-27 04:01:00",
+              "2019-12-27 03:51:00",
+              "2019-12-27 03:41:00",
+              "2019-12-27 03:31:00",
+              "2019-12-27 03:21:00",
+              "2019-12-27 03:11:00",
+              "2019-12-27 03:01:00",
+              "2019-12-27 02:51:00",
+              "2019-12-27 02:41:00",
+              "2019-12-27 02:31:00",
+              "2019-12-27 02:21:00",
+              "2019-12-27 02:11:00",
+              "2019-12-27 02:01:00",
+              "2019-12-27 01:51:00",
+              "2019-12-27 01:41:00",
+              "2019-12-27 01:31:00",
+              "2019-12-27 01:21:00",
+              "2019-12-27 01:11:00",
+              "2019-12-27 01:01:00",
+              "2019-12-27 00:51:00",
+              "2019-12-27 00:41:00",
+              "2019-12-27 00:31:00",
+              "2019-12-27 00:21:00",
+              "2019-12-27 00:11:00",
+              "2019-12-27 00:01:00",
+              "2019-12-26 23:51:00",
+              "2019-12-26 23:41:00",
+              "2019-12-26 23:31:00",
+              "2019-12-26 23:21:00",
+              "2019-12-26 23:11:00",
+              "2019-12-26 23:01:00",
+              "2019-12-26 22:51:00",
+              "2019-12-26 22:41:00",
+              "2019-12-26 22:31:00",
+              "2019-12-26 22:21:00",
+              "2019-12-26 22:11:00",
+              "2019-12-26 22:01:00",
+              "2019-12-26 21:51:00",
+              "2019-12-26 21:41:00",
+              "2019-12-26 21:31:00",
+              "2019-12-26 21:21:00",
+              "2019-12-26 21:11:00",
+              "2019-12-26 21:01:00",
+              "2019-12-26 20:51:00",
+              "2019-12-26 20:41:00",
+              "2019-12-26 20:31:00",
+              "2019-12-26 20:21:00",
+              "2019-12-26 20:11:00",
+              "2019-12-26 20:01:00",
+              "2019-12-26 19:51:00",
+              "2019-12-26 19:41:00",
+              "2019-12-26 19:31:00",
+              "2019-12-26 19:21:00",
+              "2019-12-26 19:11:00",
+              "2019-12-26 19:01:00",
+              "2019-12-26 18:51:00",
+              "2019-12-26 18:41:00",
+              "2019-12-26 18:31:00",
+              "2019-12-26 18:21:00",
+              "2019-12-26 18:11:00",
+              "2019-12-26 18:01:00",
+              "2019-12-26 17:51:00",
+              "2019-12-26 17:41:00",
+              "2019-12-26 17:31:00",
+              "2019-12-26 17:21:00",
+              "2019-12-26 17:11:00",
+              "2019-12-26 17:01:00",
+              "2019-12-26 16:51:00",
+              "2019-12-26 16:41:00",
+              "2019-12-26 16:31:00",
+              "2019-12-26 16:21:00",
+              "2019-12-26 16:11:00",
+              "2019-12-26 16:01:00",
+              "2019-12-26 15:51:00",
+              "2019-12-26 15:41:00",
+              "2019-12-26 15:31:00",
+              "2019-12-26 15:21:00",
+              "2019-12-26 15:11:00",
+              "2019-12-26 15:01:00",
+              "2019-12-26 14:51:00",
+              "2019-12-26 14:41:00",
+              "2019-12-26 14:31:00",
+              "2019-12-26 14:21:00",
+              "2019-12-26 14:11:00",
+              "2019-12-26 14:01:00",
+              "2019-12-26 13:51:00",
+              "2019-12-26 13:41:00",
+              "2019-12-26 13:31:00",
+              "2019-12-26 13:21:00",
+              "2019-12-26 13:11:00",
+              "2019-12-26 13:01:00",
+              "2019-12-26 12:51:00",
+              "2019-12-26 12:41:00",
+              "2019-12-26 12:31:00",
+              "2019-12-26 12:21:00",
+              "2019-12-26 12:11:00",
+              "2019-12-26 12:01:00",
+              "2019-12-26 11:51:00",
+              "2019-12-26 11:41:00",
+              "2019-12-26 11:31:00",
+              "2019-12-26 11:21:00",
+              "2019-12-26 11:11:00",
+              "2019-12-26 11:01:00",
+              "2019-12-26 10:51:00",
+              "2019-12-26 10:41:00",
+              "2019-12-26 10:31:00",
+              "2019-12-26 10:21:00",
+              "2019-12-26 10:11:00",
+              "2019-12-26 10:01:00",
+              "2019-12-26 09:51:00",
+              "2019-12-26 09:41:00",
+              "2019-12-26 09:31:00",
+              "2019-12-26 09:21:00",
+              "2019-12-26 09:11:00",
+              "2019-12-26 09:01:00",
+              "2019-12-26 08:51:00",
+              "2019-12-26 08:41:00",
+              "2019-12-26 08:31:00",
+              "2019-12-26 08:21:00",
+              "2019-12-26 08:11:00",
+              "2019-12-26 08:01:00",
+              "2019-12-26 07:51:00",
+              "2019-12-26 07:41:00",
+              "2019-12-26 07:31:00",
+              "2019-12-26 07:21:00",
+              "2019-12-26 07:11:00"
             ],
             "average": [
               0,
@@ -1300,6 +1266,26 @@
           },
           "P1W": {
             "time": [
+              "2019-12-27 07:00:00",
+              "2019-12-27 06:00:00",
+              "2019-12-27 05:00:00",
+              "2019-12-27 04:00:00",
+              "2019-12-27 03:00:00",
+              "2019-12-27 02:00:00",
+              "2019-12-27 01:00:00",
+              "2019-12-27 00:00:00",
+              "2019-12-26 23:00:00",
+              "2019-12-26 22:00:00",
+              "2019-12-26 21:00:00",
+              "2019-12-26 20:00:00",
+              "2019-12-26 19:00:00",
+              "2019-12-26 18:00:00",
+              "2019-12-26 17:00:00",
+              "2019-12-26 16:00:00",
+              "2019-12-26 15:00:00",
+              "2019-12-26 14:00:00",
+              "2019-12-26 13:00:00",
+              "2019-12-26 12:00:00",
               "2019-12-26 11:00:00",
               "2019-12-26 10:00:00",
               "2019-12-26 09:00:00",
@@ -1447,27 +1433,7 @@
               "2019-12-20 11:00:00",
               "2019-12-20 10:00:00",
               "2019-12-20 09:00:00",
-              "2019-12-20 08:00:00",
-              "2019-12-20 07:00:00",
-              "2019-12-20 06:00:00",
-              "2019-12-20 05:00:00",
-              "2019-12-20 04:00:00",
-              "2019-12-20 03:00:00",
-              "2019-12-20 02:00:00",
-              "2019-12-20 01:00:00",
-              "2019-12-20 00:00:00",
-              "2019-12-19 23:00:00",
-              "2019-12-19 22:00:00",
-              "2019-12-19 21:00:00",
-              "2019-12-19 20:00:00",
-              "2019-12-19 19:00:00",
-              "2019-12-19 18:00:00",
-              "2019-12-19 17:00:00",
-              "2019-12-19 16:00:00",
-              "2019-12-19 15:00:00",
-              "2019-12-19 14:00:00",
-              "2019-12-19 13:00:00",
-              "2019-12-19 12:00:00"
+              "2019-12-20 08:00:00"
             ],
             "average": [
               0,
@@ -1812,6 +1778,11 @@
           },
           "P1M": {
             "time": [
+              "2019-12-27 04:00:00",
+              "2019-12-27 00:00:00",
+              "2019-12-26 20:00:00",
+              "2019-12-26 16:00:00",
+              "2019-12-26 12:00:00",
               "2019-12-26 08:00:00",
               "2019-12-26 04:00:00",
               "2019-12-26 00:00:00",
@@ -1992,14 +1963,14 @@
               "2019-11-26 20:00:00",
               "2019-11-26 16:00:00",
               "2019-11-26 12:00:00",
-              "2019-11-26 08:00:00",
-              "2019-11-26 04:00:00",
-              "2019-11-26 00:00:00",
-              "2019-11-25 20:00:00",
-              "2019-11-25 16:00:00",
-              "2019-11-25 12:00:00"
+              "2019-11-26 08:00:00"
             ],
             "average": [
+              0,
+              0,
+              0,
+              0,
+              0,
               0,
               0,
               0,
@@ -2180,14 +2151,14 @@
               0,
               0,
               0,
-              0,
-              0,
-              0,
-              0,
-              0,
               0
             ],
             "amount": [
+              0,
+              0,
+              0,
+              0,
+              0,
               0,
               0,
               0,
@@ -2368,18 +2339,13 @@
               0,
               0,
               0,
-              0,
-              0,
-              0,
-              0,
-              0,
               0
             ]
           },
           "category": "Monitoring \/ Statistics",
           "details": "Statistics of processed tasks",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFinishedCheck",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2390,7 +2356,7 @@
           "category": "Configuration Values",
           "details": "Heartbeat timing",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\HeartBeatCheck",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2401,7 +2367,7 @@
           "category": "Configuration Values",
           "details": "Auto cancellation\/termination configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\AutoSystemTerminationCheck",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2412,7 +2378,7 @@
           "category": "Configuration Values",
           "details": "Login Queue service configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\LoginQueueCheck",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2423,7 +2389,7 @@
           "category": "TAO Configuration",
           "details": "SNS messaging service configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\Act\\SNSCheck",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2435,7 +2401,7 @@
           "category": "Monitoring \/ Statistics",
           "details": "Number of tasks in the task queue",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueMonitoring",
-          "date": 1577360190
+          "date": 1577430632
         },
         "children": []
       },
@@ -2447,7 +2413,7 @@
           "category": "Monitoring \/ Statistics",
           "details": "Used space on ElastiCache storage",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\AwsRedisFreeSpaceCheck",
-          "date": 1577360196
+          "date": 1577430635
         },
         "children": []
       },
@@ -2459,7 +2425,7 @@
           "category": "Monitoring \/ Statistics",
           "details": "Used space on RDS storage",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\AwsRDSFreeSpaceCheck",
-          "date": 1577360198
+          "date": 1577430636
         },
         "children": []
       },
@@ -2470,7 +2436,7 @@
           "category": "TAO Configuration",
           "details": "ODS\/LEAP services configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\Act\\OdsConfigurationCheck",
-          "date": 1577360198
+          "date": 1577430636
         },
         "children": [
           {
@@ -2506,7 +2472,51 @@
           "category": "TAO Configuration",
           "details": "Web sources configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\System\\WebSourceTTLCheck",
-          "date": 1577360198
+          "date": 1577430637
+        },
+        "children": []
+      },
+      {
+        "type": "warning",
+        "message": "wkhtmltopdf lib has the wrong version 0.12.4. Should 0.12.5 or more",
+        "data": {
+          "category": "Health\/Readiness check",
+          "details": "wkhtmltopdf library presence and version",
+          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\WkhtmltopdfCheck",
+          "date": 1577430370
+        },
+        "children": []
+      },
+      {
+        "type": "success",
+        "message": "All messages.json exist",
+        "data": {
+          "category": "Health\/Readiness check",
+          "details": "messages.json language file presence and correctness",
+          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\MessagesJsonCheck",
+          "date": 1577430360
+        },
+        "children": []
+      },
+      {
+        "type": "success",
+        "message": "TAO has permissions to write into 'config' and 'data' folders",
+        "data": {
+          "category": "Health\/Readiness check",
+          "details": "Permissions to write into 'config' and 'data' folders",
+          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\WriteConfigDataCheck",
+          "date": 1577430370
+        },
+        "children": []
+      },
+      {
+        "type": "success",
+        "message": "MathJax is configured correctly",
+        "data": {
+          "category": "Health\/Readiness check",
+          "details": "MathJax presence",
+          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\MathJaxCheck",
+          "date": 1577430370
         },
         "children": []
       },
@@ -2517,7 +2527,7 @@
           "category": "Health\/Readiness check",
           "details": "CRON jobs configuration",
           "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\CronCheck",
-          "date": 1577360176
+          "date": 1577430371
         },
         "children": [
           {
@@ -2533,50 +2543,6 @@
             "children": []
           }
         ]
-      },
-      {
-        "type": "success",
-        "message": "TAO has permissions to write into 'config' and 'data' folders",
-        "data": {
-          "category": "Health\/Readiness check",
-          "details": "Permissions to write into 'config' and 'data' folders",
-          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\WriteConfigDataCheck",
-          "date": 1577360175
-        },
-        "children": []
-      },
-      {
-        "type": "warning",
-        "message": "wkhtmltopdf lib has the wrong version 0.12.4. Should 0.12.5 or more",
-        "data": {
-          "category": "Health\/Readiness check",
-          "details": "wkhtmltopdf library presence and version",
-          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\WkhtmltopdfCheck",
-          "date": 1577360175
-        },
-        "children": []
-      },
-      {
-        "type": "success",
-        "message": "All messages.json exist",
-        "data": {
-          "category": "Health\/Readiness check",
-          "details": "messages.json language file presence and correctness",
-          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\MessagesJsonCheck",
-          "date": 1577360164
-        },
-        "children": []
-      },
-      {
-        "type": "success",
-        "message": "MathJax is configured correctly",
-        "data": {
-          "category": "Health\/Readiness check",
-          "details": "MathJax presence",
-          "check_id": "oat\\taoSystemStatus\\model\\Check\\Instance\\MathJaxCheck",
-          "date": 1577360175
-        },
-        "children": []
       }
     ]
   }
