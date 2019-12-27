@@ -119,7 +119,7 @@ define([
                             $('.system-status-table__details-button', $table)
                                 .on('click', ({ target }) => {
                                     const reportDetails = $(target).data('report');
-
+                                    const $modal = $('<div class="modal system-status-table__details-modal"></div>');
                                     const $reportDetails = $(reportTableTpl({
                                         category: __('Task details'),
                                         columns: [__('Status'), __('Description')],
@@ -131,16 +131,18 @@ define([
                                             }))
                                     }));
 
-                                    $container.append($reportDetails);
-                                    $reportDetails.modal({
+                                    $modal.append($reportDetails);
+                                    $container.append($modal);
+                                    $modal.modal({
+                                        minWidth: 450,
                                         startClosed: true,
-                                        minWidth: 450
+                                        top: 100,
                                     });
-                                    $reportDetails.modal('open');
+                                    $modal.modal('open');
 
-                                    $reportDetails.on('closed.modal', function () {
-                                        $reportDetails.modal('destroy');
-                                        $($reportDetails).remove();
+                                    $modal.on('closed.modal', function () {
+                                        $modal.modal('destroy');
+                                        $(this).remove();
                                     });
                                 });
                         }
@@ -197,7 +199,7 @@ define([
                             $chartContainer.append($taskQueue);
                         }
                     })
-                    //.catch(() => feedback().error(__('Something went wrong.')))
+                    .catch(() => feedback().error(__('Something went wrong.')))
                     .finally(() => loadingBar.stop());
             }
         }

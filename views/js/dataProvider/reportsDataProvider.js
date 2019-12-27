@@ -65,7 +65,7 @@ define([
                 const category = categories.find((category) =>
                     reportCategories[category].indexOf(id) !== -1
                 );
-                console.log
+
                 if (category) {
                     agg[category].push(item);
                 }
