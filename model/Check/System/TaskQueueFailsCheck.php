@@ -71,12 +71,20 @@ class TaskQueueFailsCheck extends AbstractCheck
             $data = $taskReport->getData();
             $data[self::TASK_REPORT_TIME] = \tao_helpers_Date::displayeDate($task->getCreatedAt());
             $data[self::TASK_LABEL] = $task->getLabel();
-            $taskReport->setData($data);
-            $report->add($taskReport);
+
+            $taskReportFormatted = new Report($taskReport->getType(), $taskReport->getMessage());
+            $taskReportFormatted->setData($data);
+            foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
+                $childReportFormatted = new Report($child->getType(), $child->getMessage());
+                $childReportFormatted->setData($child->getData());
+                $taskReportFormatted->add($childReportFormatted);
+            }
+            $report->add($taskReportFormatted);
         }
 
         return $this->prepareReport($report);
     }
+
 
     /**
      * @return bool
@@ -119,14 +127,11 @@ class TaskQueueFailsCheck extends AbstractCheck
     {
         $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
         $taskReports = [];
+        /** @var Report $taskReport */
         foreach ($report->getChildren() as $taskReport) {
-            $flat = [];
-            foreach ($this->getRecursiveReportIterator($taskReport) as $child) {
-                $flat[] = $child;
-            }
             $taskReports[] = [
                 'task-report' => $taskReport,
-                'task-report-flat' => $flat
+                'task-report-flat' => $taskReport->getChildren()
             ];
         }
         $renderer->setData('reports', $taskReports);
