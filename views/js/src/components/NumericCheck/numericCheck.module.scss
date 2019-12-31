@@ -1,0 +1,32 @@
+$status-task-queue-background-color: #949494;
+$status-task-queue-color: #fff;
+
+.container {
+  border: 1px solid gray;
+  display: flex;
+  height : 200px;
+  margin-left: 13px;
+  width  : 250px;
+}
+
+.icon {
+  align-items: center;
+  background: $status-task-queue-background-color;
+  color: $status-task-queue-color;
+  display: flex;
+  font-size: 20px;
+  justify-content: center;
+  width: 70px;
+}
+
+.description {
+  font-size: 28px;
+  padding: 10px;
+  text-align: center;
+  width: 180px;
+}
+
+.descriptionTitle {
+  font-size: 20px;
+  margin-bottom: 50px;
+}

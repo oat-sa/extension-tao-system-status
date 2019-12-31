@@ -1,0 +1,3 @@
+import TaskQueueStatistic from 'components/TaskQueueStatistic/TaskQueueStatisticContainer'
+
+export default TaskQueueStatistic

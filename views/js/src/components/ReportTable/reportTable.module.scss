@@ -1,0 +1,80 @@
+$status-table-head-background-color: #949494;
+$status-table-head-color: #fff;
+$status-table-row-even-background-color: #fff;
+$status-table-row-odd-background-color: #f9f9f9;
+
+.wrapper {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.title {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.table {
+  border-collapse: collapse;
+  position: relative;
+  width: 100%;
+}
+
+.row {
+  border: 1px solid grey;
+  border-top: none;
+  height: 40px;
+  padding: 5px 0;
+  text-align: center;
+
+  td {
+    min-width: 280px;
+    padding: 0 10px;
+  }
+}
+
+.headRow {
+  th {
+    background-color: $status-table-head-background-color;
+    color: $status-table-head-color;
+  }
+}
+
+.statusCell.statusCell {
+  min-width: unset;
+  padding: 0;
+  width: 60px;
+}
+
+.detailsButton {
+  background-color: transparent;
+  border: 1px solid gray;
+  color: black;
+  height: 30px;
+  outline: none;
+}
+
+.iconSuccess,
+.iconError,
+.iconWarning {
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  font-size: 20px;
+  justify-content: center;
+  height: 30px;
+  margin: 0 15px;
+  width: 30px;
+}
+
+.iconError {
+  background-color: red;
+}
+
+.iconSuccess {
+  background-color: green;
+}
+
+.iconWarning {
+  background-color: orange;
+}
