@@ -102,12 +102,16 @@ class OdsConfigurationCheck extends AbstractCheck
         $url = $this->getOdsResultService()->getOption(OdsResultService::OPTION_ODS_URL);
         $url = rtrim($url, '/') . '/reconcile/';
         $response = $service->request($url, [], 'POST');
-        $code = $response->getStatusCode();
-        $body = (string) $response->getBody();
-
-        if ($code === 400 && $body === 'EVENT PAYLOAD IS REQUIRED') {
-            return new Report(Report::TYPE_SUCCESS, __('Ods Connector service correctly configured'));
+        if ($response) {
+            $code = $response->getStatusCode();
+            $body = (string) $response->getBody();
+            if ($code === 400 && $body === 'EVENT PAYLOAD IS REQUIRED') {
+                return new Report(Report::TYPE_SUCCESS, __('Ods Connector service correctly configured'));
+            }
+        } else {
+            return new Report(Report::TYPE_ERROR, __('Error during execution of ODS request'));
         }
+
         return new Report(Report::TYPE_ERROR, $body);
     }
 
