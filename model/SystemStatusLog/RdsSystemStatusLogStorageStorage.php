@@ -80,7 +80,9 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
      */
     public function getLatest(\DateInterval $interval)
     {
-        $date = (new \DateTime)->sub($interval);
+        $dbNow = $this->getPersistence()->getPlatForm()->getNowExpression();
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $dbNow);
+        $date = $date->sub($interval);
         $conditionSql = $this->getQueryBuilder()
             ->select('max('.self::COLUMN_ID.')')
             ->where(self::COLUMN_CREATED_AT . ' > :date')
