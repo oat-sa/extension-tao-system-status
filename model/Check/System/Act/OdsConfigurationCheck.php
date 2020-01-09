@@ -101,7 +101,7 @@ class OdsConfigurationCheck extends AbstractCheck
         //attempt to make an empty 'reconcile' request
         $url = $this->getOdsResultService()->getOption(OdsResultService::OPTION_ODS_URL);
         $url = rtrim($url, '/') . '/reconcile/';
-        $response = $service->request($url, 'POST');
+        $response = $service->request($url, [], 'POST');
         $code = $response->getStatusCode();
         $body = (string) $response->getBody();
 
