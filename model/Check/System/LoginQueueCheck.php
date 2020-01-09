@@ -91,7 +91,7 @@ class LoginQueueCheck extends AbstractCheck
         $restrictionsOptions = '';
         foreach ($restrictions as $restriction => $property) {
             $restrictionName = explode('\\', $restriction);
-            $restrictionsOptions .= end($restrictionName) .'='.$property . PHP_EOL;
+            $restrictionsOptions .= end($restrictionName) .'='.json_encode($property) . PHP_EOL;
         }
         return new Report(Report::TYPE_INFO, __('Implementation: GetActiveDeliveryExecution') . PHP_EOL . __('Options:') . ' '. $restrictionsOptions);
 
