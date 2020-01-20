@@ -19,7 +19,7 @@
 define([
     'util/url',
     'core/request',
-    'json!./data.json'
+    'json!/taoSystemStatus/SystemStatus/reports'
 ], function (urlHelper, request, data) {
 
     const reportCategories = {

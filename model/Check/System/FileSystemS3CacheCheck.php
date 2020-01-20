@@ -31,6 +31,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class FileSystemS3CacheCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'config';
+
     /**
      * @param array $params
      * @return Report

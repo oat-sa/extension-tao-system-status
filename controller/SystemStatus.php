@@ -38,17 +38,7 @@ class SystemStatus extends \tao_actions_SinglePageModule
      */
     public function index()
     {
-        $report = $this->getSystemStatusService()->check();
-        $this->setData('report', $report);
-        $reportsByStatus = [];
-        foreach ($report->getChildren() as $childReport) {
-            $check = $this->getSystemStatusService()->getCheck($childReport->getData()[CheckInterface::PARAM_CHECK_ID]);
-            $reportsByStatus[$check->getCategory()][] = $childReport;
-        }
-        ksort($reportsByStatus);
-        $this->setData('reports_by_status', $reportsByStatus);
         $this->setData('support_portal_link', $this->getSystemStatusService()->getSupportPortalLink());
-        $this->setData('service', $this->getSystemStatusService());
         $this->setView('Status/index.tpl');
     }
 
@@ -57,14 +47,8 @@ class SystemStatus extends \tao_actions_SinglePageModule
      */
     public function reports()
     {
-        $params = $this->getPsrRequest()->getQueryParams();
         /** @var Report[] $reports */
         $reports = $this->getSystemStatusService()->check();
-
-        if (isset($params['category'])) {
-            //todo: filter reports by category
-        }
-
         $this->returnJson(['report' => $reports]);
     }
 

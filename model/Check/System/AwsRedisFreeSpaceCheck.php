@@ -29,7 +29,6 @@ use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
 use oat\taoSystemStatus\model\SystemCheckException;
 use oat\awsTools\AwsClient;
-use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
  * Class AwsRedisFreeSpaceCheck
@@ -38,8 +37,9 @@ use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
  */
 class AwsRedisFreeSpaceCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'monitoring';
+
     use LoggerAwareTrait;
-    use PieChartReportRenderer;
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;

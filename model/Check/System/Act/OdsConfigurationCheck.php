@@ -36,6 +36,8 @@ use common_exception_Error;
  */
 class OdsConfigurationCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'config';
+
     /**
      * @param array $params
      * @return Report

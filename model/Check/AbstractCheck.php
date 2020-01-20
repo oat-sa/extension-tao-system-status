@@ -24,8 +24,6 @@ use common_report_Report as Report;
 use oat\oatbox\service\ServiceManagerAwareTrait;
 use common_ext_ExtensionsManager;
 use oat\tao\helpers\Template;
-use common_Exception;
-use Renderer;
 
 /**
  * class AbstractCheck
@@ -35,6 +33,8 @@ use Renderer;
 abstract class AbstractCheck implements CheckInterface
 {
     use ServiceManagerAwareTrait;
+
+    const CATEGORY_ID = 'system';
 
     /** @var array  */
     private $params;
@@ -82,17 +82,6 @@ abstract class AbstractCheck implements CheckInterface
     }
 
     /**
-     * @inheritdoc
-     * @throws common_Exception
-     */
-    public function renderReport(Report $report): string
-    {
-        $renderer = new Renderer($this->getTemplate());
-        $renderer->setData('report', $report);
-        return $renderer->render();
-    }
-
-    /**
      * @return string
      */
     protected function getTemplate() : string
@@ -112,6 +101,7 @@ abstract class AbstractCheck implements CheckInterface
             $data = [];
         }
         $data[self::PARAM_CATEGORY] = $this->getCategory();
+        $data[self::PARAM_CATEGORY_ID] = $this->getCategoryId();
         $data[self::PARAM_DETAILS] = $this->getDetails();
         $data[self::PARAM_CHECK_ID] = $this->getId();
         $data[self::PARAM_DATE] = time();
@@ -162,5 +152,13 @@ abstract class AbstractCheck implements CheckInterface
         //this is an assumption.
         //Todo: check if there is another way to check if we are in the AWS environment.
         return $this->getServiceLocator()->has('generis/awsClient');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategoryId(): string
+    {
+        return static::CATEGORY_ID;
     }
 }

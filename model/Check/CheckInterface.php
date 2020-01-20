@@ -37,9 +37,8 @@ interface CheckInterface extends Action, ServiceLocatorAwareInterface
     /** @var string common check */
     const TYPE_SYSTEM = 'system';
 
-    const DEFAULT_CATEGORY = 'Tao System';
-
     const PARAM_CATEGORY = 'category';
+    const PARAM_CATEGORY_ID = 'category_id';
     const PARAM_DETAILS = 'details';
     const PARAM_CHECK_ID = 'check_id';
     const PARAM_DATE = 'date';
@@ -55,6 +54,11 @@ interface CheckInterface extends Action, ServiceLocatorAwareInterface
      * @return string
      */
     public function getCategory(): string;
+
+    /**
+     * @return string
+     */
+    public function getCategoryId(): string;
 
     /**
      * @return string
@@ -86,11 +90,5 @@ interface CheckInterface extends Action, ServiceLocatorAwareInterface
      * @return bool
      */
     public function isActive(): bool;
-
-    /**
-     * @param Report $report
-     * @return string
-     */
-    public function renderReport(Report $report): string;
 
 }

@@ -30,6 +30,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class WriteConfigDataCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
+
     /**
      * @param array $params
      * @return Report
