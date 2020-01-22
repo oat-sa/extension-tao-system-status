@@ -14,29 +14,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2020 (original work) Open Assessment Technologies SA ;
  *
  */
 
-namespace oat\taoSystemStatus\scripts\update;
-
-use common_ext_ExtensionUpdater;
+namespace oat\taoSystemStatus\controller;
 
 /**
- * Class Updater
- *
- * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * Class ExecutionScrutinizer
+ * @package oat\taoSystemStatus\controller
+ * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
-class Updater extends common_ext_ExtensionUpdater
+class ExecutionScrutinizer extends \tao_actions_SinglePageModule
 {
-    /**
-     * @param $initialVersion
-     * @return string|void
-     */
-    public function update($initialVersion)
+
+    public function index()
     {
-        $this->skip('0.0.1', '0.6.0');
+        $this->setView('ExecutionScrutinizer/index.tpl');
     }
 }
-
