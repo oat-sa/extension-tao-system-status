@@ -5,7 +5,22 @@
         <description />
         <icon id="icon-tools" src=""/>
         <sections>
-            <section id="system_status" name="System Status" url="/taoSystemStatus/SystemStatus/index" />
+            <section id="system_status" name="System Status" url="/taoSystemStatus/SystemStatus/index">
+                <actions>
+                    <action id="system_status" name="Health and Configuration" url="/taoSystemStatus/SystemStatus/index" context="*" group="content">
+                        <icon id="icon-test"/>
+                    </action>
+                    <action id="performance_monitoring" name="Performance Monitoring" url="/taoSystemStatus/PerformanceMonitoring/index" context="*" group="content">
+                        <icon id="icon-test"/>
+                    </action>
+                    <action id="audit_logs" name="Audit Logs" url="/taoSystemStatus/AuditLogs/index" context="*" group="content">
+                        <icon id="icon-test"/>
+                    </action>
+                    <action id="execution_scrutinizer" name="Delivery Execution Scrutinizer" url="/taoSystemStatus/ExecutionScrutinizer/index" context="*" group="content">
+                        <icon id="icon-test"/>
+                    </action>
+                </actions>
+            </section>
         </sections>
     </structure>
 </structures>
