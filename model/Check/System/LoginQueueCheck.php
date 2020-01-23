@@ -32,6 +32,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class LoginQueueCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'config_values';
+
     /**
      * @param array $params
      * @return Report

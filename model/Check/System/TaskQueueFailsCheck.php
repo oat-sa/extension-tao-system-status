@@ -44,6 +44,7 @@ class TaskQueueFailsCheck extends AbstractCheck
     const PARAM_DEFAULT_LIMIT = 10;
     const TASK_REPORT_TIME = 'task_report_time';
     const TASK_LABEL = 'task_label';
+    const CATEGORY_ID = 'monitoring';
 
     /**
      * @param array $params
@@ -116,26 +117,6 @@ class TaskQueueFailsCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Last failed tasks in the task queue');
-    }
-
-    /**
-     * @param Report $report
-     * @return string
-     * @throws common_Exception
-     */
-    public function renderReport(Report $report): string
-    {
-        $renderer = new \Renderer(Template::getTemplate('Reports/taskReport.tpl', 'taoSystemStatus'));
-        $taskReports = [];
-        /** @var Report $taskReport */
-        foreach ($report->getChildren() as $taskReport) {
-            $taskReports[] = [
-                'task-report' => $taskReport,
-                'task-report-flat' => $taskReport->getChildren()
-            ];
-        }
-        $renderer->setData('reports', $taskReports);
-        return $renderer->render();
     }
 
     /**

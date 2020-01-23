@@ -31,6 +31,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class MathJaxCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
+
     const MATH_JAX_FOLDER_PREFIX = 'views/js/mathjax';
 
     /**

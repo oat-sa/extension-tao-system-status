@@ -30,6 +30,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class DebugModeCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'config_values';
+
     /**
      * @param array $params
      * @return Report
