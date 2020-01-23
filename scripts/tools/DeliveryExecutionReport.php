@@ -20,12 +20,16 @@
 
 namespace oat\taoSystemStatus\scripts\tools;
 
+use common_exception_Error;
+use common_exception_NotFound;
+use InvalidArgumentException;
 use oat\oatbox\extension\AbstractAction;
 use oat\oatbox\log\LoggerAwareTrait;
 use oat\tao\model\taskQueue\TaskLog;
 use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
-use oat\taoAct\model\Ods\DeliveryLogCacheService;
+use oat\taoAct\model\transmissionLog\TransmissionLog;
+use oat\taoAct\model\transmissionLog\TransmissionLogService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoProctoring\model\deliveryLog\DeliveryLog;
 use oat\taoProctoring\model\monitorCache\DeliveryMonitoringService;
@@ -42,13 +46,8 @@ class DeliveryExecutionReport extends AbstractAction
 {
     use LoggerAwareTrait;
 
-    private static $validMethods = ['show'];
-
-    /** @var array */
-    private $params;
-
     /** @var string */
-    private $method;
+    private $executionDeliveryId;
 
     /**
      * @inheritdoc
@@ -56,7 +55,7 @@ class DeliveryExecutionReport extends AbstractAction
     public function __invoke($params = [])
     {
         $this->init($params);
-        return call_user_func_array([$this, $this->method], $this->params);
+        return $this->execute($this->executionDeliveryId);
     }
 
     /**
@@ -65,11 +64,10 @@ class DeliveryExecutionReport extends AbstractAction
      */
     private function init($params = [])
     {
-        if (!isset($params[0]) || !in_array($params[0], self::$validMethods)) {
-            throw new \InvalidArgumentException('Wrong method parameter. Available methods: ' . implode(',', self::$validMethods));
+        if (!isset($params[0])) {
+            throw new InvalidArgumentException('Missing parameter');
         }
-        $this->method = $params[0];
-        $this->params = array_slice($params, 1);
+        $this->executionDeliveryId = $params[0];
     }
 
     /**
@@ -77,32 +75,22 @@ class DeliveryExecutionReport extends AbstractAction
      *
      * Run example:
      * ```
-     * sudo php index.php 'oat\taoSystemStatus\scripts\tools\DeliveryExecutionReport' show http://act-pr.docker.localhost/tao.rdf#i5e28154860c9a17943be5add4f7b1b5
+     * sudo php index.php 'oat\taoSystemStatus\scripts\tools\DeliveryExecutionReport' http://act-pr.docker.localhost/tao.rdf#i5e28154860c9a17943be5add4f7b1b5
      * ```
      *
      * @param string $executionId
      * @return Report
-     * @throws \common_exception_Error
-     * @throws \common_exception_NotFound
+     * @throws common_exception_Error
+     * @throws common_exception_NotFound
      */
-    private function show($executionId)
+    private function execute($executionId)
     {
+        $report = new Report(Report::TYPE_INFO, sprintf('Information about delivery execution %s', $executionId));
         $extensionManager = $this->getExtensionManager();
+
         $deliveryExecutionService = $this->getDeliveryExecutionService();
         $deliveryExecution = $deliveryExecutionService->getDeliveryExecution($executionId);
-        $report = new Report(Report::TYPE_INFO, sprintf('Information about delivery execution %s', $executionId));
-
-        $report->add(
-            new Report(
-                Report::TYPE_INFO,
-                'Delivery Id: ' . $deliveryExecution->getDelivery()->getUri() . PHP_EOL .
-                '  User Id: ' . $deliveryExecution->getUserIdentifier() . PHP_EOL .
-                '  Status: ' . $deliveryExecution->getState()->getLabel() . PHP_EOL .
-                '  Start Time: ' . $this->getFormatDate($deliveryExecution->getStartTime()) . PHP_EOL .
-                '  Finish Time: ' . $this->getFormatDate($deliveryExecution->getFinishTime()) . PHP_EOL .
-                '  Label: ' . $deliveryExecution->getLabel() . PHP_EOL
-            )
-        );
+        $this->addSubReport($report, 'Delivery execution report', $deliveryExecution);
 
         if ($extensionManager->isInstalled('taoProctoring')) {
             $deliveryLog = $this->getDeliveryLog();
@@ -110,27 +98,45 @@ class DeliveryExecutionReport extends AbstractAction
                 'order' => DeliveryLog::CREATED_AT,
                 'dir' => 'asc',
             ]);
-            $report->setData($deliveryLogEvents);
+            $this->addSubReport($report, 'Delivery log report', $deliveryLogEvents);
+
             $monitoringService = $this->getDeliveryMonitoringService();
             $deliveryMonitoringData = $monitoringService->getData($deliveryExecution)->get();
-            $report->setData($deliveryMonitoringData);
+            $this->addSubReport($report, 'Delivery monitoring report', $deliveryMonitoringData);
         }
 
         if ($extensionManager->isInstalled('taoAct')) {
-            $odsTaoActDeliveryLogCacheService = $this->getDeliveryLogCacheService();
-            $odsEvents = $odsTaoActDeliveryLogCacheService->get($executionId);
-            $report->setData($odsEvents);
+            $transmissionLogService = $this->getTransmissionLogService();
+            $odsEvents = $transmissionLogService->findTransmissions([
+                TransmissionLog::COLUMN_SESSION_ID => $this->getIdentifier($executionId)
+            ]);
+            $this->addSubReport($report, 'Ods log report', $odsEvents);
         }
 
         $taskLog = $this->getTaskLog();
-        $optionCondition = sprintf('%%%s%%', strstr($executionId, '#'));
+        $optionCondition = sprintf('%%%s%%', $this->getIdentifier($executionId));
         $filter = (new TaskLogFilter())
             ->like(TaskLogBrokerInterface::COLUMN_PARAMETERS, $optionCondition)
             ->gte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $this->getFormatDate($deliveryExecution->getStartTime()));
         $taskLogInform = $taskLog->search($filter)->toArray();
-        $report->setData($taskLogInform);
+        $this->addSubReport($report, 'Tasks log report', $taskLogInform);
 
         return $report;
+    }
+
+
+    /**
+     * Add a subReport to the main report
+     * @param Report $report
+     * @param mixed $data
+     * @param string $message
+     * @throws common_exception_Error
+     */
+    private function addSubReport($report, $message, $data)
+    {
+        $deliveryExecutionReport = new Report(Report::TYPE_INFO, $message);
+        $deliveryExecutionReport->setData($data);
+        $report->add($deliveryExecutionReport);
     }
 
     /**
@@ -144,6 +150,16 @@ class DeliveryExecutionReport extends AbstractAction
         date_default_timezone_set('UTC');
         $timestamp = explode(' ', $microtime){1};
         return date($format, $timestamp);
+    }
+
+    /**
+     * Returns identifier from full uri
+     * @param string $uri
+     * @return string
+     */
+    private function getIdentifier($uri)
+    {
+        return substr($uri, strpos($uri, '#') + 1);
     }
 
     /**
@@ -179,19 +195,19 @@ class DeliveryExecutionReport extends AbstractAction
     }
 
     /**
-     * @return DeliveryLogCacheService|object
-     */
-    private function getDeliveryLogCacheService()
-    {
-        return $this->getServiceLocator()->get(DeliveryLogCacheService::SERVICE_ID);
-    }
-
-    /**
      * @return TaskLog|object
      */
     private function getTaskLog()
     {
         return $this->getServiceLocator()->get(TaskLog::SERVICE_ID);
+    }
+
+    /**
+     * @return TransmissionLogService|object
+     */
+    private function getTransmissionLogService()
+    {
+        return $this->getServiceLocator()->get(TransmissionLogService::SERVICE_ID);
     }
 
 }
