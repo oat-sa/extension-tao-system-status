@@ -37,11 +37,11 @@ class Updater extends common_ext_ExtensionUpdater
      */
     public function update($initialVersion)
     {
-        $this->skip('0.0.1', '0.7.0');
+        $this->skip('0.0.1', '0.8.0');
 
-        if ($this->isVersion('0.7.0')) {
+        if ($this->isVersion('0.8.0')) {
             $this->getServiceManager()->register(ExecutionsStatistics::SERVICE_ID, new ExecutionsStatistics([]));
-            $this->setVersion('0.8.0');
+            $this->setVersion('0.9.0');
         }
     }
 }
