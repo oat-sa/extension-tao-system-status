@@ -11,9 +11,8 @@ use oat\tao\helpers\Template;
         </div>
         <div class="grid-row">
             <div class="col-12">
-                <h2 class="section_header"><?= __('TAO Configuration') ?></h2>
+                <h2 class="section_header"><?= __('Test session statistics') ?></h2>
                 <div class="js-report">
-                    <h3>Test session statistics</h3>
                     <div>
                         <select class="js-execution-statistics-interval" data-has-search="false">
                             <option value="PT1H"><?= __('Last Hour') ?></option>
