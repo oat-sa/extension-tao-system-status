@@ -6,8 +6,27 @@ use oat\tao\helpers\Template;
     <div class="grid-container">
         <div class="grid-row">
             <div class="col-12">
-                <h1>Performance Monitoring - Page under construction</h1>
+                <h1>Performance Monitoring</h1>
             </div>
         </div>
-    <div>
+        <div class="grid-row">
+            <div class="col-12">
+                <h2 class="section_header"><?= __('TAO Configuration') ?></h2>
+                <div class="js-report">
+                    <h3>Test session statistics</h3>
+                    <div>
+                        <select class="js-execution-statistics-interval" data-has-search="false">
+                            <option value="PT1H"><?= __('Last Hour') ?></option>
+                            <option value="P1D"><?= __('Last Day') ?></option>
+                            <option value="P1M"><?= __('Last Month') ?></option>
+                        </select>
+                        <em>Note: statistics represented in UTC timezone.</em>
+                        <div class="tasks-graph-container js-execution-statistics-graph-container">
+                            <div class="js-execution-statistics-graph"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

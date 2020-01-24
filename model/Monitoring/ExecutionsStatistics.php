@@ -43,7 +43,7 @@ class ExecutionsStatistics extends ConfigurableService
      * @return array|mixed[]
      * @throws SystemStatusException
      */
-    private function getStartedExecutionsData(DatePeriod $period)
+    public function getStartedExecutionsData(DatePeriod $period)
     {
         $persistence = $this->getPersistence();
 
@@ -81,7 +81,7 @@ class ExecutionsStatistics extends ConfigurableService
      * @return array|mixed[]
      * @throws SystemStatusException
      */
-    private function getFinishedExecutionsData(DatePeriod $period)
+    public function getFinishedExecutionsData(DatePeriod $period)
     {
         $persistence = $this->getPersistence();
 
