@@ -46,7 +46,7 @@ define([
             },
             bar: {
                 width: {
-                    ratio: 0.9
+                    ratio: 0.7
                 }
             },
             tooltip: {
