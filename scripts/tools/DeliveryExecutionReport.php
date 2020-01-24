@@ -30,6 +30,7 @@ use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
 use oat\taoAct\model\transmissionLog\TransmissionLog;
 use oat\taoAct\model\transmissionLog\TransmissionLogService;
+use oat\taoDelivery\model\execution\rds\RdsDeliveryExecutionService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoProctoring\model\deliveryLog\DeliveryLog;
 use oat\taoProctoring\model\monitorCache\DeliveryMonitoringService;
@@ -38,6 +39,13 @@ use common_ext_ExtensionsManager;
 
 /**
  * Class DeliveryExecutionReport
+ *
+ * Show comprehensive information about delivery execution
+ *
+ * Run example:
+ * ```
+ * sudo php index.php 'oat\taoSystemStatus\scripts\tools\DeliveryExecutionReport' http://act-pr.docker.localhost/tao.rdf#i5e28154860c9a17943be5add4f7b1b5
+ * ```
  *
  * @package oat\taoSystemStatus\scripts\tools
  * @author Andrei Niahrou, <Andrei.Niahrou@1pt.com>
@@ -71,13 +79,6 @@ class DeliveryExecutionReport extends AbstractAction
     }
 
     /**
-     * Show comprehensive information about delivery execution
-     *
-     * Run example:
-     * ```
-     * sudo php index.php 'oat\taoSystemStatus\scripts\tools\DeliveryExecutionReport' http://act-pr.docker.localhost/tao.rdf#i5e28154860c9a17943be5add4f7b1b5
-     * ```
-     *
      * @param string $executionId
      * @return Report
      * @throws common_exception_Error
@@ -90,7 +91,14 @@ class DeliveryExecutionReport extends AbstractAction
 
         $deliveryExecutionService = $this->getDeliveryExecutionService();
         $deliveryExecution = $deliveryExecutionService->getDeliveryExecution($executionId);
-        $this->addSubReport($report, 'Delivery execution report', $deliveryExecution);
+        $this->addSubReport($report, 'Delivery execution report', [
+            RdsDeliveryExecutionService::COLUMN_LABEL => $deliveryExecution->getLabel(),
+            RdsDeliveryExecutionService::COLUMN_DELIVERY_ID => $deliveryExecution->getDelivery()->getUri(),
+            RdsDeliveryExecutionService::COLUMN_USER_ID => $deliveryExecution->getUserIdentifier(),
+            RdsDeliveryExecutionService::COLUMN_STATUS => $deliveryExecution->getState()->getLabel(),
+            RdsDeliveryExecutionService::COLUMN_STARTED_AT => $this->getFormatDate($deliveryExecution->getStartTime()),
+            RdsDeliveryExecutionService::COLUMN_FINISHED_AT => $this->getFormatDate($deliveryExecution->getFinishTime())
+        ]);
 
         if ($extensionManager->isInstalled('taoProctoring')) {
             $deliveryLog = $this->getDeliveryLog();
@@ -124,7 +132,6 @@ class DeliveryExecutionReport extends AbstractAction
         return $report;
     }
 
-
     /**
      * Add a subReport to the main report
      * @param Report $report
@@ -134,6 +141,7 @@ class DeliveryExecutionReport extends AbstractAction
      */
     private function addSubReport($report, $message, $data)
     {
+        $message .= ': ' . json_encode($data, JSON_PRETTY_PRINT);
         $deliveryExecutionReport = new Report(Report::TYPE_INFO, $message);
         $deliveryExecutionReport->setData($data);
         $report->add($deliveryExecutionReport);
