@@ -13,16 +13,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA ;
+ * Copyright (c) 2020 (original work) Open Assessment Technologies SA ;
  */
 define([
-    'jquery',
     'lodash',
     'i18n',
     'ui/component',
     'c3',
-    'tpl!taoSystemStatus/tasksMonitoring/tasksStatistics'
-], function ($, _, __, component, c3, template) {
+    'tpl!taoSystemStatus/checkRenderers/timelineStatisticGraphRenderer/timelineStatisticGraphRenderer'
+], function (_, __, component, c3, template) {
     'use strict';
 
     /**
@@ -32,7 +31,6 @@ define([
      */
     const _defaults = {
         graphConfig: {
-            bindto: '.js-tasks-graph',
             padding: {
                 bottom: 0,
                 left: 0
@@ -42,10 +40,6 @@ define([
                 xFormat: '%Y-%m-%d %H:%M:%S',
                 mimeType: 'json',
                 type: 'line',
-                names: {
-                    amount: __('Tasks processed'),
-                    average: __('Average processing time, s')
-                }
             },
             tooltip: {
                 format: {
@@ -127,10 +121,9 @@ define([
 
         return component(activityGraph)
             .setTemplate(template)
-            .on('render', function () {
+            .after('render', function () {
                 const $element = this.getElement();
                 const $intervalSelect = $element.find('.statistics-chart__interval-select');
-
                 chart = c3.generate(this.config.graphConfig);
 
                 $intervalSelect.on('change',

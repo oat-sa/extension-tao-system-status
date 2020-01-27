@@ -5,5 +5,14 @@
 @import "inc/statisticsMonitoring";
 
 .status-report-header {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.status-report-header-container {
+    width: 100%;
+
+    .btn-info.support_portal_link {
+        margin-bottom: 30px;
+    }
 }
