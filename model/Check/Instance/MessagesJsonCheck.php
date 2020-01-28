@@ -31,6 +31,7 @@ use common_ext_ExtensionException;
  */
 class MessagesJsonCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
 
     const TAO_LOCALES_PREFIX = 'views/locales';
     const MESSAGES_JSON_NAME = 'messages.json';

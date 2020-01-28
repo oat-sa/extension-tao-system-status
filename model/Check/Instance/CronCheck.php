@@ -31,6 +31,8 @@ use oat\tao\model\taskQueue\QueueDispatcherInterface;
  */
 class CronCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
+
     const PARAM_CRON_PATH = 'cron_path';
     const DEFAULT_CRON_PATH = '/etc/cron.d';
 

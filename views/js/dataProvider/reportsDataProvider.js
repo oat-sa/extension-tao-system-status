@@ -21,75 +21,37 @@ define([
     'core/request',
     'json!./data.json'
 ], function (urlHelper, request, data) {
-
-    const reportCategories = {
-        configuration: [
-            'oat\\taoSystemStatus\\model\\Check\\System\\FrontEndLogCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\TaoLtiKVCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\TaoLtiDeliveryKVCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\LockServiceCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\LocalNamespaceCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\Act\\SNSCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\Act\\OdsConfigurationCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\WebSourceTTLCheck',
-        ],
-        configurationValues: [
-            'oat\\taoSystemStatus\\model\\Check\\System\\DefaultLanguageCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\DefaultTimeZoneCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\DebugModeCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\HeartBeatCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\AutoSystemTerminationCheck',
-            'oat\\taoSystemStatus\\model\\Check\\System\\LoginQueueCheck',
-        ],
-        healthCheck: [
-            'oat\\taoSystemStatus\\model\\Check\\System\\TaoUpdateCheck',
-            'oat\\taoSystemStatus\\model\\Check\\Instance\\CronCheck',
-            'oat\\taoSystemStatus\\model\\Check\\Instance\\WriteConfigDataCheck',
-            'oat\\taoSystemStatus\\model\\Check\\Instance\\WkhtmltopdfCheck',
-            'oat\\taoSystemStatus\\model\\Check\\Instance\\MessagesJsonCheck',
-            'oat\\taoSystemStatus\\model\\Check\\Instance\\MathJaxCheck',
-        ],
-        taskQueueFails: ['oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFailsCheck'],
-        taskQueueFinished: ['oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueFinishedCheck'],
-        taskQueueMonitoring: ['oat\\taoSystemStatus\\model\\Check\\System\\TaskQueueMonitoring'],
-        redisFreeSpace: ['oat\\taoSystemStatus\\model\\Check\\System\\AwsRedisFreeSpaceCheck'],
-        rdsFreeSpace: ['oat\\taoSystemStatus\\model\\Check\\System\\AwsRDSFreeSpaceCheck'],
-    };
-
-    const responseMapper = (({ report: { children: reports } }) => {
-        const categories = Object.keys(reportCategories);
-
-        return reports.reduce(
-            (agg, item) => {
-                const { data: { check_id: id } } = item;
-                const category = categories.find((category) =>
-                    reportCategories[category].indexOf(id) !== -1
-                );
-
-                if (category) {
-                    agg[category].push(item);
-                }
-
-                return agg;
-            },
-            {
-                configuration: [],
-                configurationValues: [],
-                healthCheck: [],
-                taskQueueFails: [],
-                taskQueueFinished: [],
-                taskQueueMonitoring: [],
-                redisFreeSpace: [],
-                rdsFreeSpace: [],
+    const mapCategories = (acc, item, i, array) => {
+        const {
+            data: {
+                category: categoryTitle,
+                category_id: categoryId
             }
-        );
-    });
+        } = item;
+        const category = acc.find(({ id }) => categoryId === id)
+
+        if (!category) {
+            acc.push({
+                id: categoryId,
+                items: array.filter(({ data: { category_id: id } }) => id === categoryId),
+                title: categoryTitle,
+            });
+        }
+
+        return acc
+    }
+
+    const responseMapper = (({ report: { children: reports } }) => ({
+        categories: reports
+            .filter(({ data: { renderer } }) => !renderer)
+            .reduce(mapCategories, []),
+        checksWithCustomRenderer: reports
+            .filter(({ data: { renderer } }) => renderer),
+    }));
 
     return {
         getReports: () => {
-            return new Promise((resolve) => {
-                resolve(data)
-            }).then(responseMapper);
+            return new Promise((resolve) => resolve(data)).then(responseMapper);
 
             /*return request({
                 url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),

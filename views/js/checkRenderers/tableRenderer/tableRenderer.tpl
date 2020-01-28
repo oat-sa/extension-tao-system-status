@@ -1,4 +1,4 @@
-<div class="system-status-table-wrapper">
+<div class="system-status-table-wrapper {{#if small}}system-status-table-wrapper--small{{/if}}">
     <div class="system-status-table-title">
         {{category}}
     </div>
@@ -7,7 +7,7 @@
             <thead>
                 <tr class="system-status-table-row system-status-table-row--head">
                     {{#each columns}}
-                    <th>{{this}}</th>
+                        <th>{{this}}</th>
                     {{/each}}
                 </tr>
             </thead>

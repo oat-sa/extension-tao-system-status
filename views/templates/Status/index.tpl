@@ -4,8 +4,13 @@ use oat\tao\helpers\Template;
 
 <link rel="stylesheet" href="<?= Template::css('systemstatus.css') ?>" />
 
-<div class="status-report-container" id="system-status-report">
-    <h1 class="status-report-header"><?= __("Welcome to TAO's status page hub") ?></h1>
-    <div class="status-report-configuration-tables" id="system-status-configuration-tables">
+<div>
+    <div class="status-report-header-container">
+        <h1 class="status-report-header"><?= __("Welcome to TAO's status page hub") ?></h1>
+        <?php if ($support_portal_link): ?>
+            <a href="<?= $support_portal_link ?>" target="_blank" class="btn-info large support_portal_link"><span class="icon-save"></span> <?= __("Visit Support Portal") ?></a>
+        <?php endif; ?>
     </div>
+    <dev class="status-report-container" id="system-status-report"></div>
+    <div class="system-status__charts-container"></div>
 </div>

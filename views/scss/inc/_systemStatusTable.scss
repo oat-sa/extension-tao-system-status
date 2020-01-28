@@ -45,15 +45,8 @@ $status-table-row-odd-background-color: #f9f9f9;
             }
         }
     }
-}
 
-.status-report-configuration-tables {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    .system-status-table-wrapper {
-        margin-bottom: 0;
+    &--small {
         width: 48%;
     }
 }
@@ -71,6 +64,9 @@ $status-table-row-odd-background-color: #f9f9f9;
 }
 
 .status-report-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -97,7 +93,7 @@ $status-table-row-odd-background-color: #f9f9f9;
     .status-report-configuration-tables {
         flex-wrap: wrap;
 
-        .system-status-table-wrapper {
+        .system-status-table-wrapper--small {
             width: 100%;
         }
     }

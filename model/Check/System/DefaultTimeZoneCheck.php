@@ -30,6 +30,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class DefaultTimeZoneCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'config_values';
 
     /**
      * @param array $params

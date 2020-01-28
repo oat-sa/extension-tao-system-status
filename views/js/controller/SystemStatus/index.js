@@ -18,186 +18,33 @@
  *
  */
 define([
-    'jquery',
     'i18n',
     'taoSystemStatus/dataProvider/reportsDataProvider',
-    'tpl!taoSystemStatus/controller/SystemStatus/tpl/reportTable',
-    'tpl!taoSystemStatus/controller/SystemStatus/tpl/chartsContainer',
-    'tpl!taoSystemStatus/controller/SystemStatus/tpl/taskQueue',
-    'taoSystemStatus/tasksMonitoring/tasksStatistics',
+    'taoSystemStatus/checkRenderers/renderers',
     'layout/loading-bar',
     'ui/feedback',
-    'c3',
-    'ui/modal',
 ], function (
-    $,
     __,
     reportsDataProvider,
-    reportTableTpl,
-    chartsContainerTpl,
-    taskQueueTpl,
-    tasksStatistics,
+    renderers,
     loadingBar,
     feedback,
-    c3
 ) {
         'use strict';
 
         return {
             start: function () {
-                const $container = $('#system-status-report');
-                const $configurationTablesContainer = $('#system-status-configuration-tables');
-
                 loadingBar.start();
 
                 reportsDataProvider.getReports()
-                    .then((reports) => {
-                        const {
-                            configuration,
-                            configurationValues,
-                            healthCheck,
-                            taskQueueFails,
-                            taskQueueFinished,
-                            taskQueueMonitoring,
-                            redisFreeSpace,
-                            rdsFreeSpace,
-                        } = reports;
+                    .then(({ categories, checksWithCustomRenderer }) => {
+                        renderers.categoriesRenderer(categories);
 
-                        if (configuration.length) {
-                            $configurationTablesContainer.append($(reportTableTpl({
-                                category: __('TAO Configuration'),
-                                columns: [__('Status'), __('Description'), __('Date')],
-                                data: configuration
-                                    .map(({ type, data: { details, date } }) => ({
-                                        type,
-                                        [`is${type}`]: true,
-                                        rows: [details, new Date(date * 1000).toLocaleString()],
-                                    }))
-                            })));
-                        }
+                        checksWithCustomRenderer.forEach(check => {
+                            const {  data: { renderer } } = check;
 
-                        if (configurationValues.length) {
-                            $configurationTablesContainer.append($(reportTableTpl({
-                                category: __('Configuration Values'),
-                                columns: [__('Status'), __('Description'), __('Value')],
-                                data: configurationValues
-                                    .map(({ type, message, data: { details } }) => ({
-                                        type,
-                                        [`is${type}`]: true,
-                                        rows: [details, message.replace(/\r?\n/g, '<br />')],
-                                    }))
-                            })));
-                        }
-
-                        if (healthCheck.length) {
-                            $container.append($(reportTableTpl({
-                                category: __('Health/Readiness check'),
-                                columns: [__('Status'), __('Description'), __('Details')],
-                                data: healthCheck
-                                    .map(({ type, message, data: { details } }) => ({
-                                        type,
-                                        [`is${type}`]: true,
-                                        rows: [details, message.replace(/\r?\n/g, '<br />')],
-                                    }))
-                            })));
-                        }
-
-                        if (taskQueueFails[0]) {
-                            const $table = $(reportTableTpl({
-                                category: __('Last failed tasks in the task queue'),
-                                columns: [__('Task'), __('Date'), ''],
-                                data: taskQueueFails[0].children
-                                    .map(({ children, data: { task_label, task_report_time } }) => ({
-                                        reportData: JSON.stringify(children),
-                                        detailsButton: true,
-                                        rows: [task_label, task_report_time],
-                                    })),
-                            }));
-
-                            $container.append($table);
-
-                            $('.system-status-table__details-button', $table)
-                                .on('click', ({ target }) => {
-                                    const reportDetails = $(target).data('report');
-                                    const $modal = $('<div class="modal system-status-table__details-modal"></div>');
-                                    const $reportDetails = $(reportTableTpl({
-                                        category: __('Task details'),
-                                        columns: [__('Status'), __('Description')],
-                                        data: reportDetails
-                                            .map(({ type, message }) => ({
-                                                type,
-                                                [`is${type}`]: true,
-                                                rows: [message.replace(/\r?\n/g, '<br />')],
-                                            }))
-                                    }));
-
-                                    $modal.append($reportDetails);
-                                    $container.append($modal);
-                                    $modal.modal({
-                                        minWidth: 450,
-                                        startClosed: true,
-                                        top: 100,
-                                    });
-                                    $modal.modal('open');
-
-                                    $modal.on('closed.modal', function () {
-                                        $modal.modal('destroy');
-                                        $(this).remove();
-                                    });
-                                });
-                        }
-
-                        if (taskQueueFinished[0]) {
-                            const { data: { P1D, P1W, P1M } } = taskQueueFinished[0];
-                            const $graphContainer = $('<div></div>');
-                            $container.append($graphContainer);
-
-                            tasksStatistics({
-                                defaultInterval: 'P1D',
-                                intervals: [
-                                    { label: __('Last Day'), value: 'P1D' },
-                                    { label: __('Last Week'), value: 'P1W' },
-                                    { label: __('Last Month'), value: 'P1M' }
-                                ],
-                                data: { P1D, P1W, P1M },
-                            })
-                                .render($graphContainer);
-                        }
-
-                        const $chartContainer = $(chartsContainerTpl());
-                        $container.append($chartContainer);
-
-                        if (redisFreeSpace[0]) {
-                            c3.generate({
-                                bindto: '.js-tasks-donut-2',
-                                data: {
-                                    columns: [
-                                        [__('Free space'), redisFreeSpace[0].data.value],
-                                        [__('Used space'), 100 - redisFreeSpace[0].data.value],
-                                    ],
-                                    type: 'donut',
-                                },
-                                width: 500,
-                            });
-                        }
-
-                        if (rdsFreeSpace[0]) {
-                            c3.generate({
-                                bindto: '.js-tasks-donut-1',
-                                data: {
-                                    columns: [
-                                        [__('Free space'), rdsFreeSpace[0].data.value],
-                                        [__('Used space'), 100 - rdsFreeSpace[0].data.value],
-                                    ],
-                                    type: 'donut',
-                                },
-                            });
-                        }
-
-                        if (taskQueueMonitoring[0]) {
-                            const $taskQueue = $(taskQueueTpl({ taskCount: taskQueueMonitoring[0].data.report_value }));
-                            $chartContainer.append($taskQueue);
-                        }
+                            renderers[renderer](check);
+                        });
                     })
                     .catch(() => feedback().error(__('Something went wrong.')))
                     .finally(() => loadingBar.stop());

@@ -32,6 +32,7 @@ use common_ext_ExtensionException;
  */
 class WkhtmltopdfCheck extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
 
     /**
      * Version 12.5 of wkhtmltopdf lib is last stable version
