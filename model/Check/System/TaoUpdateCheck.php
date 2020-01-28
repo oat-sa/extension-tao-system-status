@@ -32,6 +32,7 @@ class TaoUpdateCheck extends AbstractCheck
 {
 
     const CATEGORY_ID = 'health';
+    const RENDERER = 'processedTasksStatisticRenderer';
 
     /**
      * @param array $params
@@ -87,5 +88,18 @@ class TaoUpdateCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Extension updates');
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 }

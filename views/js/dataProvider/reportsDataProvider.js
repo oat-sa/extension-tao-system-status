@@ -53,10 +53,10 @@ define([
         getReports: () => {
             return new Promise((resolve) => resolve(data)).then(responseMapper);
 
-            /*return request({
-                url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
-                method: 'GET'
-            });*/
+            // return request({
+            //     url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
+            //     method: 'GET'
+            // });
         }
     };
 })

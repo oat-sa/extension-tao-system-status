@@ -43,6 +43,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
 
     const PARAM_PERIOD = 'period';
     const PARAM_DEFAULT_PERIOD = 300;
+    const RENDERER = 'donutChartRenderer';
 
     /**
      * @param array $params
@@ -116,6 +117,19 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Used space on ElastiCache storage');
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 
     /**

@@ -45,6 +45,7 @@ class TaskQueueFailsCheck extends AbstractCheck
     const TASK_REPORT_TIME = 'task_report_time';
     const TASK_LABEL = 'task_label';
     const CATEGORY_ID = 'monitoring';
+    const RENDERER = 'failedTasksDetailsRenderer';
 
     /**
      * @param array $params
@@ -117,6 +118,19 @@ class TaskQueueFailsCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Last failed tasks in the task queue');
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 
     /**

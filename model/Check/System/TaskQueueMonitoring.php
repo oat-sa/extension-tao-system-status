@@ -35,6 +35,7 @@ class TaskQueueMonitoring extends AbstractCheck
 {
     const REPORT_VALUE = 'report_value';
     const CATEGORY_ID = 'monitoring';
+    const RENDERER = 'amountRenderer';
 
     /**
      * @param array $params
@@ -83,6 +84,19 @@ class TaskQueueMonitoring extends AbstractCheck
     public function getDetails(): string
     {
         return __('Number of tasks in the task queue');
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 
     /**
