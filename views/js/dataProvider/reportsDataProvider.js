@@ -19,8 +19,7 @@
 define([
     'util/url',
     'core/request',
-    'json!./data.json'
-], function (urlHelper, request, data) {
+], function (urlHelper, request) {
     const mapCategories = (acc, item, i, array) => {
         const {
             data: {
@@ -51,12 +50,11 @@ define([
 
     return {
         getReports: () => {
-            return new Promise((resolve) => resolve(data)).then(responseMapper);
-
-            // return request({
-            //     url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
-            //     method: 'GET'
-            // });
+            return request({
+                 url: urlHelper.route('reports', 'SystemStatus', 'taoSystemStatus'),
+                 method: 'GET'
+            })
+                .then(responseMapper);
         }
     };
 })
