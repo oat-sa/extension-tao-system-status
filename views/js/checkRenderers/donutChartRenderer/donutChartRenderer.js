@@ -46,13 +46,16 @@ define([
             .on('render', function () {
                 const { selector, columns } = this.getConfig();
 
-
                 c3.generate({
                     bindto: `.${selector}`,
                     data: {
                         columns,
                         type: 'donut',
                     },
+                    colors: {
+                        data1: '#ff0000',
+
+                    }
                 });
             })
             .init(initConfig);

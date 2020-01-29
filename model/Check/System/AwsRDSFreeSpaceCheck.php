@@ -74,16 +74,16 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
             throw new SystemCheckException('RDS instance not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($InstanceData);
+        $usedSpacePercentage = $this->getUsedPercentage($InstanceData);
 
-        if ($freeSpacePercentage < 30) {
-            $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage).'%');
-        } elseif ($freeSpacePercentage < 50) {
-            $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage).'%');
+        if ($usedSpacePercentage > 70) {
+            $report = new Report(Report::TYPE_ERROR, round($usedSpacePercentage).'%');
+        } elseif ($usedSpacePercentage > 50) {
+            $report = new Report(Report::TYPE_WARNING, round($usedSpacePercentage).'%');
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage).'%');
+            $report = new Report(Report::TYPE_SUCCESS, round($usedSpacePercentage).'%');
         }
-        $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
+        $report->setData([self::PARAM_VALUE => round($usedSpacePercentage)]);
         return $this->prepareReport($report);
     }
 
@@ -176,7 +176,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
      * @return float|int
      * @throws SystemCheckException
      */
-    public function getFreePercentage(array $instanceData)
+    public function getUsedPercentage(array $instanceData)
     {
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
@@ -218,7 +218,8 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
         if ($freeGB === null) {
             throw new SystemCheckException('Cannot get rds instance metrics');
         }
-        return $freeGB / ($allocatedStorage / 100);
+
+        return 100 - ($freeGB / ($allocatedStorage / 100));
     }
 
     /**

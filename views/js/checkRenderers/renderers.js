@@ -132,8 +132,8 @@ define([
                 donutChartRenderer({
                     category: details,
                     columns: [
-                        [__('Free space'), value],
-                        [__('Used space'), 100 - value],
+                        [__('Free space'), 100 - value],
+                        [__('Used space'), value],
                     ],
                     selector: check_id.replace(/\\/g, ''),
                 })
