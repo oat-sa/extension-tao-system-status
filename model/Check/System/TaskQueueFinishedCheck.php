@@ -42,6 +42,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
         'P1M' => 'PT4H'
     ];
     const CATEGORY_ID = 'monitoring';
+    const RENDERER = 'processedTasksStatisticRenderer';
 
     /**
      * @param array $params
@@ -91,6 +92,19 @@ class TaskQueueFinishedCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Statistics of processed tasks');
+    }
+
+    /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 
     /**
