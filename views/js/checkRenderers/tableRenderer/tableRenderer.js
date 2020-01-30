@@ -48,7 +48,7 @@ define([
                 const $element = this.getElement();
                 const $container = this.getContainer();
 
-                $('.system-status-table__details-button', $element)
+                $('.details-button', $element)
                     .on('click', ({ target }) => {
                         const { title, children } = $(target).data('report');
                         const $modal = $('<div class="modal system-status-table__details-modal"></div>');

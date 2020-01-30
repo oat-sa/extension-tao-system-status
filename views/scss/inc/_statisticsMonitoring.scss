@@ -24,30 +24,29 @@ $status-task-queue-color: #fff;
     border: 1px solid $websiteBorder;
     display: flex;
     height : 200px;
-    margin-left: 13px;
-    width  : 250px;
-}
-
-.task-queue-load-container__icon {
-    align-items: center;
-    background: $status-task-queue-background-color;
-    color: $status-task-queue-color;
-    display: flex;
-    font-size: 20px;
-    justify-content: center;
-    width: 70px;
+    width  : 200px;
 }
 
 .task-queue-load-container__description {
-    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 10px;
+    padding-top: 20px;
     text-align: center;
-    width: 180px;
 }
 
 .task-queue-load-container__description-title {
     font-size: 20px;
-    margin-bottom: 50px;
+    padding: 0 15px;
+}
+
+.task-queue-load-container__description-amount {
+  font-size: 50px;
+}
+
+.task-queue-load-container__description-date {
+  font-size: 16px;
 }
 
 .system-status__chart-container {

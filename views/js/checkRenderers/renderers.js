@@ -34,11 +34,14 @@ define([
         const categoryRendererConfig = [
             {
                 categoryId: 'config',
-                columns: [__('Status'), __('Description'), __('Date')],
-                itemsMapper: ({ type, data: { details, date } }) => ({
+                columns: [__('Status'), __('Description'), __('Date'), ''],
+                itemsMapper: ({ children, type, data: { details, date } }) => ({
                     type,
                     [`is${type}`]: true,
                     rows: [details, new Date(date * 1000).toLocaleString()],
+                    detailsButton: children.length ? true : false,
+                    reportData: JSON.stringify({ title: details, children }),
+                    addDetailsCell: true,
                 }),
                 small: true,
             },
@@ -54,11 +57,11 @@ define([
             },
             {
                 categoryId: 'health',
-                columns: [__('Status'), __('Description'), __('Details')],
-                itemsMapper: ({ type, message, data: { details } }) => ({
+                columns: [__('Status'), __('Description'), __('Details'), __('Date')],
+                itemsMapper: ({ type, message, data: { details, date } }) => ({
                     type,
                     [`is${type}`]: true,
-                    rows: [details, message.replace(/\r?\n/g, '<br />')],
+                    rows: [details, message.replace(/\r?\n/g, '<br />'), new Date(date * 1000).toLocaleString()],
                 })
             },
             {
@@ -101,6 +104,7 @@ define([
                             detailsButton: children.length ? true : false,
                             reportData: JSON.stringify({ title: task_label, children }),
                             rows: [task_label, task_report_time],
+                            addDetailsCell: true,
                         })),
                 })
                     .render($container);
@@ -139,9 +143,10 @@ define([
                 })
                     .render($chartsContainer);
             },
-            amountRenderer: ({ data: { details, report_value }}) => {
+            amountRenderer: ({ data: { date, details, report_value }}) => {
                 const $taskQueue = $(amountRendererTpl({
                     category: details,
+                    date: new Date(date * 1000).toLocaleString(),
                     taskCount: report_value,
                 }));
 

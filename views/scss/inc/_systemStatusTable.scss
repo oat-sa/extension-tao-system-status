@@ -16,17 +16,23 @@ $status-table-row-odd-background-color: #f9f9f9;
             border-top: none;
             height: 40px;
             padding: 5px 0;
-            text-align: center;
 
             td {
                 min-width: 280px;
                 padding: 0 10px;
+
+                &.system-status-table-details-row {
+                    min-width: unset;
+                    width: 170px;
+                }
             }
 
             &.system-status-table-row--head.system-status-table-row--head {
                 th {
                     background-color: $status-table-head-background-color;
                     color: $status-table-head-color;
+                    text-align: left;
+                    padding: 10px;
                 }
             }
 
@@ -54,13 +60,6 @@ $status-table-row-odd-background-color: #f9f9f9;
 .system-status-table-title {
   font-size: 28px;
   margin-bottom: 10px
-}
-
-.system-status-table__details-button {
-    background-color: transparent;
-    border: 1px solid $textColor;
-    color: $textColor;
-    height: 30px;
 }
 
 .status-report-container {
