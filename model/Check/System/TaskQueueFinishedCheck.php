@@ -41,6 +41,8 @@ class TaskQueueFinishedCheck extends AbstractCheck
         'P1W' => 'PT1H',
         'P1M' => 'PT4H'
     ];
+    const CATEGORY_ID = 'monitoring';
+    const RENDERER = 'processedTasksStatisticRenderer';
 
     /**
      * @param array $params
@@ -94,16 +96,15 @@ class TaskQueueFinishedCheck extends AbstractCheck
 
     /**
      * @param Report $report
-     * @return string
-     * @throws common_Exception
+     * @return Report
      */
-    public function renderReport(Report $report): string
+    protected function prepareReport(Report $report): Report
     {
-        /** @var Report $taskReport */
-        $renderer = new \Renderer(Template::getTemplate('Reports/taskStatisticsReport.tpl', 'taoSystemStatus'));
-        $renderer->setData('task-report', $report);
-        $renderer->setData('task-statistics', json_encode($report->getData()));
-        return $renderer->render();
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
     }
 
     /**

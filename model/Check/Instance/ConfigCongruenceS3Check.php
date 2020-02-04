@@ -32,6 +32,8 @@ use oat\oatbox\log\loggerawaretrait;
  */
 class ConfigCongruenceS3Check extends AbstractCheck
 {
+    const CATEGORY_ID = 'health';
+
     use LoggerAwareTrait;
 
     /**

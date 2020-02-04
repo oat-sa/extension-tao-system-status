@@ -1,0 +1,99 @@
+$status-table-head-background-color: #949494;
+$status-table-head-color: #fff;
+$status-table-row-even-background-color: #fff;
+$status-table-row-odd-background-color: #f9f9f9;
+
+.system-status-table-wrapper {
+    margin-bottom: 20px;
+    width: 100%;
+
+    .system-status-table {
+        position: relative;
+        width: 100%;
+
+        .system-status-table-row {
+            border: 1px solid $websiteBorder;
+            border-top: none;
+            height: 40px;
+            padding: 5px 0;
+
+            td {
+                min-width: 280px;
+                padding: 0 10px;
+
+                &.system-status-table-details-row {
+                    min-width: unset;
+                    width: 170px;
+                }
+            }
+
+            &.system-status-table-row--head.system-status-table-row--head {
+                th {
+                    background-color: $status-table-head-background-color;
+                    color: $status-table-head-color;
+                    text-align: left;
+                    padding: 10px;
+                }
+            }
+
+            .system-status-table-status-cell {
+                min-width: unset;
+                padding: 0;
+                width: 60px;
+            }
+
+            &:nth-child(even) {
+                background-color: $status-table-row-even-background-color;
+            }
+
+            &:nth-child(odd) {
+                background-color: $status-table-row-odd-background-color;
+            }
+        }
+    }
+
+    &--small {
+        width: 48%;
+    }
+}
+
+.system-status-table-title {
+  font-size: 28px;
+  margin-bottom: 10px
+}
+
+.status-report-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.system-status-table__details-modal {
+    height: 100%;
+    max-height: calc(100vh - 200px);
+
+    .system-status-table-wrapper {
+        height: 100%;
+
+        .system-status-table-container {
+            height: calc(100% - 38px);
+            overflow: auto;
+
+            th {
+                position: sticky;
+                top: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 1335px) {
+    .status-report-configuration-tables {
+        flex-wrap: wrap;
+
+        .system-status-table-wrapper--small {
+            width: 100%;
+        }
+    }
+}

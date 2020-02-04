@@ -34,6 +34,8 @@ use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
 class TaskQueueMonitoring extends AbstractCheck
 {
     const REPORT_VALUE = 'report_value';
+    const CATEGORY_ID = 'monitoring';
+    const RENDERER = 'amountRenderer';
 
     /**
      * @param array $params
@@ -85,6 +87,19 @@ class TaskQueueMonitoring extends AbstractCheck
     }
 
     /**
+     * @param Report $report
+     * @return Report
+     */
+    protected function prepareReport(Report $report): Report
+    {
+        $report =  parent::prepareReport($report);
+        $data = $report->getData();
+        $data['renderer'] = self::RENDERER;
+        $report->setData($data);
+        return $report;
+    }
+
+    /**
      * @return int
      */
     private function getAmountOfTasks(): int
@@ -94,22 +109,5 @@ class TaskQueueMonitoring extends AbstractCheck
         $filter = new TaskLogFilter();
         $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_ENQUEUED, TaskLogInterface::STATUS_RUNNING]);
         return $taskQueueLog->getBroker()->count($filter);
-    }
-
-    /**
-     * @param Report $report
-     * @return string
-     */
-    public function renderReport(Report $report): string
-    {
-        $label = $report->getData()[self::PARAM_DETAILS];
-        $val = $report->getData()[self::REPORT_VALUE];
-        return "
-        <div class='system_status_info_block'>
-        <span class='system_status_info_block__label'>$label</span>
-        <br>
-        <span class='system_status_info_block__value'>$val</span>
-</div>
-        ";
     }
 }

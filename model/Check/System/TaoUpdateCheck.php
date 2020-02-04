@@ -31,6 +31,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class TaoUpdateCheck extends AbstractCheck
 {
 
+    const CATEGORY_ID = 'health';
+
     /**
      * @param array $params
      * @return Report
@@ -60,7 +62,7 @@ class TaoUpdateCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-       return true;
+        return true;
     }
 
     /**

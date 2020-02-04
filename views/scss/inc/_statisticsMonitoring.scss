@@ -1,0 +1,60 @@
+$status-task-queue-background-color: #949494;
+$status-task-queue-color: #fff;
+
+.statistics-chart__interval-select-container {
+    margin-bottom: 10px;
+}
+
+.system-status__charts-container {
+    align-items: center;
+    display    : flex;
+}
+
+.system-status__statistics-chart-container {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.js-tasks-donut-1,
+.js-tasks-donut-2 {
+    width: 300px;
+}
+
+.system-status__task-queue-load-container {
+    border: 1px solid $websiteBorder;
+    display: flex;
+    height : 200px;
+    width  : 200px;
+}
+
+.task-queue-load-container__description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.task-queue-load-container__description-title {
+    font-size: 20px;
+    padding: 0 15px;
+}
+
+.task-queue-load-container__description-amount {
+  font-size: 50px;
+}
+
+.task-queue-load-container__description-date {
+  font-size: 16px;
+}
+
+.system-status__chart-container {
+    margin-right: 20px;
+    width: 290px;
+}
+
+.system-status__chart-title {
+  font-size: 20px;
+  text-align: center;
+}

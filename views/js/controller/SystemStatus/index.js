@@ -1,39 +1,53 @@
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ *
+ *
+ */
 define([
-    'tpl!taoSystemStatus/controller/SystemStatus/reportDetailsModal',
-    'taoSystemStatus/tasksMonitoring/tasksStatistics'
-], function(layout, tasksStatisticsFactory) {
-    'use strict';
+    'i18n',
+    'taoSystemStatus/dataProvider/reportsDataProvider',
+    'taoSystemStatus/checkRenderers/renderers',
+    'layout/loading-bar',
+    'ui/feedback',
+], function (
+    __,
+    reportsDataProvider,
+    renderers,
+    loadingBar,
+    feedback,
+) {
+        'use strict';
 
-    var $container;
+        return {
+            start: function () {
+                loadingBar.start();
 
-    function showTaskReport($modalContent) {
-        var $modal = $(layout({data: $modalContent.html()}));
-        $container.append($modal);
-        $modal.modal({
-            startClosed : true,
-            minWidth : 450
-        });
-        $modal.modal('open');
+                reportsDataProvider.getReports()
+                    .then(({ categories, checksWithCustomRenderer }) => {
+                        renderers.categoriesRenderer(categories);
 
-        $modal.on('closed.modal', function() {
-            $modal.modal('destroy');
-            $(this).remove();
-        });
-    }
+                        checksWithCustomRenderer.forEach(check => {
+                            const {  data: { renderer } } = check;
 
-    return {
-        start : function() {
-            var tasksStatistics;
-
-            $container = $('#system-status-report');
-            $container.on('click', '.js-feedback-details-button', function () {
-                var $modalContent = $(this).closest('.js-report').find('.js-feedback-details');
-                showTaskReport($modalContent);
-            });
-
-            tasksStatistics = tasksStatisticsFactory();
-            tasksStatistics.render();
-
+                            renderers[renderer](check);
+                        });
+                    })
+                    .catch(() => feedback().error(__('Something went wrong.')))
+                    .finally(() => loadingBar.stop());
+            }
         }
-    }
-});
+    });

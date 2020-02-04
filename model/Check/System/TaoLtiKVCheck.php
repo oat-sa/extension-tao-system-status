@@ -35,6 +35,8 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class TaoLtiKVCheck extends AbstractCheck
 {
 
+    const CATEGORY_ID = 'config';
+
     /** @var Report */
     private $report;
 

@@ -1,0 +1,25 @@
+.status-report-icon--success,
+.status-report-icon--warning,
+.status-report-icon--error {
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  font-size: 20px;
+  justify-content: center;
+  height: 30px;
+  margin: 0 15px;
+  width: 30px;
+}
+
+.status-report-icon--success {
+  background-color: $success;
+}
+
+.status-report-icon--warning {
+  background-color: $warning;
+}
+
+.status-report-icon--error {
+  background-color: $error;
+}
