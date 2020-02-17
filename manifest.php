@@ -31,17 +31,18 @@ return [
     'requires' => [
         'tao' => '>=39.4.0',
     ],
-    'managementRole' => 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager',
     'acl' => [
-        ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']],
-        ['grant', TaoRoles::SYSTEM_ADMINISTRATOR, ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']],
+        ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']]
     ],
     'install' => [
         'php' => [
             \oat\taoSystemStatus\scripts\install\RegisterCheckStorage::class,
             \oat\taoSystemStatus\scripts\install\RegisterChecks::class,
             \oat\taoSystemStatus\scripts\install\RegisterSystemStatusLog::class,
-        ]
+        ],
+        'rdf' => [
+            __DIR__.'/model/Ontology/taosystemstatus.rdf',
+        ],
     ],
     'uninstall' => [],
     'update' => oat\taoSystemStatus\scripts\update\Updater::class,
