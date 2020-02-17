@@ -119,7 +119,7 @@ define([
                 newConfig = _.merge({}, initConfig, {
                     graphConfig: {
                         data: {
-                            url: url.route('executionsStatistics', 'PerformanceMonitoring', 'taoSystemStatus', { 'interval' : getInterval()}),
+                            url: url.route('executionsStatistics', 'PerformanceMonitoring', 'taoSystemStatus', { 'interval' : interval }),
                         },
                         axis: {
                             x : {
