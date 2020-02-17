@@ -115,25 +115,24 @@ define([
          * @return {Object}
          */
         function getChartConfig() {
-            var interval = getInterval(),
-                newConfig = _.merge({}, initConfig, {
-                    graphConfig: {
-                        data: {
-                            url: url.route('executionsStatistics', 'PerformanceMonitoring', 'taoSystemStatus', { 'interval' : interval }),
-                        },
-                        axis: {
-                            x : {
-                                tick : {
-                                    format: interval === 'P1D' ? '%H:%M' : '%m-%d'
-                                },
-                                label : {
-                                    text:  interval === 'P1D' ? __('Hours') : __('Days')
-                                }
+            const interval = getInterval();
+            return _.merge({}, initConfig, {
+                graphConfig: {
+                    data: {
+                        url: url.route('executionsStatistics', 'PerformanceMonitoring', 'taoSystemStatus', { 'interval' : interval }),
+                    },
+                    axis: {
+                        x : {
+                            tick : {
+                                format: interval === 'P1D' ? '%H:%M' : '%m-%d'
+                            },
+                            label : {
+                                text:  interval === 'P1D' ? __('Hours') : __('Days')
                             }
                         }
                     }
-                });
-            return newConfig;
+                }
+            });
         }
 
 
