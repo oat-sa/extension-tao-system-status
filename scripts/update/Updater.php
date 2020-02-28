@@ -22,6 +22,7 @@
 namespace oat\taoSystemStatus\scripts\update;
 
 use common_ext_ExtensionUpdater;
+use oat\taoSystemStatus\model\Monitoring\ExecutionsStatistics;
 
 /**
  * Class Updater
@@ -37,6 +38,13 @@ class Updater extends common_ext_ExtensionUpdater
     public function update($initialVersion)
     {
         $this->skip('0.0.1', '0.9.0');
+
+        if ($this->isVersion('0.9.0')) {
+            $this->getServiceManager()->register(ExecutionsStatistics::SERVICE_ID, new ExecutionsStatistics([]));
+            $this->setVersion('0.10.0');
+        }
+
+        $this->skip('0.10.0', '0.10.1');
     }
 }
 
