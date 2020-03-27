@@ -25,6 +25,7 @@ use oat\tao\model\accessControl\func\AccessRule;
 use oat\tao\model\accessControl\func\AclProxy;
 use oat\tao\model\user\TaoRoles;
 use common_ext_ExtensionUpdater;
+use oat\taoSystemStatus\model\Monitoring\ExecutionsStatistics;
 
 /**
  * Class Updater
@@ -42,12 +43,19 @@ class Updater extends common_ext_ExtensionUpdater
         $this->skip('0.0.1', '0.9.0');
 
         if ($this->isVersion('0.9.0')) {
+            $this->getServiceManager()->register(ExecutionsStatistics::SERVICE_ID, new ExecutionsStatistics([]));
+            $this->setVersion('0.10.0');
+        }
+
+        $this->skip('0.10.0', '0.10.1');
+
+        if ($this->isVersion('0.10.1')) {
             AclProxy::revokeRule(new AccessRule(
                 AccessRule::GRANT,
                 TaoRoles::SYSTEM_ADMINISTRATOR,
                 ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']
             ));
-            $this->setVersion('0.10.0');
+            $this->setVersion('0.11.0');
         }
     }
 }

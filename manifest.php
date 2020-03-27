@@ -19,12 +19,13 @@
  *
  */
 
+
 return [
     'name' => 'taoSystemStatus',
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.10.0',
+    'version' => '0.11.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
         'tao' => '>=39.4.0',

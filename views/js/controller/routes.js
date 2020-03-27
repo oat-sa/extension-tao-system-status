@@ -26,6 +26,11 @@ define(function(){
             'actions' : {
                 'index' : 'controller/SystemStatus/index'
             }
+        },
+        'PerformanceMonitoring': {
+            'actions' : {
+                'index' : 'controller/PerformanceMonitoring/index'
+            }
         }
     };
 });
