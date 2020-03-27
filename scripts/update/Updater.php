@@ -21,6 +21,9 @@
 
 namespace oat\taoSystemStatus\scripts\update;
 
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\tao\model\accessControl\func\AclProxy;
+use oat\tao\model\user\TaoRoles;
 use common_ext_ExtensionUpdater;
 
 /**
@@ -36,7 +39,16 @@ class Updater extends common_ext_ExtensionUpdater
      */
     public function update($initialVersion)
     {
-        $this->skip('0.0.1', '0.10.0');
+        $this->skip('0.0.1', '0.9.0');
+
+        if ($this->isVersion('0.9.0')) {
+            AclProxy::revokeRule(new AccessRule(
+                AccessRule::GRANT,
+                TaoRoles::SYSTEM_ADMINISTRATOR,
+                ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']
+            ));
+            $this->setVersion('0.10.0');
+        }
     }
 }
 

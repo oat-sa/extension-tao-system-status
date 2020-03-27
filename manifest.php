@@ -19,8 +19,6 @@
  *
  */
 
-use oat\tao\model\user\TaoRoles;
-
 return [
     'name' => 'taoSystemStatus',
     'label' => 'TAO System Status',
