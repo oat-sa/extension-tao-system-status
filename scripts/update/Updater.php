@@ -21,8 +21,13 @@
 
 namespace oat\taoSystemStatus\scripts\update;
 
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\tao\model\accessControl\func\AclProxy;
+use oat\tao\model\user\TaoRoles;
 use common_ext_ExtensionUpdater;
+use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoSystemStatus\model\Monitoring\ExecutionsStatistics;
+use oat\tao\model\TaoOntology;
 
 /**
  * Class Updater
@@ -45,6 +50,26 @@ class Updater extends common_ext_ExtensionUpdater
         }
 
         $this->skip('0.10.0', '0.10.1');
+
+        if ($this->isVersion('0.10.1')) {
+            $rolesService = \tao_models_classes_RoleService::singleton();
+            $globalManager = new \core_kernel_classes_Resource(TaoRoles::GLOBAL_MANAGER);
+            $systemManager = new \core_kernel_classes_Resource('http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager');
+            $rolesService->unincludeRole($globalManager, $systemManager);
+
+            AclProxy::revokeRule(new AccessRule(
+                AccessRule::GRANT,
+                TaoRoles::SYSTEM_ADMINISTRATOR,
+                ['ext' => 'taoSystemStatus', 'mod' => 'SystemStatus']
+            ));
+
+            $this->setVersion('0.11.0');
+        }
+
+        if ($this->isVersion('0.11.0')) {
+            OntologyUpdater::syncModels();
+            $this->setVersion('0.11.1');
+        }
     }
 }
 
