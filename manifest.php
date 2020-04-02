@@ -25,10 +25,10 @@ return [
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.11.1',
+    'version' => '0.11.2',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
-        'tao' => '>=39.4.0',
+        'tao' => '>=38.13.3',
     ],
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']]
