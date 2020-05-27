@@ -43,21 +43,11 @@ class ConfigCongruenceS3Check extends AbstractCheck
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $fileSystem = $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
-        $filesystemConf = $fileSystem->getOptions();
-        if (isset($filesystemConf['dirs']['private'])) {
-            $adapterOptions = $filesystemConf['adapters'][$filesystemConf['dirs']['private']];
-        } else {
-            $adapterOptions = $filesystemConf['adapters']['private'];
-        }
-        $bucket = $adapterOptions['options'][0]['bucket'];
-        $client = $adapterOptions['options'][0]['client'];
-
-        /** @var \oat\awsTools\AwsClient $awsClient */
-        $awsClient = $this->getServiceLocator()->get($client);
-        $s3Client = $awsClient->getS3Client();
 
         $tmpDir = \tao_helpers_File::createTempDir() . 'migrations' . DIRECTORY_SEPARATOR . 'config';
+        $s3Client = $this->getS3Client();
+        $adapterOptions = $this->getAdapterOptions();
+        $bucket = $adapterOptions['options'][0]['bucket'];
         $s3Client->downloadBucket($tmpDir, $bucket, '/migrations/config');
 
         if ($this->hashDirectory($tmpDir) === $this->hashDirectory(CONFIG_PATH)) {
@@ -78,7 +68,12 @@ class ConfigCongruenceS3Check extends AbstractCheck
         /** @var FileSystemService $fileSystem */
         $fileSystem = $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
         if (class_exists('oat\awsTools\AwsFileSystemService') && get_class($fileSystem) === 'oat\awsTools\AwsFileSystemService'){
-            return true;
+            $adapterOptions = $this->getAdapterOptions();
+            $bucket = $adapterOptions['options'][0]['bucket'];
+            $s3Client = $this->getS3Client();
+            if ($s3Client->doesObjectExist($bucket, 'migrations/config/generis.conf.php')) {
+                return true;
+            }
         }
         return false;
     }
@@ -105,6 +100,34 @@ class ConfigCongruenceS3Check extends AbstractCheck
     public function getDetails(): string
     {
         return __('Configuration Files Compliance');
+    }
+
+    /**
+     * @return \Aws\S3\S3Client
+     */
+    private function getS3Client()
+    {
+        $adapterOptions = $this->getAdapterOptions();
+        $client = $adapterOptions['options'][0]['client'];
+
+        /** @var \oat\awsTools\AwsClient $awsClient */
+        $awsClient = $this->getServiceLocator()->get($client);
+        return $awsClient->getS3Client();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAdapterOptions()
+    {
+        $fileSystem = $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
+        $filesystemConf = $fileSystem->getOptions();
+        if (isset($filesystemConf['dirs']['private'])) {
+            $adapterOptions = $filesystemConf['adapters'][$filesystemConf['dirs']['private']];
+        } else {
+            $adapterOptions = $filesystemConf['adapters']['private'];
+        }
+        return $adapterOptions;
     }
 
     /**
