@@ -19,18 +19,9 @@ jobs:
     steps:
     - name: Get runtime date
       run: date
-    - name: Submit request to proceed QA for CI
+    - name: Submit request to start automated procedures
       run: |
         curl -X POST -H "Content-Type: application/json" -H "token: ci-pipeline-v1" \
-        -vs http://qa.kitchen.it.taocloud.org/generic-webhook-trigger/invoke?GITHUB_EVENT="pull_request"\
-        \&GITHUB_EVENT_NUMBER="${{ github.event.number }}"\
-        \&GITHUB_REPOSITORY_NAME="${{ github.event.repository.name }}"\
-        \&GITHUB_REPOSITORY_FULL_NAME="${{ github.event.repository.full_name }}"\
-        \&GITHUB_REFERENCE="${{ github.event.pull_request.head.ref }}"\
-        \&GITHUB_SHA="${{ github.event.pull_request.head.sha }}"
-    - name: Submit request to proceed QA for CD
-      run: |
-        curl -X POST -H "Content-Type: application/json" -H "token: cd-pipeline-v1" \
         -vs http://qa.kitchen.it.taocloud.org/generic-webhook-trigger/invoke?GITHUB_EVENT="pull_request"\
         \&GITHUB_EVENT_NUMBER="${{ github.event.number }}"\
         \&GITHUB_REPOSITORY_NAME="${{ github.event.repository.name }}"\
