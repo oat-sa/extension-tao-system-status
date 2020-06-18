@@ -6,11 +6,13 @@ on:
 
 jobs:
   build:
-    name: Request verification
+    name: Verification of standards compliance
     runs-on: ubuntu-latest
     steps:
     - name: Get runtime date
       run: date
+    #- name: Verify standards
+    #  run: TODO
     - name: Submit request to QA
       run: |
         curl -X POST -H "Content-Type: application/json" -H "token: ci-pipeline-v1" \
