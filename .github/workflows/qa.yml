@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  compliance:
     name: Verification of standards compliance
     runs-on: ubuntu-latest
     steps:
@@ -13,7 +13,13 @@ jobs:
       run: date
     #- name: Verify standards
     #  run: TODO
-    - name: Submit request to QA
+  request:
+    name: Request CI/CD
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get runtime date
+      run: date
+    - name: Submit request to proceed QA on CI
       run: |
         curl -X POST -H "Content-Type: application/json" -H "token: ci-pipeline-v1" \
         -vs http://qa.kitchen.it.taocloud.org/generic-webhook-trigger/invoke?GITHUB_EVENT="pull_request"\
