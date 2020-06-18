@@ -13,12 +13,6 @@ jobs:
       run: date
     #- name: Verify standards
     #  run: TODO
-  request:
-    name: Start automated procedures
-    runs-on: ubuntu-latest
-    steps:
-    - name: Get runtime date
-      run: date
     - name: Submit request to start automated procedures
       run: |
         curl -X POST -H "Content-Type: application/json" -H "token: ci-pipeline-v1" \
