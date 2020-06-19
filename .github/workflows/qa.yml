@@ -7,7 +7,7 @@ on:
 jobs:
   compliance:
     name: Verification of standards compliance
-    runs-on: ubuntu-latest
+    runs-on: linux
     steps:
     - name: Get runtime date
       run: date
