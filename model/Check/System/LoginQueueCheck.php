@@ -85,7 +85,7 @@ class LoginQueueCheck extends AbstractCheck
         $loginQueueActions = $this->getInstantActionQueue()->getOption(InstantActionQueue::OPTION_ACTIONS);
 
         if (!isset($loginQueueActions[GetActiveDeliveryExecution::class])) {
-            return new Report(Report::TYPE_WARNING, __('Action GetActiveDeliveryExecution for Login Queue is not exists.'));
+            return new Report(Report::TYPE_WARNING, __('Action GetActiveDeliveryExecution for Login Queue does not exist.'));
         }
         $restrictions = $loginQueueActions[GetActiveDeliveryExecution::class]['restrictions'];
         $restrictionsOptions = '';
