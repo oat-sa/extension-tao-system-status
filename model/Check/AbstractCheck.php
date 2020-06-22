@@ -144,15 +144,11 @@ abstract class AbstractCheck implements CheckInterface
      */
     protected function isWorker(): bool
     {
-        if (DEBUG_MODE) {
-            return true;
-        }
-        exec('ps -ef |egrep \'.+www-data.*index.php\soat\'', $output);
+        exec('ps -ef |egrep \'.+index.php\soat\'', $output);
         $taskQueueProcesses = preg_grep('/RunWorker/', $output);
 
         return !empty($taskQueueProcesses);
     }
-
 
     /**
      * @return bool
