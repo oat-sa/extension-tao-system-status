@@ -46,7 +46,7 @@ class SystemStatusServiceTest extends TestCase
     private function getInstance()
     {
         $service = new SystemStatusService([]);
-        $service->setServiceLocator(ServiceManager::getServiceManager());
+        $service->setServiceLocator($this->getServiceLocatorMock());
         return $service;
     }
 }
