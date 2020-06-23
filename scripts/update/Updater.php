@@ -33,6 +33,7 @@ use oat\tao\model\TaoOntology;
  * Class Updater
  *
  * @author Aleh Hutnikau <hutnikau@1pt.com>
+ * @deprecated use migrations instead. See https://github.com/oat-sa/generis/wiki/Tao-Update-Process
  */
 class Updater extends common_ext_ExtensionUpdater
 {
@@ -72,6 +73,11 @@ class Updater extends common_ext_ExtensionUpdater
         }
 
         $this->skip('0.11.1', '0.11.4');
+        
+        //Updater files are deprecated. Please use migrations.
+        //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
+
+        $this->setVersion($this->getExtension()->getManifest()->getVersion());
     }
 }
 
