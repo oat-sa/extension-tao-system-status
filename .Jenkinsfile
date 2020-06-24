@@ -8,7 +8,6 @@ pipeline {
     environment {
         REPO_NAME='oat-sa/extension-tao-system-status'
         EXT_NAME='taoSystemStatus'
-        GITHUB_ORGANIZATION='oat-sa'
     }
     stages {
         stage('Prepare') {
@@ -44,6 +43,12 @@ pipeline {
                         env.branch = branch
                         writeFile(file: 'composer.json', text: """
                         {
+                            "repositories": [
+                                {
+                                    "type" : "vcs",
+                                    "url" : "https://github.com/${REPO_NAME}"
+                                },
+                            ],
                             "require": {
                                 "oat-sa/extension-tao-devtools" : "dev-develop",
                                 "${REPO_NAME}" : "dev-${branch}#${GIT_COMMIT}"
