@@ -47,7 +47,7 @@ pipeline {
                                 {
                                     "type" : "vcs",
                                     "url" : "https://github.com/${REPO_NAME}"
-                                },
+                                }
                             ],
                             "require": {
                                 "oat-sa/extension-tao-devtools" : "dev-develop",
