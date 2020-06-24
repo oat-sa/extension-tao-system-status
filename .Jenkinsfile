@@ -40,6 +40,8 @@ pipeline {
                         } else {
                             branch = BRANCH_NAME
                         }
+                        String COMMIT_ID = sh (returnStdout: true, script: "git rev-parse HEAD").trim()
+                        echo COMMIT_ID
                         env.branch = branch
                         writeFile(file: 'composer.json', text: """
                         {
