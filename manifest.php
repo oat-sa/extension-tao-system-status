@@ -19,16 +19,18 @@
  *
  */
 
+use oat\taoSystemStatus\model\Routing\ApiRoute;
 
 return [
     'name' => 'taoSystemStatus',
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.12.1',
+    'version' => '0.13.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
         'tao' => '>=38.13.3',
+        'taoScheduler' => '>=2.3.0',
     ],
     'acl' => [
         ['grant', 'http://www.tao.lu/Ontologies/generis.rdf#taoSystemStatusManager', ['ext' => 'taoSystemStatus']]
@@ -46,7 +48,8 @@ return [
     'uninstall' => [],
     'update' => oat\taoSystemStatus\scripts\update\Updater::class,
     'routes' => array(
-        '/taoSystemStatus' => 'oat\\taoSystemStatus\\controller'
+        '/taoSystemStatus/api' => ['class' => ApiRoute::class],
+        '/taoSystemStatus' => 'oat\\taoSystemStatus\\controller',
     ),
     'constants' => [
         'DIR_VIEWS' => __DIR__ . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
