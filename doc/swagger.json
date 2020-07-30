@@ -1,0 +1,19 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tao System Status API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/taoSystemStatus/api/systemStatus": {
+            "get": {
+                "summary": "Get system status data",
+                "responses": {
+                    "200": {
+                        "description": "Result of sustem check"
+                    }
+                }
+            }
+        }
+    }
+}
