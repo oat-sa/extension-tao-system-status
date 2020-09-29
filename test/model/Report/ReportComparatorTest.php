@@ -38,7 +38,7 @@ class ReportComparatorTest extends TestCase
         $oldReport = $this->getInitialReport();
         $newReport = $this->getNewReport();
 
-        $expected = new Report(Report::TYPE_INFO);
+        $expected = new Report(Report::TYPE_WARNING, 'Service degradations found');
         $expected->add($this->getReport(Report::TYPE_WARNING, 'Check A warning', 'A'));
         $expected->add($this->getReport(Report::TYPE_ERROR, 'Check E error', 'E'));
         $expected->add($this->getReport(Report::TYPE_ERROR, 'Check G error', 'G'));
@@ -48,7 +48,7 @@ class ReportComparatorTest extends TestCase
 
         //No degradations - empty report
         $comparator = new ReportComparator($oldReport, $oldReport);
-        $this->assertEquals(new Report(Report::TYPE_INFO), $comparator->getDegradations());
+        $this->assertFalse($comparator->getDegradations()->hasChildren());
     }
 
     public function testGetRestorations()
@@ -56,7 +56,7 @@ class ReportComparatorTest extends TestCase
         $oldReport = $this->getInitialReport();
         $newReport = $this->getNewReport();
 
-        $expected = new Report(Report::TYPE_INFO);
+        $expected = new Report(Report::TYPE_SUCCESS, 'Service restorations found');
         $expected->add($this->getReport(Report::TYPE_SUCCESS, 'Check B success', 'B'));
         $expected->add($this->getReport(Report::TYPE_WARNING, 'Check C warning', 'C'));
         $expected->add($this->getReport(Report::TYPE_SUCCESS, 'Check F success', 'F'));

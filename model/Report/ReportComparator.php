@@ -64,16 +64,30 @@ class ReportComparator
      */
     public function getDegradations(): Report
     {
-        return $this->compare(function ($trend) {
+        $report = $this->compare(function ($trend) {
             return $trend < 0;
         });
+
+        if ($report->hasChildren()) {
+            $report->setType(Report::TYPE_WARNING);
+            $report->setMessage('Service degradations found');
+        }
+
+        return $report;
     }
 
     public function getRestorations(): Report
     {
-        return $this->compare(function ($trend) {
+        $report = $this->compare(function ($trend) {
             return $trend > 0;
         });
+
+        if ($report->hasChildren()) {
+            $report->setType(Report::TYPE_SUCCESS);
+            $report->setMessage('Service restorations found');
+        }
+
+        return $report;
     }
 
     private function compare($trendComparator)
@@ -81,7 +95,7 @@ class ReportComparator
         $oldReports = $this->mapReportsById($this->oldReport);
         $newReports = $this->mapReportsById($this->newReport);
 
-        $result = new Report(Report::TYPE_INFO);
+        $result = new Report(Report::TYPE_SUCCESS, 'No changes found');
 
         foreach ($oldReports as $reportId => $oldReport) {
             if (!isset($newReports[$reportId])) {
@@ -114,6 +128,9 @@ class ReportComparator
     {
         $result = [];
         foreach ($report->getChildren() as $childReport) {
+            if ($childReport->getType() === Report::TYPE_INFO) {
+                continue;
+            }
             $result[$childReport->getData()[CheckInterface::PARAM_CHECK_ID]] = $childReport;
         }
         ksort($result);
