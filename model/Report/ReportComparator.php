@@ -92,7 +92,7 @@ class ReportComparator
         return $report;
     }
 
-    private function compare($trendComparator)
+    private function compare(callable $trendComparator): Result
     {
         $oldReports = $this->mapReportsById($this->oldReport);
         $newReports = $this->mapReportsById($this->newReport);
