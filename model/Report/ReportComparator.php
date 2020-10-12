@@ -117,7 +117,7 @@ class ReportComparator
      * @param Report $newReports
      * @return int
      */
-    private function getTrend(Report $oldReport, Report $newReports)
+    private function getTrend(Report $oldReport, Report $newReports): int
     {
         return self::REPORTS_MAP[$oldReport->getType()] - self::REPORTS_MAP[$newReports->getType()];
     }
