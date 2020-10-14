@@ -33,14 +33,6 @@ class SystemStatusServiceTest extends TestCase
 {
     const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
 
-    /**
-     * @inheritdoc
-     */
-    public function testCheck()
-    {
-
-    }
-
     public function testGetInstanceId()
     {
         $instanceId = $this->getInstance()->getInstanceId();

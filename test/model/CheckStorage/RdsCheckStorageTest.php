@@ -44,11 +44,9 @@ class RdsCheckStorageTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $checks[0]->getParameters());
     }
 
-    /**
-     * @expectedException  \oat\taoSystemStatus\model\SystemStatusException
-     */
     public function testAddCheckException()
     {
+        $this->expectException('\oat\taoSystemStatus\model\SystemStatusException');
         $service = $this->getInstance();
         $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']));
         $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']));

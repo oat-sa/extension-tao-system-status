@@ -44,10 +44,11 @@ class ReportComparator
      */
     private $newReport;
 
-    const REPORTS_MAP = [
+    const REPORT_WEIGHT_MAP = [
         Report::TYPE_SUCCESS => 0,
-        Report::TYPE_WARNING => 1,
-        Report::TYPE_ERROR => 2,
+        Report::TYPE_INFO => 1,
+        Report::TYPE_WARNING => 2,
+        Report::TYPE_ERROR => 3,
     ];
 
     /**
@@ -92,12 +93,12 @@ class ReportComparator
         return $report;
     }
 
-    private function compare(callable $trendComparator): Result
+    private function compare(callable $trendComparator): Report
     {
         $oldReports = $this->mapReportsById($this->oldReport);
         $newReports = $this->mapReportsById($this->newReport);
 
-        $result = new Report(Report::TYPE_SUCCESS, 'No changes found');
+        $result = Report::createInfo();
 
         foreach ($oldReports as $reportId => $oldReport) {
             if (!isset($newReports[$reportId])) {
@@ -107,6 +108,10 @@ class ReportComparator
             if ($trendComparator($trend)) {
                 $result->add($newReports[$reportId]);
             }
+        }
+
+        if (!$result->hasChildren()) {
+            $result->setMessage('No changes found');
         }
 
         return $result;
@@ -119,7 +124,7 @@ class ReportComparator
      */
     private function getTrend(Report $oldReport, Report $newReports): int
     {
-        return self::REPORTS_MAP[$oldReport->getType()] - self::REPORTS_MAP[$newReports->getType()];
+        return self::REPORT_WEIGHT_MAP[$oldReport->getType()] - self::REPORT_WEIGHT_MAP[$newReports->getType()];
     }
 
     /**
