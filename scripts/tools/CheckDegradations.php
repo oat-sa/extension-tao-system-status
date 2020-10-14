@@ -70,7 +70,7 @@ class CheckDegradations extends ScriptAction
         $report = $this->getSystemStatusService()->check();
         $previousReport = $this->getPreviousReport();
         if (!$previousReport) {
-            return new Report('No previous report found');
+            return new Report(Report::TYPE_INFO, 'No previous report found');
         }
 
         $comparator = new ReportComparator($previousReport, $report);
