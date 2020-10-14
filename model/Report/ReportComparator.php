@@ -135,7 +135,10 @@ class ReportComparator
     {
         $result = [];
         foreach ($report->getChildren() as $childReport) {
-            $result[$childReport->getData()[CheckInterface::PARAM_CHECK_ID]] = $childReport;
+            $reportData = $childReport->getData();
+            if (isset($reportData[CheckInterface::PARAM_CHECK_ID])) {
+                $result[$reportData[CheckInterface::PARAM_CHECK_ID]] = $childReport;
+            }
         }
         ksort($result);
         return $result;
