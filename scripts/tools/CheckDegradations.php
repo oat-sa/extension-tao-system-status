@@ -81,6 +81,18 @@ class CheckDegradations extends ScriptAction
     }
 
     /**
+     * @return array|string[]
+     */
+    protected function provideUsage()
+    {
+        return [
+            'prefix' => 'h',
+            'longPrefix' => 'help',
+            'description' => 'Prints a help statement'
+        ];
+    }
+
+    /**
      * @return Report|null
      */
     private function getPreviousReport()
