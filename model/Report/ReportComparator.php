@@ -135,9 +135,6 @@ class ReportComparator
     {
         $result = [];
         foreach ($report->getChildren() as $childReport) {
-            if ($childReport->getType() === Report::TYPE_INFO) {
-                continue;
-            }
             $result[$childReport->getData()[CheckInterface::PARAM_CHECK_ID]] = $childReport;
         }
         ksort($result);
