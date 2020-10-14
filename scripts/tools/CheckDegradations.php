@@ -94,8 +94,10 @@ class CheckDegradations extends ScriptAction
 
     /**
      * @return Report|null
+     * @throws \common_exception_Error
+     * @throws \oat\oatbox\service\exception\InvalidServiceManagerException
      */
-    private function getPreviousReport()
+    private function getPreviousReport():?Report
     {
         $report = $this->getPersistence()->get(self::KV_PERSISTENCE_KEY);
         $result = null;
