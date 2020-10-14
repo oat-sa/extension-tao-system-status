@@ -52,7 +52,7 @@ class CheckDegradations extends ScriptAction
                 'prefix' => 'p',
                 'longPrefix' => 'persistence',
                 'required' => true,
-                'description' => 'The KeyValue persistence where you want store results of previous check',
+                'description' => 'The KeyValue persistence identifier (see your persistence config) where you want store results of previous check',
             ],
         ];
     }
