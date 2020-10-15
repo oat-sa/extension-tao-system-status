@@ -25,20 +25,18 @@ use oat\oatbox\filesystem\FileSystemService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class FileSystemS3CacheCheck
+ * Class FileSystemS3CachePathCheck
+ *
+ * It is possible to upload a PHP file using the MediaManager extension.
+ * It is important to note that this is the expected behavior of the application as all kind of files can be uploaded.
+ *
+ * Those files must be outside of directory available from web
+ *
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
+ * @author Aleh Hutnikau, <aleh@taotesting.com>
  */
-class FileSystemS3CacheCheck extends AbstractCheck
+class FileSystemS3CachePathCheck extends AbstractCheck
 {
-
-    const CACHED_FILESYSTEMS = [
-        'public',
-        'private',
-        'qtiItemPci',
-        'qtiItemImsPci',
-        'portableElementStorage'
-    ];
 
     /**
      * @param array $params
@@ -49,7 +47,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
-        $report = $this->checkFileSystemConfig();
+        $report = $this->checkFilesystemCaches();
         return $this->prepareReport($report);
     }
 
@@ -84,31 +82,39 @@ class FileSystemS3CacheCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Cache status on S3 file system adapters');
+        return __('Cache directory path on S3 file system adapters');
     }
 
     /**
      * @return Report
      */
-    private function checkFileSystemConfig() : Report
+    private function checkFilesystemCaches() : Report
     {
-        $adaptersWithoutCache = [];
-        foreach (self::CACHED_FILESYSTEMS as $fsId) {
-            $adapter = $this->getFlysystemAdapterConfig($fsId);
-            $options = array_pop($adapter['options']);
+        $adaptersWithCacheInsideTaoRoot = [];
+        $taoRootDir = $this->getTaoRootDir();
+        $adapters = $this->getFileSystemService()->getOption(FileSystemService::OPTION_ADAPTERS);
+        foreach ($adapters as $adapterId => $adapterConfig) {
+            if (!isset($adapterConfig['options'])) {
+                continue;
+            }
+            $options = array_pop($adapterConfig['options']);
             if (!isset($options['cache'])) {
-                $adaptersWithoutCache[] = $fsId;
+                continue;
+            }
+            $cachePath = realpath($options['cache']);
+            if (strpos($cachePath, $taoRootDir) === 0) {
+                $adaptersWithCacheInsideTaoRoot[] = $adapterId;
             }
         }
 
-        if (!empty($adaptersWithoutCache)) {
+        if (!empty($adaptersWithCacheInsideTaoRoot)) {
             return new Report(
                 Report::TYPE_WARNING,
-                __('Cache is disabled for File System adapters: %s', implode(', ', $adaptersWithoutCache))
+                __('Cache directory is inside tao root directory. Filesystem adapters: %s', implode(', ', $adaptersWithCacheInsideTaoRoot))
             );
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('Filesystem adapters correctly configured.'));
+        return new Report(Report::TYPE_SUCCESS, __('Cache directories of filesystem adapters correctly configured.'));
     }
 
     /**
@@ -121,31 +127,10 @@ class FileSystemS3CacheCheck extends AbstractCheck
     }
 
     /**
-     * Get configuration of filesystem adapter
-     * @param $id
-     * @return mixed
+     * @return string
      */
-    private function getFlysystemAdapterConfig($id): array
+    private function getTaoRootDir(): string
     {
-        $fsService = $this->getFileSystemService();
-        $dirs = $fsService->hasOption(FileSystemService::OPTION_DIRECTORIES)
-            ? $fsService->getOption(FileSystemService::OPTION_DIRECTORIES)
-            : [];
-
-        if (!isset($dirs[$id])) {
-            $adapterId = $id;
-        } elseif (is_array($dirs[$id])) {
-            $adapterId = $dirs[$id]['adapter'];
-        } else {
-            $adapterId = $dirs[$id];
-        }
-
-        $fsConfig = $fsService->getOption(FileSystemService::OPTION_ADAPTERS);
-        $adapterConfig = $fsConfig[$adapterId];
-        // alias?
-        while (is_string($adapterConfig)) {
-            $adapterConfig = $fsConfig[$adapterConfig];
-        }
-        return $adapterConfig;
+        return realpath(rtrim(ROOT_PATH, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR);
     }
 }
