@@ -25,6 +25,7 @@ namespace oat\taoSystemStatus\scripts\tools;
 use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\extension\script\ScriptAction;
 use oat\taoSystemStatus\model\Report\ReportComparator;
+use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 use common_report_Report as Report;
 
@@ -67,6 +68,7 @@ class CheckDegradations extends ScriptAction
 
     public function run()
     {
+        $this->getInstanceStatusService()->check();
         $report = $this->getSystemStatusService()->check();
         $previousReport = $this->getPreviousReport();
         if (!$previousReport) {
@@ -127,5 +129,13 @@ class CheckDegradations extends ScriptAction
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
+    }
+
+    /**
+     * @return InstanceStatusService
+     */
+    private function getInstanceStatusService() : InstanceStatusService
+    {
+        return $this->getServiceLocator()->get(InstanceStatusService::SERVICE_ID);
     }
 }
