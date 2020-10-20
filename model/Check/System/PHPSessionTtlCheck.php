@@ -57,7 +57,7 @@ class PHPSessionTtlCheck extends AbstractCheck
 
         if ($cookieLifetime < $sessionMaxLifetime) {
             $report = new Report(
-                Report::TYPE_ERROR,
+                Report::TYPE_WARNING,
                 __('\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. Session life time is %d seconds', $cookieLifetime)
             );
         } else if ($sessionLifeTime === 1440 ) {
