@@ -53,27 +53,25 @@ class PHPSessionTtlCheck extends AbstractCheck
         $sessionMaxLifetime = (int) ini_get('session.gc_maxlifetime');
         $cookieLifetime = (int) ini_get('session.cookie_lifetime');
 
-        $sessionLifeTime = min($cookieLifetime, $sessionMaxLifetime);
-
         if ($cookieLifetime < $sessionMaxLifetime) {
             $report = new Report(
                 Report::TYPE_WARNING,
                 __('\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. Session life time is %d seconds', $cookieLifetime)
             );
-        } else if ($sessionLifeTime === 1440 ) {
+        } else if ($sessionMaxLifetime === 1440 ) {
             $report = new Report(
                 Report::TYPE_WARNING,
-                __('\'session.gc_maxlifetime\' php option has default value. Session life time is %d seconds', $sessionLifeTime)
+                __('\'session.gc_maxlifetime\' php option has default value. Session life time is %d seconds', $sessionMaxLifetime)
             );
-        } else if ($sessionLifeTime < 1440 ) {
+        } else if ($sessionMaxLifetime < 1440 ) {
             $report = new Report(
                 Report::TYPE_WARNING,
-                __('\'session.cookie_lifetime\' php option is less than default value. Session life time is %d seconds', $sessionLifeTime)
+                __('\'session.gc_maxlifetime\' php option is less than default value. Session life time is %d seconds', $sessionMaxLifetime)
             );
         } else {
             $report = new Report(
                 Report::TYPE_SUCCESS,
-                __('Session life time is %d seconds', $sessionLifeTime));
+                __('Session life time is %d seconds', min($cookieLifetime, $sessionMaxLifetime)));
         }
 
         return $this->prepareReport($report);
