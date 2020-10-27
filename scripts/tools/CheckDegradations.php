@@ -72,11 +72,11 @@ class CheckDegradations extends ScriptAction
         $report = $this->getSystemStatusService()->check();
         $previousReport = $this->getPreviousReport();
         if (!$previousReport) {
-            return new Report(Report::TYPE_INFO, 'No previous report found');
+            $result = new Report(Report::TYPE_INFO, 'No previous report found');
+        } else {
+            $comparator = new ReportComparator($previousReport, $report);
+            $result = $comparator->getDegradations();
         }
-
-        $comparator = new ReportComparator($previousReport, $report);
-        $result = $comparator->getDegradations();
 
         $this->getPersistence()->set(self::KV_PERSISTENCE_KEY, json_encode($report));
         return $result;
