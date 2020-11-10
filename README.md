@@ -8,7 +8,7 @@ Extension supposed to be used to monitor the status of some services and the cor
 Requires the following CRON job on ALL instances (web and workers):
 
 ```
-0 * * * * root cd /var/www/html/tao && /usr/bin/flock -n /var/lock/tao-InstanceCheck.lock -c "sudo -u www-data nohup /usr/bin/php index.php 'oat\taoSystemStatus\scripts\tools\RunInstanceCheck' 2>&1 >>/var/log/tao/InstanceCheck.log &"
+*/5 * * * * root cd /var/www/html/tao && /usr/bin/flock -n /var/lock/tao-InstanceCheck.lock -c "sudo -u www-data nohup /usr/bin/php index.php 'oat\taoSystemStatus\scripts\tools\RunInstanceCheck' 2>&1 >>/var/log/tao/InstanceCheck.log &"
 ```
 
 NOTE: For AWS environemnts make sure that both Web Server Role and Worker Server Role have rights to perform:
