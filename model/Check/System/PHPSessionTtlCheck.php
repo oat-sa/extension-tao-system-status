@@ -35,13 +35,17 @@ use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
  * Class PHPSessionTtlCheck
+ *
+ * Warning when cookie life time is less than session life time.
+ * Warning when session life time has default value (that means that this value was not adapted to customer needs)
+ * Warning when session life time less than default. This means that it's configured wrong.
+ *
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleh Hutnikau, <hutnikau@1pt.com>
  */
 class PHPSessionTtlCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
-
 
     /**
      * @param array $params
@@ -53,26 +57,30 @@ class PHPSessionTtlCheck extends AbstractCheck
         $sessionMaxLifetime = (int) ini_get('session.gc_maxlifetime');
         $cookieLifetime = (int) ini_get('session.cookie_lifetime');
 
-        if ($cookieLifetime !== 0 && $cookieLifetime < $sessionMaxLifetime) {
-            $report = new Report(
-                Report::TYPE_WARNING,
-                __('\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. Session life time is %d seconds', $cookieLifetime)
-            );
-        } else if ($sessionMaxLifetime === 1440 ) {
-            $report = new Report(
-                Report::TYPE_WARNING,
-                __('\'session.gc_maxlifetime\' php option has default value. Session life time is %d seconds', $sessionMaxLifetime)
-            );
-        } else if ($sessionMaxLifetime < 1440 ) {
-            $report = new Report(
-                Report::TYPE_WARNING,
-                __('\'session.gc_maxlifetime\' php option is less than default value. Session life time is %d seconds', $sessionMaxLifetime)
-            );
-        } else {
-            $report = new Report(
-                Report::TYPE_SUCCESS,
-                __('Session life time is %d seconds', min($cookieLifetime, $sessionMaxLifetime)));
+        $message = '';
+
+        $report = new Report(Report::TYPE_SUCCESS);
+
+        if ($sessionMaxLifetime === 1440 ) {
+            $report->setType(Report::TYPE_WARNING);
+            $message .= __('\'session.gc_maxlifetime\' php option has default value. Session life time is %d seconds', $sessionMaxLifetime);
         }
+
+        if ($cookieLifetime !== 0 && $cookieLifetime < $sessionMaxLifetime) {
+            $report->setType(Report::TYPE_WARNING);
+            $message .= PHP_EOL.__('\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. Session life time is %d seconds', $cookieLifetime);
+        }
+
+        if ($sessionMaxLifetime < 1440 ) {
+            $report->setType(Report::TYPE_WARNING);
+            $message .= PHP_EOL.__('\'session.gc_maxlifetime\' php option is less than default value. Session life time is %d seconds', $sessionMaxLifetime);
+        }
+
+        if ($report->getType() === Report::TYPE_SUCCESS) {
+            $message = __('Session life time is %d seconds', min($cookieLifetime, $sessionMaxLifetime));
+        }
+
+        $report->setMessage(trim($message));
 
         return $this->prepareReport($report);
     }
