@@ -128,7 +128,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
      * @param $id
      * @return mixed
      */
-    private function getFlysystemAdapterConfig($id): array
+    private function getFlysystemAdapterConfig(string $id): array
     {
         $fsService = $this->getFileSystemService();
         $dirs = $fsService->hasOption(FileSystemService::OPTION_DIRECTORIES)
