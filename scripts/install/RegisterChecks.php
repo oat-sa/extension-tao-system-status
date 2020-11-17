@@ -88,6 +88,7 @@ class RegisterChecks extends AbstractAction
             new \oat\taoSystemStatus\model\Check\System\TaskQueueMonitoring([]),
             new \oat\taoSystemStatus\model\Check\System\WebSourceTTLCheck([]),
             new \oat\taoSystemStatus\model\Check\System\PHPSessionTtlCheck([]),
+            new \oat\taoSystemStatus\model\Check\System\FileSystemS3CachePathCheck([]),
         ];
     }
 
