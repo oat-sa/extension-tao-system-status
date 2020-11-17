@@ -42,10 +42,9 @@ class FileSystemS3CachePathCheck extends AbstractCheck
 {
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke(array $params = []): Report
+    public function __invoke($params = []): Report
     {
         if (!$this->isActive()) {
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
