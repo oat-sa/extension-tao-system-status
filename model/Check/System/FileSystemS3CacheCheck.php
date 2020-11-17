@@ -122,12 +122,7 @@ class FileSystemS3CacheCheck extends AbstractCheck
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(FileSystemService::SERVICE_ID);
     }
-
-    /**
-     * Get configuration of filesystem adapter
-     * @param $id
-     * @return mixed
-     */
+    
     private function getFlysystemAdapterConfig(string $id): array
     {
         $fsService = $this->getFileSystemService();
