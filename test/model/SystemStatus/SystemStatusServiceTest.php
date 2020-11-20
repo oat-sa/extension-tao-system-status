@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,14 +34,6 @@ use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 class SystemStatusServiceTest extends TestCase
 {
     const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
-
-    /**
-     * @inheritdoc
-     */
-    public function testCheck()
-    {
-
-    }
 
     public function testGetInstanceId()
     {
