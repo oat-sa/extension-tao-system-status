@@ -24,6 +24,8 @@ namespace oat\taoSystemStatus\scripts\tools;
 
 use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\extension\script\ScriptAction;
+use oat\taoSystemStatus\model\Alert\Alert;
+use oat\taoSystemStatus\model\Alert\AlertService;
 use oat\taoSystemStatus\model\Report\ReportComparator;
 use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
@@ -76,6 +78,10 @@ class CheckDegradations extends ScriptAction
         } else {
             $comparator = new ReportComparator($previousReport, $report);
             $result = $comparator->getDegradations();
+
+            if (in_array($result->getType(), [Report::TYPE_WARNING, Report::TYPE_ERROR])) {
+                $result->add($this->sendAlert($result));
+            }
         }
 
         $this->getPersistence()->set(self::KV_PERSISTENCE_KEY, json_encode($report));
@@ -108,6 +114,24 @@ class CheckDegradations extends ScriptAction
             $result = Report::jsonUnserialize($report);
         }
         return $result;
+    }
+
+    /**
+     * @param Report $report
+     */
+    private function sendAlert(Report $report)
+    {
+        if (!$this->getServiceLocator()->has(AlertService::SERVICE_ID)) {
+            return;
+        }
+
+        /** @var AlertService $alertService */
+        $alertService = $this->getServiceLocator()->get(AlertService::SERVICE_ID);
+        $alert = new Alert(
+            'System degradations detected: ' . ROOT_URL,
+            json_encode($report->toArray(), JSON_PRETTY_PRINT)
+        );
+        return $alertService->createAlert($alert);
     }
 
     /**
