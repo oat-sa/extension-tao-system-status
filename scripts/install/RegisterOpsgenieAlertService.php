@@ -25,9 +25,6 @@ namespace oat\taoSystemStatus\scripts\install;
 use oat\oatbox\extension\AbstractAction;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Alert\OpsgenieAlertService;
-use oat\taoSystemStatus\model\Check\CheckInterface;
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
-use oat\taoSystemStatus\model\SystemStatusException;
 
 /**
  * Class RegisterOpsgenieAlertService

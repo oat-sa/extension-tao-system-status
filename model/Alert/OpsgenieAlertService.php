@@ -26,6 +26,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use common_report_Report as Report;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class OpsgenieAlertService
@@ -33,12 +34,10 @@ use common_report_Report as Report;
  */
 class OpsgenieAlertService extends AlertService
 {
-    const SERVICE_ID = 'taoSystemStatus/AlertService';
+    public const OPTION_API_KEY = 'api_key';
 
-    const OPTION_API_KEY = 'api_key';
-
-    const OPSGENIE_API_URI = 'https://api.eu.opsgenie.com';
-    const OPSGENIE_API_VERSION = 'v2';
+    private const OPSGENIE_API_URI = 'https://api.eu.opsgenie.com';
+    private const OPSGENIE_API_VERSION = 'v2';
 
     private const RESPONDERS = [
         [
@@ -50,21 +49,20 @@ class OpsgenieAlertService extends AlertService
     /**
      * @param Alert $alert
      * @return Report
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createAlert(Alert $alert)
+    public function createAlert(Alert $alert): Report
     {
         $report = new Report(Report::TYPE_SUCCESS);
 
         try {
             $request = new Request('POST', 'alerts', $this->getHeaders(), $this->getBody($alert));
             $response = $this->getClient()->send($request);
-            $report->setMessage((string) $response->getBody());
+            $report->setMessage((string)$response->getBody());
         } catch (BadResponseException $e) {
             $response = $e->getResponse();
-            $report->setMessage((string) $response->getBody());
+            $report->setMessage((string)$response->getBody());
             $report->setType(Report::TYPE_ERROR);
-        } catch (\Error $e) {
+        } catch (\Error|GuzzleException $e) {
             $report->setMessage($e->getMessage());
             $report->setType(Report::TYPE_ERROR);
         }
@@ -110,7 +108,7 @@ class OpsgenieAlertService extends AlertService
     private function getClient()
     {
         return new Client([
-            'base_uri' => self::OPSGENIE_API_URI . '/'. self::OPSGENIE_API_VERSION . '/',
+            'base_uri' => self::OPSGENIE_API_URI . '/' . self::OPSGENIE_API_VERSION . '/',
         ]);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace oat\taoSystemStatus\model\Alert;
 
 use oat\oatbox\service\ConfigurableService;
+use common_report_Report as Report;
 
 /**
  * Class AlertService
@@ -30,7 +31,7 @@ use oat\oatbox\service\ConfigurableService;
  */
 abstract class AlertService extends ConfigurableService
 {
-    const SERVICE_ID = 'taoSystemStatus/AlertService';
+    public const SERVICE_ID = 'taoSystemStatus/AlertService';
 
-    abstract public function createAlert(Alert $alert);
+    abstract public function createAlert(Alert $alert): Report;
 }
