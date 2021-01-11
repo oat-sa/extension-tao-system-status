@@ -125,8 +125,8 @@ class CheckDegradations extends ScriptAction
         /** @var AlarmNotificationService $alertService */
         $alertService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
         $alert = new Alert(
-            json_encode($report->toArray(), JSON_PRETTY_PRINT),
-            'System degradations detected: ' . ROOT_URL
+            'System degradations detected: ' . ROOT_URL,
+            json_encode($report->toArray(), JSON_PRETTY_PRINT)
         );
         $alertService->sendNotifications($alert);
 
