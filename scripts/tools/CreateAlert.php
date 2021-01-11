@@ -25,7 +25,6 @@ namespace oat\taoSystemStatus\scripts\tools;
 use oat\oatbox\extension\script\ScriptAction;
 use oat\tao\model\notifications\Alert;
 use oat\tao\model\notifications\AlarmNotificationService;
-use oat\oatbox\reporting\Report;
 
 /**
  * Class CheckDegradations
@@ -70,7 +69,7 @@ class CreateAlert extends ScriptAction
     }
 
     /**
-     * @return Report
+     * @return \common_report_Report
      */
     public function run()
     {
@@ -79,7 +78,7 @@ class CreateAlert extends ScriptAction
         $alert = new Alert($this->getOption('message'), $this->getOption('description'));
         $service->sendNotifications($alert);
 
-        return Report::createInfo('Notification has been sent');
+        return \common_report_Report::createInfo('Notification has been sent');
     }
 
     /**

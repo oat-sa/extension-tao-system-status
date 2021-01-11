@@ -29,7 +29,7 @@ return [
     'version' => '0.17.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
-        'tao' => '>=38.13.3',
+        'tao' => '>=46.11.1',
         'taoScheduler' => '>=2.3.0',
     ],
     'acl' => [
