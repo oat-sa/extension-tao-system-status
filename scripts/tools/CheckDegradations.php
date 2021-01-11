@@ -29,7 +29,7 @@ use oat\tao\model\notifications\Alert;
 use oat\taoSystemStatus\model\Report\ReportComparator;
 use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
-use oat\oatbox\reporting\Report;
+use common_report_Report as Report;
 
 /**
  * Class CheckDegradations
@@ -125,8 +125,8 @@ class CheckDegradations extends ScriptAction
         /** @var AlarmNotificationService $alertService */
         $alertService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
         $alert = new Alert(
-            'System degradations detected: ' . ROOT_URL,
-            json_encode($report->toArray(), JSON_PRETTY_PRINT)
+            json_encode($report->toArray(), JSON_PRETTY_PRINT),
+            'System degradations detected: ' . ROOT_URL
         );
         $alertService->sendNotifications($alert);
 
