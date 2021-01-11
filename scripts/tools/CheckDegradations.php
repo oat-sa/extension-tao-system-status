@@ -24,12 +24,12 @@ namespace oat\taoSystemStatus\scripts\tools;
 
 use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\extension\script\ScriptAction;
-use oat\taoSystemStatus\model\Alert\Alert;
-use oat\taoSystemStatus\model\Alert\AlertService;
+use oat\tao\model\notifications\AlarmNotificationService;
+use oat\tao\model\notifications\Alert;
 use oat\taoSystemStatus\model\Report\ReportComparator;
 use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
-use common_report_Report as Report;
+use oat\oatbox\reporting\Report;
 
 /**
  * Class CheckDegradations
@@ -118,20 +118,19 @@ class CheckDegradations extends ScriptAction
 
     /**
      * @param Report $report
+     * @return Report
      */
     private function sendAlert(Report $report)
     {
-        if (!$this->getServiceLocator()->has(AlertService::SERVICE_ID)) {
-            return;
-        }
-
-        /** @var AlertService $alertService */
-        $alertService = $this->getServiceLocator()->get(AlertService::SERVICE_ID);
+        /** @var AlarmNotificationService $alertService */
+        $alertService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
         $alert = new Alert(
             'System degradations detected: ' . ROOT_URL,
             json_encode($report->toArray(), JSON_PRETTY_PRINT)
         );
-        return $alertService->createAlert($alert);
+        $alertService->sendNotifications($alert);
+
+        return Report::createInfo('Alert has been sent');
     }
 
     /**

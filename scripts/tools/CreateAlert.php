@@ -22,14 +22,10 @@ declare(strict_types=1);
 
 namespace oat\taoSystemStatus\scripts\tools;
 
-use oat\generis\persistence\PersistenceManager;
 use oat\oatbox\extension\script\ScriptAction;
-use oat\taoSystemStatus\model\Alert\Alert;
-use oat\taoSystemStatus\model\Alert\AlertService;
-use oat\taoSystemStatus\model\Report\ReportComparator;
-use oat\taoSystemStatus\model\SystemStatus\InstanceStatusService;
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
-use common_report_Report as Report;
+use oat\tao\model\notifications\Alert;
+use oat\tao\model\notifications\AlarmNotificationService;
+use oat\oatbox\reporting\Report;
 
 /**
  * Class CheckDegradations
@@ -78,10 +74,12 @@ class CreateAlert extends ScriptAction
      */
     public function run()
     {
-        /** @var AlertService $service */
-        $service = $this->getServiceLocator()->get(AlertService::SERVICE_ID);
+        /** @var AlarmNotificationService $service */
+        $service = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
         $alert = new Alert($this->getOption('message'), $this->getOption('description'));
-        return $service->createAlert($alert);
+        $service->sendNotifications($alert);
+
+        return Report::createInfo('Notification has been sent');
     }
 
     /**
