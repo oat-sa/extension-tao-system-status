@@ -26,10 +26,10 @@ return [
     'label' => 'TAO System Status',
     'description' => 'TAO System Status',
     'license' => 'GPL-2.0',
-    'version' => '0.16.0',
+    'version' => '0.17.0',
     'author' => 'Open Assessment Technologies SA',
     'requires' => [
-        'tao' => '>=38.13.3',
+        'tao' => '>=46.11.1',
         'taoScheduler' => '>=2.3.0',
     ],
     'acl' => [
@@ -39,6 +39,7 @@ return [
         'php' => [
             \oat\taoSystemStatus\scripts\install\RegisterCheckStorage::class,
             \oat\taoSystemStatus\scripts\install\RegisterChecks::class,
+            \oat\taoSystemStatus\scripts\install\ScheduleJobs::class,
             \oat\taoSystemStatus\scripts\install\RegisterSystemStatusLog::class,
         ],
         'rdf' => [
