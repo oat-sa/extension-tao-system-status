@@ -100,7 +100,7 @@ class FileSystemS3CachePathCheck extends AbstractCheck
                 continue;
             }
             $options = array_pop($adapterConfig['options']);
-            if (!isset($options['cache'])) {
+            if (!isset($options['cache']) || !is_string($options['cache'])) {
                 continue;
             }
             $cachePath = realpath($options['cache']);
