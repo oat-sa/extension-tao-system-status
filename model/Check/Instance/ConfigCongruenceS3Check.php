@@ -35,15 +35,10 @@ class ConfigCongruenceS3Check extends AbstractCheck
     use LoggerAwareTrait;
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-
         $tmpDir = \tao_helpers_File::createTempDir() . 'migrations' . DIRECTORY_SEPARATOR . 'config';
         $s3Client = $this->getS3Client();
         $adapterOptions = $this->getAdapterOptions();
@@ -56,8 +51,7 @@ class ConfigCongruenceS3Check extends AbstractCheck
             $this->logError('The instance configuration is not match configuration stored on s3');
             $report = new Report(Report::TYPE_ERROR, __('The instance configuration is not match configuration stored on s3'));
         }
-
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

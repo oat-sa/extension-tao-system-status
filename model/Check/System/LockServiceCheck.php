@@ -32,17 +32,19 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class LockServiceCheck extends AbstractCheck
 {
-     /**
-     * @param array $params
-     * @return Report
+    /**
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $lockService = $this->getLockService();
+        $storage = $lockService->getOption(LockService::OPTION_PERSISTENCE_CLASS);
+
+        if ($storage === NoLockStorage::class) {
+            return new Report(Report::TYPE_WARNING, __('Disabled'));
         }
-        $report = $this->checkLockServiceService();
-        return $this->prepareReport($report);
+
+        return new Report(Report::TYPE_SUCCESS, __('Enabled'));
     }
 
     /**
@@ -75,21 +77,6 @@ class LockServiceCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Lock Service status');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkLockServiceService() : Report
-    {
-        $lockService = $this->getLockService();
-        $storage = $lockService->getOption(LockService::OPTION_PERSISTENCE_CLASS);
-
-        if ($storage === NoLockStorage::class) {
-            return new Report(Report::TYPE_WARNING, __('Disabled'));
-        }
-
-        return new Report(Report::TYPE_SUCCESS, __('Enabled'));
     }
 
     /**

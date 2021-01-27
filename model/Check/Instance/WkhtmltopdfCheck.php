@@ -39,17 +39,38 @@ class WkhtmltopdfCheck extends AbstractCheck
     private const MINIMUM_STABLE_VERSION = '0.12.5';
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws \common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $options = $this->getWkhtmltopdfConfig();
+        $guessPath = PdfBookletExporter::guessWhereWkhtmltopdfInstalled();
+
+        $process = shell_exec(escapeshellarg(trim($guessPath)) . ' -V');
+        preg_match("/(?:wkhtmltopdf)\s*((?:[0-9]+\.?)+)/i", $process, $matches);
+
+        if (isset($matches[1])) {
+            //
+            if (version_compare($matches[1], self::MINIMUM_STABLE_VERSION) < 0) {
+                return new Report(
+                    Report::TYPE_WARNING,
+                    __('wkhtmltopdf lib has the wrong version %s. Should %s or more', $matches[1], self::MINIMUM_STABLE_VERSION)
+                );
+            }
         }
-        $report = $this->checkWkhtmltopdf();
-        return $this->prepareReport($report);
+
+        $bin = $options['binary'];
+        if ($guessPath !== $bin) {
+            return new Report(
+                Report::TYPE_WARNING,
+                __('wkhtmltopdf lib not correctly configured in taoBooklet extension. Please, check config/taoBooklet/wkhtmltopdf.conf.php.')
+            );
+        }
+
+        return new Report(
+            Report::TYPE_SUCCESS,
+            __('wkhtmltopdf lib correctly configured in taoBooklet extension.')
+        );
     }
 
     /**
@@ -82,42 +103,6 @@ class WkhtmltopdfCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('wkhtmltopdf library presence and version');
-    }
-
-    /**
-     * @return Report
-     * @throws common_ext_ExtensionException
-     */
-    private function checkWkhtmltopdf() : Report
-    {
-        $options = $this->getWkhtmltopdfConfig();
-        $guessPath = PdfBookletExporter::guessWhereWkhtmltopdfInstalled();
-
-        $process = shell_exec(escapeshellarg(trim($guessPath)) . ' -V');
-        preg_match("/(?:wkhtmltopdf)\s*((?:[0-9]+\.?)+)/i", $process, $matches);
-
-        if (isset($matches[1])) {
-            //
-            if (version_compare($matches[1], self::MINIMUM_STABLE_VERSION) < 0) {
-                return new Report(
-                    Report::TYPE_WARNING,
-                    __('wkhtmltopdf lib has the wrong version %s. Should %s or more', $matches[1], self::MINIMUM_STABLE_VERSION)
-                );
-            }
-        }
-
-        $bin = $options['binary'];
-        if ($guessPath !== $bin) {
-            return new Report(
-                Report::TYPE_WARNING,
-                __('wkhtmltopdf lib not correctly configured in taoBooklet extension. Please, check config/taoBooklet/wkhtmltopdf.conf.php.')
-            );
-        }
-
-        return new Report(
-            Report::TYPE_SUCCESS,
-            __('wkhtmltopdf lib correctly configured in taoBooklet extension.')
-        );
     }
 
     /**

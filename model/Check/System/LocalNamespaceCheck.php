@@ -33,16 +33,19 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class LocalNamespaceCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $uriProvider = $this->getUriProviderService();
+        $namespace = trim($uriProvider->getOption('namespace'), ' #');
+        if (!$namespace) {
+            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider does not exist'));
         }
-        $report = $this->checkLocalNamespace();
-        return $this->prepareReport($report);
+        if ($namespace !== LOCAL_NAMESPACE) {
+            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE'));
+        }
+        return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured'));
     }
 
     /**
@@ -75,22 +78,6 @@ class LocalNamespaceCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('LOCAL_NAMESPACE and URI provider configuration');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkLocalNamespace() : Report
-    {
-        $uriProvider = $this->getUriProviderService();
-        $namespace = trim($uriProvider->getOption('namespace'), ' #');
-        if (!$namespace) {
-            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider does not exist'));
-        }
-        if ($namespace !== LOCAL_NAMESPACE) {
-            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE'));
-        }
-        return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured'));
     }
 
     /**

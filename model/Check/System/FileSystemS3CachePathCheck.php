@@ -40,17 +40,36 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class FileSystemS3CachePathCheck extends AbstractCheck
 {
-
     /**
      * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $adaptersWithCacheInsideTaoRoot = [];
+        $taoRootDir = $this->getTaoRootDir();
+        $adapters = $this->getFileSystemService()->getOption(FileSystemService::OPTION_ADAPTERS);
+        foreach ($adapters as $adapterId => $adapterConfig) {
+            if (!isset($adapterConfig['options'])) {
+                continue;
+            }
+            $options = array_pop($adapterConfig['options']);
+            if (!isset($options['cache']) || !is_string($options['cache'])) {
+                continue;
+            }
+            $cachePath = realpath($options['cache']);
+            if (strpos($cachePath, $taoRootDir) === 0) {
+                $adaptersWithCacheInsideTaoRoot[] = $adapterId;
+            }
         }
-        $report = $this->checkFilesystemCaches();
-        return $this->prepareReport($report);
+
+        if (!empty($adaptersWithCacheInsideTaoRoot)) {
+            return new Report(
+                Report::TYPE_WARNING,
+                __('Cache directory is inside tao root directory. Filesystem adapters: %s', implode(', ', $adaptersWithCacheInsideTaoRoot))
+            );
+        }
+
+        return new Report(Report::TYPE_SUCCESS, __('Cache directories of filesystem adapters correctly configured.'));
     }
 
     /**
@@ -85,38 +104,6 @@ class FileSystemS3CachePathCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Cache directory path on S3 file system adapters');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkFilesystemCaches() : Report
-    {
-        $adaptersWithCacheInsideTaoRoot = [];
-        $taoRootDir = $this->getTaoRootDir();
-        $adapters = $this->getFileSystemService()->getOption(FileSystemService::OPTION_ADAPTERS);
-        foreach ($adapters as $adapterId => $adapterConfig) {
-            if (!isset($adapterConfig['options'])) {
-                continue;
-            }
-            $options = array_pop($adapterConfig['options']);
-            if (!isset($options['cache']) || !is_string($options['cache'])) {
-                continue;
-            }
-            $cachePath = realpath($options['cache']);
-            if (strpos($cachePath, $taoRootDir) === 0) {
-                $adaptersWithCacheInsideTaoRoot[] = $adapterId;
-            }
-        }
-
-        if (!empty($adaptersWithCacheInsideTaoRoot)) {
-            return new Report(
-                Report::TYPE_WARNING,
-                __('Cache directory is inside tao root directory. Filesystem adapters: %s', implode(', ', $adaptersWithCacheInsideTaoRoot))
-            );
-        }
-
-        return new Report(Report::TYPE_SUCCESS, __('Cache directories of filesystem adapters correctly configured.'));
     }
 
     /**

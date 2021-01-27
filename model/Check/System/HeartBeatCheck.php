@@ -33,17 +33,16 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class HeartBeatCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $config = $this->getTestRunnerService()->getConfig('testRunner');
+        $heartbeatConfig = $config['plugins']['heartbeat'] ?? null;
+        if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
+            return new Report(Report::TYPE_WARNING, __('Heartbeat frequency: %d seconds. This may have negative impact on performance', $heartbeatConfig['frequency']));
         }
-        $report = $this->checkHeartBeat();
-        return $this->prepareReport($report);
+        return new Report(Report::TYPE_SUCCESS, __('Frequency: %d', $heartbeatConfig['frequency']));
     }
 
     /**
@@ -76,20 +75,6 @@ class HeartBeatCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Heartbeat timing');
-    }
-
-    /**
-     * @return Report
-     * @throws common_ext_ExtensionException
-     */
-    private function checkHeartBeat() : Report
-    {
-        $config = $this->getTestRunnerService()->getConfig('testRunner');
-        $heartbeatConfig = $config['plugins']['heartbeat'] ?? null;
-        if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
-            return new Report(Report::TYPE_WARNING, __('Heartbeat frequency: %d seconds. This may have negative impact on performance', $heartbeatConfig['frequency']));
-        }
-        return new Report(Report::TYPE_SUCCESS, __('Frequency: %d', $heartbeatConfig['frequency']));
     }
 
     /**

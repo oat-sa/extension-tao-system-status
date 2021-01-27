@@ -30,17 +30,36 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class WriteConfigDataCheck extends AbstractCheck
 {
+
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $configDir = ROOT_PATH.'config';
+        $dataDir = ROOT_PATH.'data';
+
+        if (!is_writable($configDir)) {
+            return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'config\' folder'));
         }
-        $report = $this->checkConfigAndDataFolders();
-        return $this->prepareReport($report);
+
+        $dir = new \DirectoryIterator($configDir);
+        foreach ($dir as $fileinfo) {
+            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+                if (!is_writable($fileinfo->getPathname())) {
+                    return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
+                }
+            }
+        }
+
+        if (!file_exists($dataDir)) {
+            return new Report(Report::TYPE_ERROR, __('\'data\' folder does not exist'));
+        }
+        if (!is_writable($dataDir)) {
+            return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'data\' folder'));
+        }
+
+        return new Report(Report::TYPE_SUCCESS, __('TAO has permissions to write into \'config\' and \'data\' folders'));
     }
 
     /**
@@ -73,38 +92,5 @@ class WriteConfigDataCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Permissions to write into \'config\' and \'data\' folders');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkConfigAndDataFolders() : Report
-    {
-        $configDir = ROOT_PATH.'config';
-        $dataDir = ROOT_PATH.'data';
-
-        if (!is_writable($configDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'config\' folder'));
-        }
-
-        $dir = new \DirectoryIterator($configDir);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
-                if (!is_writable($fileinfo->getPathname())) {
-                    return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
-                }
-            }
-        }
-
-        if (!file_exists($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('\'data\' folder does not exist'));
-        }
-        if (!is_writable($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'data\' folder'));
-        }
-
-
-        return new Report(Report::TYPE_SUCCESS, __('TAO has permissions to write into \'config\' and \'data\' folders'));
-
     }
 }

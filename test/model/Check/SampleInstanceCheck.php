@@ -30,10 +30,6 @@ use common_report_Report as Report;
  */
 class SampleInstanceCheck extends AbstractCheck
 {
-    public function __invoke($params = []): Report
-    {
-        return Report::createSuccess('foo');
-    }
     public function isActive(): bool
     {
         return true;
@@ -49,5 +45,9 @@ class SampleInstanceCheck extends AbstractCheck
     public function getDetails(): string
     {
         return 'check details';
+    }
+    protected function doCheck(): Report
+    {
+        return Report::createSuccess('foo');
     }
 }

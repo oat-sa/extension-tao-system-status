@@ -39,14 +39,10 @@ class TaoLtiKVCheck extends AbstractCheck
     private $report;
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
         $this->report = new Report(Report::TYPE_SUCCESS);
 
         if (!$this->checkLtiLinkService()) {
@@ -57,7 +53,7 @@ class TaoLtiKVCheck extends AbstractCheck
             $this->report->setType(Report::TYPE_WARNING);
         }
 
-        return $this->prepareReport($this->report);
+        return $this->report;
     }
 
     /**

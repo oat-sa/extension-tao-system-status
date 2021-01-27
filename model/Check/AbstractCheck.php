@@ -48,7 +48,15 @@ abstract class AbstractCheck implements CheckInterface
         $this->params = $params;
     }
 
-    abstract public function __invoke($params = []): Report;
+    public function __invoke($params = []): Report
+    {
+        if (!$this->isActive()) {
+            $report = new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        } else {
+            $report = $this->doCheck();
+        }
+        return $this->prepareReport($report);
+    }
 
     /**
      * @inheritdoc
@@ -64,6 +72,11 @@ abstract class AbstractCheck implements CheckInterface
      * @inheritdoc
      */
     abstract public function getDetails(): string;
+
+    /**
+     * @return Report
+     */
+    abstract protected function doCheck(): Report;
 
     /**
      * @inheritdoc

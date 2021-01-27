@@ -34,17 +34,32 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class WebSourceTTLCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $configDir = ROOT_PATH.'config/tao';
+        $dirIterator = new \DirectoryIterator($configDir);
+        $errorReport = null;
+        foreach ($dirIterator as $config) {
+            if (!$config->isDir()|| !$config->isDot()) {
+                if (strpos($config->getFilename() , WebsourceManager::CONFIG_PREFIX) === 0) {
+                    $ext = $this->getExtensionsManagerService()->getExtensionById('tao');
+                    $configName = explode('.', $config->getFilename(), 2)[0];
+                    $options = $ext->getConfig($configName);
+                    if (isset($options['options'])) {
+                        $ttl = $options['options']['ttl'] ?? 0;
+                        if ($ttl === 0) {
+                            $errorReport .= __('Web Source config %s has no TTL value.', $configName) . PHP_EOL;
+                        }
+                    }
+                }
+            }
         }
-        $report = $this->checkWebSourceTTL();
-        return $this->prepareReport($report);
+        if ($errorReport) {
+            return new Report(Report::TYPE_WARNING, $errorReport);
+        }
+        return new Report(Report::TYPE_SUCCESS, __('Web Source is configured correctly.'));
     }
 
     /**
@@ -77,35 +92,5 @@ class WebSourceTTLCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Web sources configuration');
-    }
-
-    /**
-     * @return Report
-     * @throws common_ext_ExtensionException
-     */
-    private function checkWebSourceTTL() : Report
-    {
-        $configDir = ROOT_PATH.'config/tao';
-        $dirIterator = new \DirectoryIterator($configDir);
-        $errorReport = null;
-        foreach ($dirIterator as $config) {
-            if (!$config->isDir()|| !$config->isDot()) {
-                if(strpos($config->getFilename() , WebsourceManager::CONFIG_PREFIX) === 0) {
-                    $ext = $this->getExtensionsManagerService()->getExtensionById('tao');
-                    $configName = explode('.', $config->getFilename(), 2)[0];
-                    $options = $ext->getConfig($configName);
-                    if (isset($options['options'])) {
-                        $ttl = $options['options']['ttl'] ?? 0;
-                        if ($ttl === 0) {
-                            $errorReport .= __('Web Source config %s has no TTL value.', $configName) . PHP_EOL;
-                        }
-                    }
-                }
-            }
-        }
-        if ($errorReport) {
-            return new Report(Report::TYPE_WARNING, $errorReport);
-        }
-        return new Report(Report::TYPE_SUCCESS, __('Web Source is configured correctly.'));
     }
 }
