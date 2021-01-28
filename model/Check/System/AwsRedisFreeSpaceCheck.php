@@ -45,16 +45,10 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
     const PARAM_DEFAULT_PERIOD = 300;
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-
         $elastiCacheClient = $this->getElastiCacheClient();
         $redisHost = $this->getRedisHost();
         $stackId = $this->getStackId($redisHost);
@@ -82,8 +76,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
         }
 
         $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
-
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

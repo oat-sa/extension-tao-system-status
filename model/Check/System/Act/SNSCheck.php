@@ -33,18 +33,16 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class SNSCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $snsOptions = $this->getSnsService()->getOptions();
+        if ($search = array_keys($snsOptions, AmazonSimpleNotificationService::ARN_NOT_CONFIGURED_VALUE)) {
+            return new Report(Report::TYPE_ERROR, __('SNS messaging service is not correctly configured. The following options have default values: ' . implode(', ', $search)));
         }
-        $report = $this->checkSNS();
 
-        return $this->prepareReport($report);
+        return new Report(Report::TYPE_SUCCESS, __('SNS messaging service is configured correctly'));
     }
 
     /**
@@ -77,19 +75,6 @@ class SNSCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('SNS messaging service configuration');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkSNS() : Report
-    {
-        $snsOptions = $this->getSnsService()->getOptions();
-        if ($search = array_keys($snsOptions, AmazonSimpleNotificationService::ARN_NOT_CONFIGURED_VALUE)) {
-            return new Report(Report::TYPE_ERROR, __('SNS messaging service is not correctly configured. The following options have default values: ' . implode(', ', $search)));
-        }
-
-        return new Report(Report::TYPE_SUCCESS, __('SNS messaging service is configured correctly'));
     }
 
     /**

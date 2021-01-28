@@ -36,17 +36,25 @@ class MessagesJsonCheck extends AbstractCheck
     const MESSAGES_JSON_NAME = 'messages.json';
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $taoDir = $this->getExtensionsManagerService()->getExtensionById('tao')->getDir();
+        $dir = new \DirectoryIterator($taoDir.self::TAO_LOCALES_PREFIX);
+        $isDir = false;
+        foreach ($dir as $fileinfo) {
+            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+                $isDir = true;
+                if (!file_exists($fileinfo->getPathname().'/'.self::MESSAGES_JSON_NAME)) {
+                    return new Report(Report::TYPE_WARNING, __('Missed messages.json for '.$fileinfo->getFilename()));
+                }
+            }
         }
-        $report = $this->checkMessagesJson();
-        return $this->prepareReport($report);
+        if (!$isDir) {
+            return new Report(Report::TYPE_WARNING, __('Locales folder is empty'));
+        }
+        return new Report(Report::TYPE_SUCCESS, __('All messages.json exist'));
     }
 
     /**
@@ -81,27 +89,4 @@ class MessagesJsonCheck extends AbstractCheck
         return __('messages.json language file presence and correctness');
     }
 
-    /**
-     * @return Report
-     * @throws common_ext_ExtensionException
-     */
-    private function checkMessagesJson() : Report
-    {
-        $taoDir = $this->getExtensionsManagerService()->getExtensionById('tao')->getDir();
-        $dir = new \DirectoryIterator($taoDir.self::TAO_LOCALES_PREFIX);
-        $isDir = false;
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDir() && !$fileinfo->isDot()) {
-                $isDir = true;
-                if (!file_exists($fileinfo->getPathname().'/'.self::MESSAGES_JSON_NAME)) {
-                    return new Report(Report::TYPE_WARNING, __('Missed messages.json for '.$fileinfo->getFilename()));
-                }
-            }
-        }
-        if (!$isDir) {
-            return new Report(Report::TYPE_WARNING, __('Locales folder is empty'));
-        }
-        return new Report(Report::TYPE_SUCCESS, __('All messages.json exist'));
-
-    }
 }

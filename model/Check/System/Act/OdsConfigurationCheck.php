@@ -36,18 +36,12 @@ use common_exception_Error;
  */
 class OdsConfigurationCheck extends AbstractCheck
 {
-    /**
-     * @param array $params
-     * @return Report
-     * @throws common_exception_Error
-     * @throws InvalidTokenException
-     */
-    public function __invoke($params = []): Report
-    {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
 
+    /**
+     * @inheritdoc
+     */
+    protected function doCheck(): Report
+    {
         $report = new Report(Report::TYPE_INFO);
 
         $report->add($this->checkOdsConnector());
@@ -57,13 +51,13 @@ class OdsConfigurationCheck extends AbstractCheck
 
         if (count($report->getSuccesses()) === count($report->getChildren())) {
             $report->setType(Report::TYPE_SUCCESS);
-        } else if(count($report->getErrors()) > 0)  {
+        } elseif(count($report->getErrors()) > 0)  {
             $report->setType(Report::TYPE_ERROR);
         } else {
             $report->setType(Report::TYPE_WARNING);
         }
 
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

@@ -36,20 +36,14 @@ class TaskQueueMonitoring extends AbstractCheck
     const REPORT_VALUE = 'report_value';
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-
         $amountOfTasks = $this->getAmountOfTasks();
         $report = new Report(Report::TYPE_INFO, $amountOfTasks);
         $report->setData([self::REPORT_VALUE => $amountOfTasks]);
-
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

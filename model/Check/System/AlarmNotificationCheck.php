@@ -32,17 +32,31 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class AlarmNotificationCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
-     * @throws Exception
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $correct = true;
+        /** @var AlarmNotificationService $alarmNotificationService */
+        $alarmNotificationService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
+
+        $notifiers = $alarmNotificationService->getOption(AlarmNotificationService::OPTION_NOTIFIERS);
+
+        if (is_array($notifiers) && !empty($notifiers)) {
+            foreach ($notifiers as $notifier) {
+                $correct = $correct && class_exists($notifier['class']);
+            }
+        } else {
+            $correct = false;
         }
-        $report = $this->checkNotifiers();
-        return $this->prepareReport($report);
+
+        if ($correct) {
+            $report = new Report(Report::TYPE_SUCCESS, 'Alarm notification channel configured correctly');
+        } else {
+            $report = new Report(Report::TYPE_ERROR, 'Alarm notification channel not configured');
+        }
+
+        return $report;
     }
 
     /**
@@ -75,34 +89,5 @@ class AlarmNotificationCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Alarm communication channels');
-    }
-
-    /**
-     * @return Report
-     * @throws Exception
-     */
-    private function checkNotifiers() : Report
-    {
-        $correct = true;
-        /** @var AlarmNotificationService $alarmNotificationService */
-        $alarmNotificationService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
-
-        $notifiers = $alarmNotificationService->getOption(AlarmNotificationService::OPTION_NOTIFIERS);
-
-        if (is_array($notifiers) && !empty($notifiers)) {
-            foreach ($notifiers as $notifier) {
-                $correct = $correct && class_exists($notifier['class']);
-            }
-        } else {
-            $correct = false;
-        }
-
-        if ($correct) {
-            $report = new Report(Report::TYPE_SUCCESS, 'Alarm notification channel configured correctly');
-        } else {
-            $report = new Report(Report::TYPE_ERROR, 'Alarm notification channel not configured');
-        }
-
-        return $report;
     }
 }

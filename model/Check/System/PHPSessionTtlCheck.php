@@ -48,11 +48,9 @@ class PHPSessionTtlCheck extends AbstractCheck
     use LoggerAwareTrait;
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
         $sessionMaxLifetime = (int) ini_get('session.gc_maxlifetime');
         $cookieLifetime = (int) ini_get('session.cookie_lifetime');
@@ -82,7 +80,7 @@ class PHPSessionTtlCheck extends AbstractCheck
 
         $report->setMessage(trim($message));
 
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

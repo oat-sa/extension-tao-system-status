@@ -41,20 +41,14 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
     use LoggerAwareTrait;
     use PieChartReportRenderer;
 
-    const PARAM_PERIOD = 'period';
-    const PARAM_DEFAULT_PERIOD = 300;
+    private const PARAM_PERIOD = 'period';
+    private const PARAM_DEFAULT_PERIOD = 300;
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-
         $rdsHost = $this->getRDSHost();
         $stackId = $this->getStackId($rdsHost);
 
@@ -83,7 +77,8 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
             $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage).'%');
         }
         $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
-        return $this->prepareReport($report);
+
+        return $report;
     }
 
     /**

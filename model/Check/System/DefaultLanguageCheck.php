@@ -30,18 +30,12 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class DefaultLanguageCheck extends AbstractCheck
 {
-
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-        $report = $this->checkDefaultLanguage();
-        return $this->prepareReport($report);
+        return new Report(Report::TYPE_SUCCESS, __('Global language: %s', DEFAULT_LANG) . PHP_EOL . __('Anonymous user language: %s', DEFAULT_ANONYMOUS_INTERFACE_LANG));
     }
 
     /**
@@ -74,13 +68,5 @@ class DefaultLanguageCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Default Language');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkDefaultLanguage() : Report
-    {
-        return new Report(Report::TYPE_SUCCESS, __('Global language: %s', DEFAULT_LANG) . PHP_EOL . __('Anonymous user language: %s', DEFAULT_ANONYMOUS_INTERFACE_LANG));
     }
 }

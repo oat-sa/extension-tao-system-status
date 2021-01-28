@@ -32,14 +32,10 @@ class TaoUpdateCheck extends AbstractCheck
 {
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
         $extManager = $this->getExtensionsManagerService();
         $notUpdated = [];
         foreach ($this->getExtensionsManagerService()->getInstalledExtensions() as $extension) {
@@ -52,7 +48,7 @@ class TaoUpdateCheck extends AbstractCheck
         } else {
             $report = new Report(Report::TYPE_WARNING, __('The following extensions require update: ') . implode(', ', $notUpdated));
         }
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

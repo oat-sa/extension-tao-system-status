@@ -33,16 +33,22 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class LoginQueueCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $loginQueueActions = $this->getInstantActionQueue()->getOption(InstantActionQueue::OPTION_ACTIONS);
+
+        if (!isset($loginQueueActions[GetActiveDeliveryExecution::class])) {
+            return new Report(Report::TYPE_WARNING, __('Action GetActiveDeliveryExecution for Login Queue does not exist.'));
         }
-        $report = $this->checkLoginQueue();
-        return $this->prepareReport($report);
+        $restrictions = $loginQueueActions[GetActiveDeliveryExecution::class]['restrictions'];
+        $restrictionsOptions = '';
+        foreach ($restrictions as $restriction => $property) {
+            $restrictionName = explode('\\', $restriction);
+            $restrictionsOptions .= end($restrictionName) .'='.json_encode($property) . PHP_EOL;
+        }
+        return new Report(Report::TYPE_INFO, __('Implementation: GetActiveDeliveryExecution') . PHP_EOL . __('Options:') . ' '. $restrictionsOptions);
     }
 
     /**
@@ -75,26 +81,6 @@ class LoginQueueCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Login Queue service configuration');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkLoginQueue() : Report
-    {
-        $loginQueueActions = $this->getInstantActionQueue()->getOption(InstantActionQueue::OPTION_ACTIONS);
-
-        if (!isset($loginQueueActions[GetActiveDeliveryExecution::class])) {
-            return new Report(Report::TYPE_WARNING, __('Action GetActiveDeliveryExecution for Login Queue does not exist.'));
-        }
-        $restrictions = $loginQueueActions[GetActiveDeliveryExecution::class]['restrictions'];
-        $restrictionsOptions = '';
-        foreach ($restrictions as $restriction => $property) {
-            $restrictionName = explode('\\', $restriction);
-            $restrictionsOptions .= end($restrictionName) .'='.json_encode($property) . PHP_EOL;
-        }
-        return new Report(Report::TYPE_INFO, __('Implementation: GetActiveDeliveryExecution') . PHP_EOL . __('Options:') . ' '. $restrictionsOptions);
-
     }
 
     /**

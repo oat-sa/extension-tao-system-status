@@ -40,15 +40,10 @@ class CronCheck extends AbstractCheck
     private $cronRegEx = '/(\*|(\d|1\d|2\d|3\d|4\d|5\d)|\*\/(\d|1\d|2\d|3\d|4\d|5\d)) (\*|(\d|1\d|2[0-3])|\*\/(\d|1\d|2[0-3])) (\*|([1-9]|1\d|2\d|3[0-1])|\*\/([1-9]|1\d|2\d|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))/';
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws \common_exception_Error
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
         $this->cronPath = $params[self::PARAM_CRON_PATH] ?? self::DEFAULT_CRON_PATH;
         $report = new Report(Report::TYPE_INFO);
         $report->add($this->checkTaskQueueCron());
@@ -59,13 +54,13 @@ class CronCheck extends AbstractCheck
 
         if (count($report->getSuccesses()) === count($report->getChildren())) {
             $report->setType(Report::TYPE_SUCCESS);
-        } else if(count($report->getErrors()) > 0)  {
+        } elseif(count($report->getErrors()) > 0)  {
             $report->setType(Report::TYPE_ERROR);
         } else {
             $report->setType(Report::TYPE_WARNING);
         }
 
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**
