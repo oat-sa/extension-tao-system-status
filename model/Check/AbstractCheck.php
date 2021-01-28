@@ -151,7 +151,7 @@ abstract class AbstractCheck implements CheckInterface
      * Check if current instance is a worker
      *
      * NOTE: In debug mode all instances treated as workers because this is the most probably developer instance.
-     * NOTE: Instance treated as worker if any task queue process is active.
+     * NOTE: Instance treated as worker if any task queue or tao scheduler process is active.
      *
      * @return bool
      */
@@ -159,8 +159,9 @@ abstract class AbstractCheck implements CheckInterface
     {
         exec('ps -ef |egrep \'.+index.php\soat\'', $output);
         $taskQueueProcesses = preg_grep('/RunWorker/', $output);
+        $schedulerProcess = preg_grep('/JobRunner/', $output);
 
-        return !empty($taskQueueProcesses);
+        return !empty($taskQueueProcesses) || !empty($schedulerProcess);
     }
 
     /**
