@@ -43,21 +43,14 @@ class TaskQueueFinishedCheck extends AbstractCheck
     ];
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws Exception
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
         $statistics = $this->getTasksStatistics();
-
         $report = new Report(Report::TYPE_SUCCESS, __('Task Queue statistics:'));
         $report->setData($statistics);
-
-        return $this->prepareReport($report);
+        return $report;
     }
 
     /**

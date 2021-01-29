@@ -32,16 +32,11 @@ class DefaultTimeZoneCheck extends AbstractCheck
 {
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-        $report = $this->checkDefaultTimeZone();
-        return $this->prepareReport($report);
+        return new Report(Report::TYPE_SUCCESS, TIME_ZONE);
     }
 
     /**
@@ -74,13 +69,5 @@ class DefaultTimeZoneCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Time Zone');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkDefaultTimeZone() : Report
-    {
-        return new Report(Report::TYPE_SUCCESS, TIME_ZONE);
     }
 }

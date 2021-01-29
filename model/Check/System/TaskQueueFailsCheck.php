@@ -46,17 +46,10 @@ class TaskQueueFailsCheck extends AbstractCheck
     const TASK_LABEL = 'task_label';
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_Exception
-     * @throws common_exception_Error
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-
         $limit = $params[self::PARAM_LIMIT] ?? self::PARAM_DEFAULT_LIMIT;
         $tasks = $this->getLastFailedTasks($limit);
 
@@ -82,7 +75,7 @@ class TaskQueueFailsCheck extends AbstractCheck
             $report->add($taskReportFormatted);
         }
 
-        return $this->prepareReport($report);
+        return $report;
     }
 
 

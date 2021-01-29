@@ -34,17 +34,20 @@ class MathJaxCheck extends AbstractCheck
     const MATH_JAX_FOLDER_PREFIX = 'views/js/mathjax';
 
     /**
-     * @param array $params
-     * @return Report
-     * @throws common_ext_ExtensionException
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $qtiItemDir = $this->getExtensionsManagerService()->getExtensionById('taoQtiItem')->getDir();
+        if (!$this->checkDirIsNotEmpty($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX)) {
+            return new Report(Report::TYPE_WARNING, __('MathJax folder is empty.'));
         }
-        $report = $this->checkMathJax();
-        return $this->prepareReport($report);
+
+        if (!$this->isMathJaxJsExists($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX.'/MathJax.js')) {
+            return new Report(Report::TYPE_WARNING, __('MathJax.js does not exist'));
+        }
+
+        return new Report(Report::TYPE_SUCCESS, __('MathJax is configured correctly'));
     }
 
     /**
@@ -77,24 +80,6 @@ class MathJaxCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('MathJax presence');
-    }
-
-    /**
-     * @return Report
-     * @throws common_ext_ExtensionException
-     */
-    private function checkMathJax() : Report
-    {
-        $qtiItemDir = $this->getExtensionsManagerService()->getExtensionById('taoQtiItem')->getDir();
-        if (!$this->checkDirIsNotEmpty($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX)) {
-            return new Report(Report::TYPE_WARNING, __('MathJax folder is empty.'));
-        }
-
-        if (!$this->isMathJaxJsExists($qtiItemDir.self::MATH_JAX_FOLDER_PREFIX.'/MathJax.js')) {
-            return new Report(Report::TYPE_WARNING, __('MathJax.js does not exist'));
-        }
-
-        return new Report(Report::TYPE_SUCCESS, __('MathJax is configured correctly'));
     }
 
     /**

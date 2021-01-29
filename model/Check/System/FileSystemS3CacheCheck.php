@@ -35,7 +35,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class FileSystemS3CacheCheck extends AbstractCheck
 {
 
-    const CACHED_FILESYSTEMS = [
+    private const CACHED_FILESYSTEMS = [
         'public',
         'private',
         'qtiItemPci',
@@ -44,16 +44,27 @@ class FileSystemS3CacheCheck extends AbstractCheck
     ];
 
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $adaptersWithoutCache = [];
+        foreach (self::CACHED_FILESYSTEMS as $fsId) {
+            $adapter = $this->getFlysystemAdapterConfig($fsId);
+            $options = array_pop($adapter['options']);
+            if (!isset($options['cache'])) {
+                $adaptersWithoutCache[] = $fsId;
+            }
         }
-        $report = $this->checkFileSystemConfig();
-        return $this->prepareReport($report);
+
+        if (!empty($adaptersWithoutCache)) {
+            return new Report(
+                Report::TYPE_WARNING,
+                __('Cache is disabled for File System adapters: %s', implode(', ', $adaptersWithoutCache))
+            );
+        }
+
+        return new Report(Report::TYPE_SUCCESS, __('Filesystem adapters correctly configured.'));
     }
 
     /**
@@ -88,30 +99,6 @@ class FileSystemS3CacheCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Cache status on S3 file system adapters');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkFileSystemConfig() : Report
-    {
-        $adaptersWithoutCache = [];
-        foreach (self::CACHED_FILESYSTEMS as $fsId) {
-            $adapter = $this->getFlysystemAdapterConfig($fsId);
-            $options = array_pop($adapter['options']);
-            if (!isset($options['cache'])) {
-                $adaptersWithoutCache[] = $fsId;
-            }
-        }
-
-        if (!empty($adaptersWithoutCache)) {
-            return new Report(
-                Report::TYPE_WARNING,
-                __('Cache is disabled for File System adapters: %s', implode(', ', $adaptersWithoutCache))
-            );
-        }
-
-        return new Report(Report::TYPE_SUCCESS, __('Filesystem adapters correctly configured.'));
     }
 
     /**

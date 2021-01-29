@@ -32,18 +32,18 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class TaoLtiDeliveryKVCheck extends AbstractCheck
 {
-
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
+        $ltiDeliveryExecutionService = $this->getLtiDeliveryExecutionService();
+
+        if ($ltiDeliveryExecutionService instanceof KvLtiDeliveryExecutionService) {
+            return new Report(Report::TYPE_SUCCESS, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is configured correctly.'));
         }
-        $report = $this->checkLtiDeliveryExecutionService();
-        return $this->prepareReport($report);
+
+        return new Report(Report::TYPE_WARNING, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is not configured optimally. There may be performance issues.'));
     }
 
     /**
@@ -76,21 +76,6 @@ class TaoLtiDeliveryKVCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Lti Delivery Execution Service configuration');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkLtiDeliveryExecutionService() : Report
-    {
-        $ltiDeliveryExecutionService = $this->getLtiDeliveryExecutionService();
-
-        if ($ltiDeliveryExecutionService instanceof KvLtiDeliveryExecutionService) {
-            return new Report(Report::TYPE_SUCCESS, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is configured correctly.'));
-        }
-
-        return new Report(Report::TYPE_WARNING, __('The LTI Delivery Service (\'ltiDeliveryProvider/LtiDeliveryExecution\') is not configured optimally. There may be performance issues.'));
-
     }
 
     /**

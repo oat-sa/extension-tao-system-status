@@ -31,16 +31,12 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
 class DebugModeCheck extends AbstractCheck
 {
     /**
-     * @param array $params
-     * @return Report
+     * @inheritdoc
      */
-    public function __invoke($params = []): Report
+    protected function doCheck(): Report
     {
-        if (!$this->isActive()) {
-            return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
-        }
-        $report = $this->checkDebugMode();
-        return $this->prepareReport($report);
+        $type = DEBUG_MODE ? Report::TYPE_WARNING : Report::TYPE_SUCCESS;
+        return new Report($type, DEBUG_MODE ? __('On') : __('Off'));
     }
 
     /**
@@ -73,14 +69,5 @@ class DebugModeCheck extends AbstractCheck
     public function getDetails(): string
     {
         return __('Debug Mode status');
-    }
-
-    /**
-     * @return Report
-     */
-    private function checkDebugMode() : Report
-    {
-        $type = DEBUG_MODE ? Report::TYPE_WARNING : Report::TYPE_SUCCESS;
-        return new Report($type, DEBUG_MODE ? __('On') : __('Off'));
     }
 }

@@ -21,28 +21,42 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
-use common_ext_ExtensionException;
-use common_ext_Extension;
+use Exception;
+use oat\tao\model\notifications\AlarmNotificationService;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 
 /**
- * Class HeartBeatCheck
+ * Class AlarmNotificationCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
  */
-class HeartBeatCheck extends AbstractCheck
+class AlarmNotificationCheck extends AbstractCheck
 {
     /**
      * @inheritdoc
      */
     protected function doCheck(): Report
     {
-        $config = $this->getTestRunnerService()->getConfig('testRunner');
-        $heartbeatConfig = $config['plugins']['heartbeat'] ?? null;
-        if (!$heartbeatConfig['frequency'] || $heartbeatConfig['frequency'] <= 20) {
-            return new Report(Report::TYPE_WARNING, __('Heartbeat frequency: %d seconds. This may have negative impact on performance', $heartbeatConfig['frequency']));
+        $correct = true;
+        /** @var AlarmNotificationService $alarmNotificationService */
+        $alarmNotificationService = $this->getServiceLocator()->get(AlarmNotificationService::SERVICE_ID);
+
+        $notifiers = $alarmNotificationService->getOption(AlarmNotificationService::OPTION_NOTIFIERS);
+
+        if (is_array($notifiers) && !empty($notifiers)) {
+            foreach ($notifiers as $notifier) {
+                $correct = $correct && class_exists($notifier['class']);
+            }
+        } else {
+            $correct = false;
         }
-        return new Report(Report::TYPE_SUCCESS, __('Frequency: %d', $heartbeatConfig['frequency']));
+
+        if ($correct) {
+            $report = new Report(Report::TYPE_SUCCESS, 'Alarm notification channel configured correctly');
+        } else {
+            $report = new Report(Report::TYPE_ERROR, 'Alarm notification channel not configured');
+        }
+
+        return $report;
     }
 
     /**
@@ -50,7 +64,7 @@ class HeartBeatCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-       return $this->ifTaoActIsInstalled();
+       return $this->getServiceLocator()->has(AlarmNotificationService::SERVICE_ID);
     }
 
     /**
@@ -66,7 +80,7 @@ class HeartBeatCheck extends AbstractCheck
      */
     public function getCategory(): string
     {
-        return __('Configuration Values');
+        return __('TAO Configuration');
     }
 
     /**
@@ -74,25 +88,6 @@ class HeartBeatCheck extends AbstractCheck
      */
     public function getDetails(): string
     {
-        return __('Heartbeat timing');
+        return __('Alarm communication channels');
     }
-
-    /**
-     * @return common_ext_Extension
-     * @throws common_ext_ExtensionException
-     */
-    private function getTestRunnerService() : common_ext_Extension
-    {
-        return $this->getExtensionsManagerService()->getExtensionById('taoQtiTest');
-    }
-
-    /**
-     * @return bool
-     */
-    private function ifTaoActIsInstalled() : bool
-    {
-        $extensionManagerService = $this->getExtensionsManagerService();
-        return $extensionManagerService->isInstalled('taoAct');
-    }
-
 }
