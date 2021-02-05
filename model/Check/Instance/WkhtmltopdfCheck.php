@@ -78,7 +78,7 @@ class WkhtmltopdfCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return $this->ifTaoBookletIsInstalled();
+        return $this->ifTaoBookletIsInstalled() && $this->isWorker();
     }
 
     /**
