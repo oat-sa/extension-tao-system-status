@@ -46,6 +46,7 @@ class FileSystemS3CachePathCheck extends AbstractCheck
     protected function doCheck(): Report
     {
         $adaptersWithCacheInsideTaoRoot = [];
+        $notValidCachePaths = [];
         $taoRootDir = $this->getTaoRootDir();
         $adapters = $this->getFileSystemService()->getOption(FileSystemService::OPTION_ADAPTERS);
         foreach ($adapters as $adapterId => $adapterConfig) {
@@ -57,9 +58,20 @@ class FileSystemS3CachePathCheck extends AbstractCheck
                 continue;
             }
             $cachePath = realpath($options['cache']);
+            if ($cachePath === false) {
+                $notValidCachePaths[] = $options['cache'];
+                continue;
+            }
             if (strpos($cachePath, $taoRootDir) === 0) {
                 $adaptersWithCacheInsideTaoRoot[] = $adapterId;
             }
+        }
+
+        if (!empty($notValidCachePaths)) {
+            return new Report(
+                Report::TYPE_WARNING,
+                __('Cache path is not valid: %s', implode(', ', $notValidCachePaths))
+            );
         }
 
         if (!empty($adaptersWithCacheInsideTaoRoot)) {
