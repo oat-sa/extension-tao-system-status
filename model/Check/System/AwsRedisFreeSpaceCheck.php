@@ -67,7 +67,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
 
         $freeSpacePercentage = $this->getFreePercentage($clusterData['CacheClusterId']);
 
-        if ($freeSpacePercentage < 30) {
+        if ($freeSpacePercentage < 40) {
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
         } elseif ($freeSpacePercentage < 50) {
             $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage) . '%');
