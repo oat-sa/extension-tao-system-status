@@ -60,7 +60,7 @@ class WkhtmltopdfCheck extends AbstractCheck
         }
 
         $bin = $options['binary'];
-        if ($guessPath !== $bin) {
+        if (realpath(trim($guessPath)) !== realpath(trim($bin))) {
             return new Report(
                 Report::TYPE_WARNING,
                 __('wkhtmltopdf lib not correctly configured in taoBooklet extension. Please, check config/taoBooklet/wkhtmltopdf.conf.php.')
