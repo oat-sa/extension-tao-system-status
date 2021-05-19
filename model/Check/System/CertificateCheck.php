@@ -39,7 +39,7 @@ class CertificateCheck extends AbstractCheck
      */
     protected function doCheck(): Report
     {
-        $certInfo = $this->getCertInfo()
+        $certInfo = $this->getCertInfo();
 
         $now = new DateTime();
         $validTo = new DateTime('@' . $certInfo['validTo_time_t']);;
