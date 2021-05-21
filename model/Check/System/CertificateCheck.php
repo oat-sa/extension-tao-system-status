@@ -14,13 +14,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2021 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
 namespace oat\taoSystemStatus\model\Check\System;
 
-use common_report_Report as Report;
+use oat\oatbox\reporting\Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\log\loggerawaretrait;
 use DateTime;
@@ -34,6 +34,8 @@ class CertificateCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
 
+    const WARNING_DAYS = 14;
+    const ERROR_DAYS = 7;
     /**
      * @inheritdoc
      */
@@ -46,12 +48,12 @@ class CertificateCheck extends AbstractCheck
         $diffDays = $validTo->diff($now)->format("%a");
         $data = $validTo->format('Y-m-d H:i:s');
 
-        if ($diffDays < 7) {
-            return new Report(Report::TYPE_ERROR, $data);
-        } elseif ($diffDays < 14) {
-            return new Report(Report::TYPE_WARNING, $data);
+        if ($diffDays < self::ERROR_DAYS) {
+            return Report::createError($data);
+        } elseif ($diffDays < self::WARNING_DAYS) {
+            return Report::createWarning($data);
         }
-        return new Report(Report::TYPE_SUCCESS, $data);
+        return Report::createSuccess($data);
     }
 
     /**
@@ -64,7 +66,14 @@ class CertificateCheck extends AbstractCheck
 
         $originalParse = parse_url($url, PHP_URL_HOST);
         $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
-        $read = stream_socket_client("ssl://".$originalParse.":443", $errno, $errStr, 30, STREAM_CLIENT_CONNECT, $get);
+        $read = stream_socket_client(
+            sprintf('ssl://%s:443', $originalParse),
+            $errno,
+            $errStr,
+            30,
+            STREAM_CLIENT_CONNECT,
+            $get
+        );
         $cert = stream_context_get_params($read);
         return openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
     }
