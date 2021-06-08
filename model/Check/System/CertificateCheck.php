@@ -70,12 +70,14 @@ class CertificateCheck extends AbstractCheck
      */
     private function getCertInfo() : ?array
     {
+        $certInfo = null;
         if (!$url = \tao_helpers_Uri::getRootUrl()) {
             return null;
         }
-        $certInfo = null;
-
-        $originalParse = parse_url($url, PHP_URL_HOST);
+        $originalParse = parse_url($url);
+        if (isset($originalParse['scheme']) && $originalParse['scheme'] !== 'https') {
+            return null;
+        }
         $get = stream_context_create(
             [
                 "ssl" => [
@@ -83,18 +85,18 @@ class CertificateCheck extends AbstractCheck
                 ]
             ]
         );
-
-        if ($read = stream_socket_client(
+        $read = stream_socket_client(
             sprintf(
                 'ssl://%s:443',
-                $originalParse
+                $originalParse['host']
             ),
             $errno,
             $errStr,
             30,
             STREAM_CLIENT_CONNECT,
             $get
-        )) {
+        );
+        if ($read) {
             $cert = stream_context_get_params($read);
             if (isset($cert['options']['ssl']['peer_certificate'])) {
                 $certInfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
@@ -108,11 +110,7 @@ class CertificateCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-            || $_SERVER['SERVER_PORT'] == 443) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
