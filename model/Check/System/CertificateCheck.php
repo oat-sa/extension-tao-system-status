@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,10 +23,10 @@
 
 namespace oat\taoSystemStatus\model\Check\System;
 
+use DateTime;
 use oat\oatbox\reporting\Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\log\loggerawaretrait;
-use DateTime;
 
 /**
  * Class CertificateCheck
@@ -34,8 +37,9 @@ class CertificateCheck extends AbstractCheck
 {
     use LoggerAwareTrait;
 
-    const WARNING_DAYS = 14;
-    const ERROR_DAYS = 7;
+    private const WARNING_DAYS = 14;
+    private const ERROR_DAYS = 7;
+
     /**
      * @inheritdoc
      */
@@ -43,39 +47,60 @@ class CertificateCheck extends AbstractCheck
     {
         $certInfo = $this->getCertInfo();
 
+        if (!$certInfo) {
+            return Report::createWarning(__('Cannot get cert Info'));
+        }
+
         $now = new DateTime();
         $validTo = new DateTime('@' . $certInfo['validTo_time_t']);;
         $diffDays = $validTo->diff($now)->format("%a");
-        $data = $validTo->format('Y-m-d H:i:s');
+        $date = $validTo->format('Y-m-d H:i:s');
 
+        $report = Report::createSuccess($date);
         if ($diffDays < self::ERROR_DAYS) {
-            return Report::createError($data);
+            $report = Report::createError($date);
         } elseif ($diffDays < self::WARNING_DAYS) {
-            return Report::createWarning($data);
+            $report = Report::createWarning($date);
         }
-        return Report::createSuccess($data);
+        return $report;
     }
 
     /**
-     * Get certification info based on RootUrl
-     * @return array
+     * @return array|null
      */
-    private function getCertInfo() : array
+    private function getCertInfo() : ?array
     {
-        $url = \tao_helpers_Uri::getRootUrl();
+        if (!$url = \tao_helpers_Uri::getRootUrl()) {
+            return null;
+        }
+        $certInfo = null;
 
         $originalParse = parse_url($url, PHP_URL_HOST);
-        $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
-        $read = stream_socket_client(
-            sprintf('ssl://%s:443', $originalParse),
+        $get = stream_context_create(
+            [
+                "ssl" => [
+                    "capture_peer_cert" => TRUE
+                ]
+            ]
+        );
+
+        if ($read = stream_socket_client(
+            sprintf(
+                'ssl://%s:443',
+                $originalParse
+            ),
             $errno,
             $errStr,
             30,
             STREAM_CLIENT_CONNECT,
             $get
-        );
-        $cert = stream_context_get_params($read);
-        return openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+        )) {
+            $cert = stream_context_get_params($read);
+            if (isset($cert['options']['ssl']['peer_certificate'])) {
+                $certInfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+            }
+        }
+        return $certInfo;
     }
 
     /**
@@ -83,7 +108,11 @@ class CertificateCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return true;
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || $_SERVER['SERVER_PORT'] == 443) {
+            return true;
+        }
+        return false;
     }
 
     /**
