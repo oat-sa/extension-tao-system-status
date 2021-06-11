@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace oat\taoSystemStatus\model\Check\System;
 
 use DateTime;
-use oat\oatbox\reporting\Report;
+use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\log\loggerawaretrait;
 
