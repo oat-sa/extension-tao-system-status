@@ -44,7 +44,8 @@ class ConfigCongruenceS3Check extends AbstractCheck
             return new Report(Report::TYPE_INFO, 'Check ' . $this->getId() . ' is not active');
         }
 
-        $tmpDir = \tao_helpers_File::createTempDir() . 'migrations' . DIRECTORY_SEPARATOR . 'config';
+        $tmpRootDir = \tao_helpers_File::createTempDir();
+        $tmpDir = $tmpRootDir . 'migrations' . DIRECTORY_SEPARATOR . 'config';
         $s3Client = $this->getS3Client();
         $adapterOptions = $this->getAdapterOptions();
         $bucket = $adapterOptions['options'][0]['bucket'];
@@ -56,6 +57,8 @@ class ConfigCongruenceS3Check extends AbstractCheck
             $this->logError('The instance configuration is not match configuration stored on s3');
             $report = new Report(Report::TYPE_ERROR, __('The instance configuration is not match configuration stored on s3'));
         }
+
+        \tao_helpers_File::delTree($tmpRootDir);
 
         return $this->prepareReport($report);
     }
