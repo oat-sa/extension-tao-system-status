@@ -30,7 +30,6 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  */
 class WriteConfigDataCheck extends AbstractCheck
 {
-
     /**
      * @inheritdoc
      */
@@ -47,16 +46,22 @@ class WriteConfigDataCheck extends AbstractCheck
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDir() && !$fileinfo->isDot()) {
                 if (!is_writable($fileinfo->getPathname())) {
-                    return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'config/%s\' folder', $fileinfo->getFilename()));
+                    $message = __('TAO has no permissions to write into \'config/%s\' folder', $fileinfo->getFilename());
+                    $this->logError($message);
+                    return new Report(Report::TYPE_ERROR, $message);
                 }
             }
         }
 
         if (!file_exists($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('\'data\' folder does not exist'));
+            $message = __('\'data\' folder does not exist');
+            $this->logError($message);
+            return new Report(Report::TYPE_ERROR, $message);
         }
         if (!is_writable($dataDir)) {
-            return new Report(Report::TYPE_ERROR, __('TAO has no permissions to write into \'data\' folder'));
+            $message = __('TAO has no permissions to write into \'data\' folder');
+            $this->logError($message);
+            return new Report(Report::TYPE_ERROR, $message);
         }
 
         return new Report(Report::TYPE_SUCCESS, __('TAO has permissions to write into \'config\' and \'data\' folders'));

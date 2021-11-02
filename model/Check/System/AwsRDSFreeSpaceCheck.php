@@ -24,7 +24,6 @@ use Aws\Rds\RdsClient;
 use common_report_Report as Report;
 use oat\generis\persistence\PersistenceManager;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use oat\oatbox\log\loggerawaretrait;
 use DateInterval;
 use DateTime;
 use oat\taoSystemStatus\model\SystemCheckException;
@@ -38,7 +37,6 @@ use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
  */
 class AwsRDSFreeSpaceCheck extends AbstractCheck
 {
-    use LoggerAwareTrait;
     use PieChartReportRenderer;
 
     private const PARAM_PERIOD = 'period';
@@ -70,6 +68,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
         $freeSpacePercentage = $this->getFreePercentage($InstanceData);
 
         if ($freeSpacePercentage < 30) {
+            $this->logError(__('Used space on RDS storage') . '< 30%');
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage).'%');
         } elseif ($freeSpacePercentage < 50) {
             $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage).'%');

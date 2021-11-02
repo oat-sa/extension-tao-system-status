@@ -23,7 +23,6 @@ namespace oat\taoSystemStatus\model\Check\System;
 use common_report_Report as Report;
 use oat\generis\persistence\PersistenceManager;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use oat\oatbox\log\loggerawaretrait;
 use DateInterval;
 use DateTime;
 use Aws\ElastiCache\ElastiCacheClient;
@@ -38,7 +37,6 @@ use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
  */
 class AwsRedisFreeSpaceCheck extends AbstractCheck
 {
-    use LoggerAwareTrait;
     use PieChartReportRenderer;
 
     const PARAM_PERIOD = 'period';
@@ -69,6 +67,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
 
         if ($freeSpacePercentage < 40) {
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
+            $this->logError(__('Used space on ElastiCache storage') . '< 40%');
         } elseif ($freeSpacePercentage < 50) {
             $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage) . '%');
         } else {

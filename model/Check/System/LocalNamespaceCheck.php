@@ -40,10 +40,14 @@ class LocalNamespaceCheck extends AbstractCheck
         $uriProvider = $this->getUriProviderService();
         $namespace = trim($uriProvider->getOption('namespace'), ' #');
         if (!$namespace) {
-            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider does not exist'));
+            $message = __('Namespace option for UriProvider does not exist');
+            $this->logError($message);
+            return new Report(Report::TYPE_ERROR, $message);
         }
         if ($namespace !== LOCAL_NAMESPACE) {
-            return new Report(Report::TYPE_ERROR, __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE'));
+            $message = __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE');
+            $this->logError($message);
+            return new Report(Report::TYPE_ERROR, $message);
         }
         return new Report(Report::TYPE_SUCCESS, __('LOCAL_NAMESPACE and URI provider configuration correctly configured'));
     }
