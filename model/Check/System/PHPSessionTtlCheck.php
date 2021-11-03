@@ -23,15 +23,7 @@ declare(strict_types=1);
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
-use oat\generis\persistence\PersistenceManager;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use oat\oatbox\log\loggerawaretrait;
-use DateInterval;
-use DateTime;
-use Aws\ElastiCache\ElastiCacheClient;
-use oat\taoSystemStatus\model\SystemCheckException;
-use oat\awsTools\AwsClient;
-use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
  * Class PHPSessionTtlCheck
@@ -45,7 +37,6 @@ use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
  */
 class PHPSessionTtlCheck extends AbstractCheck
 {
-    use LoggerAwareTrait;
 
     /**
      * @inheritdoc

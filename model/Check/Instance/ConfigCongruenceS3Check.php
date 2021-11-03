@@ -23,7 +23,6 @@ namespace oat\taoSystemStatus\model\Check\Instance;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\oatbox\filesystem\FileSystemService;
-use oat\oatbox\log\loggerawaretrait;
 
 /**
  * Class ConfigCongruenceS3Check
@@ -32,7 +31,6 @@ use oat\oatbox\log\loggerawaretrait;
  */
 class ConfigCongruenceS3Check extends AbstractCheck
 {
-    use LoggerAwareTrait;
 
     /**
      * @inheritdoc
