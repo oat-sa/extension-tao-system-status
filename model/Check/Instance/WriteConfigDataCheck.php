@@ -53,7 +53,7 @@ class WriteConfigDataCheck extends AbstractCheck
             }
         }
 
-        if (!file_exists($dataDir)) {
+        if (!file_exists($dataDir) || !is_dir($dataDir)) {
             $message = __('\'data\' folder does not exist');
             $this->logError($message);
             return new Report(Report::TYPE_ERROR, $message);

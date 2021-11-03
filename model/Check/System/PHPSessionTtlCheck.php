@@ -24,8 +24,6 @@ namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use Aws\ElastiCache\ElastiCacheClient;
-use oat\awsTools\AwsClient;
 
 /**
  * Class PHPSessionTtlCheck

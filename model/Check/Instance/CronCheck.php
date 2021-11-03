@@ -54,11 +54,9 @@ class CronCheck extends AbstractCheck
 
         if (count($report->getSuccesses()) === count($report->getChildren())) {
             $report->setType(Report::TYPE_SUCCESS);
-        } elseif(count($report->getErrors()) > 0)  {
+        } else {
             $report->setType(Report::TYPE_ERROR);
             $this->logError('CRON job not configured properly.');
-        } else {
-            $report->setType(Report::TYPE_WARNING);
         }
 
         return $report;

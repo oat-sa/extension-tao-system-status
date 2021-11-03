@@ -44,7 +44,7 @@ class LocalNamespaceCheck extends AbstractCheck
             $this->logError($message);
             return new Report(Report::TYPE_ERROR, $message);
         }
-        if ($namespace !== LOCAL_NAMESPACE) {
+        if ($namespace !== trim(LOCAL_NAMESPACE, ' #')) {
             $message = __('Namespace option for UriProvider is not equal to LOCAL_NAMESPACE');
             $this->logError($message);
             return new Report(Report::TYPE_ERROR, $message);

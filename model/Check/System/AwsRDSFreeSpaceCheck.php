@@ -68,7 +68,7 @@ class AwsRDSFreeSpaceCheck extends AbstractCheck
         $freeSpacePercentage = $this->getFreePercentage($InstanceData);
 
         if ($freeSpacePercentage < 30) {
-            $this->logError(__('Used space on RDS storage') . '< 30%');
+            $this->logError(__('Free space on RDS storage') . '< 30%');
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage).'%');
         } elseif ($freeSpacePercentage < 50) {
             $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage).'%');

@@ -67,7 +67,7 @@ class AwsRedisFreeSpaceCheck extends AbstractCheck
 
         if ($freeSpacePercentage < 40) {
             $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
-            $this->logError(__('Used space on ElastiCache storage') . '< 40%');
+            $this->logError(__('Free space on ElastiCache storage') . '< 40%');
         } elseif ($freeSpacePercentage < 50) {
             $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage) . '%');
         } else {
