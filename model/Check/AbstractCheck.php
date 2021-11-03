@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\Check;
 
 use common_report_Report as Report;
+use oat\oatbox\log\LoggerAwareTrait;
 use oat\oatbox\service\ServiceManagerAwareTrait;
 use common_ext_ExtensionsManager;
 use oat\tao\helpers\Template;
@@ -35,6 +36,7 @@ use Renderer;
 abstract class AbstractCheck implements CheckInterface
 {
     use ServiceManagerAwareTrait;
+    use LoggerAwareTrait;
 
     /** @var array  */
     private $params;

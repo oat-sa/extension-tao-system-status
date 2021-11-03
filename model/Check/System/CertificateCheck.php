@@ -26,7 +26,6 @@ namespace oat\taoSystemStatus\model\Check\System;
 use DateTime;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
-use oat\oatbox\log\loggerawaretrait;
 
 /**
  * Class CertificateCheck
@@ -35,7 +34,6 @@ use oat\oatbox\log\loggerawaretrait;
  */
 class CertificateCheck extends AbstractCheck
 {
-    use LoggerAwareTrait;
 
     private const WARNING_DAYS = 14;
     private const ERROR_DAYS = 7;
