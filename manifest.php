@@ -36,6 +36,7 @@ return [
             \oat\taoSystemStatus\scripts\install\RegisterChecks::class,
             \oat\taoSystemStatus\scripts\install\ScheduleJobs::class,
             \oat\taoSystemStatus\scripts\install\RegisterSystemStatusLog::class,
+            \oat\taoSystemStatus\scripts\install\SetUpStuckTasksCheck::class,
         ],
         'rdf' => [
             __DIR__.'/model/Ontology/taosystemstatus.rdf',
