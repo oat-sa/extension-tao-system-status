@@ -128,7 +128,7 @@ class StuckTasksCheck extends AbstractCheck
         $runningMaxTime = $this->getStuckTasksCheckService()->getRunningMaxTime();
 
         $ageDateTime = new \DateTimeImmutable(
-            sprintf('now -%s seconds', $runningMaxTime),
+            sprintf('now -%s minutes', $runningMaxTime),
             new \DateTimeZone('UTC')
         );
         return $ageDateTime;
@@ -139,7 +139,7 @@ class StuckTasksCheck extends AbstractCheck
         $enqueuedMaxTime = $this->getStuckTasksCheckService()->getEnqueuedMaxTime();
 
         $ageDateTime = new \DateTimeImmutable(
-            sprintf('now -%s seconds', $enqueuedMaxTime),
+            sprintf('now -%s minutes', $enqueuedMaxTime),
             new \DateTimeZone('UTC')
         );
         return $ageDateTime;
