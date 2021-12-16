@@ -9,6 +9,7 @@ $reports = get_data('reports');
     <thead>
     <tr>
         <th><?= __('Task ID') ?></th>
+        <th><?= __('Label') ?></th>
         <th><?= __('Status') ?></th>
         <th><?= __('Last activity') ?></th>
     </tr>
@@ -17,6 +18,7 @@ $reports = get_data('reports');
     <?php foreach($reports as $report): ?>
     <tr class="js-report taskqueue_log_report">
         <th><?= $report['task-report']->getData()[StuckTasksCheck::OPTION_TASK_ID] ?></th>
+        <th><?= $report['task-report']->getData()[StuckTasksCheck::OPTION_LABEL] ?></th>
         <td><?= $report['task-report']->getData()[StuckTasksCheck::OPTION_STATUS] ?></td>
         <td><?= $report['task-report']->getData()[StuckTasksCheck::OPTION_UPDATED] ?></td>
     </tr>

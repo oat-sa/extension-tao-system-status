@@ -16,6 +16,7 @@ class StuckTasksCheck extends AbstractCheck
     use LoggerAwareTrait;
 
     const OPTION_TASK_ID = 'task_id';
+    const OPTION_LABEL = 'label';
     const OPTION_STATUS = 'status';
     const OPTION_UPDATED = 'updated_at';
 
@@ -30,6 +31,7 @@ class StuckTasksCheck extends AbstractCheck
             foreach ($allStuckTasks as $stuckTask) {
                 $task = [
                     self::OPTION_TASK_ID => $stuckTask[self::OPTION_TASK_ID],
+                    self::OPTION_LABEL => $stuckTask[self::OPTION_LABEL],
                     self::OPTION_STATUS => $stuckTask[self::OPTION_STATUS],
                     self::OPTION_UPDATED => $stuckTask[self::OPTION_UPDATED],
                 ];
@@ -96,6 +98,7 @@ class StuckTasksCheck extends AbstractCheck
         foreach ($tasks as $task) {
             $enqueuedTasks[] = [
                 self::OPTION_TASK_ID => $task->getId(),
+                self::OPTION_LABEL => $task->getLabel(),
                 self::OPTION_STATUS => $task->getStatus(),
                 self::OPTION_UPDATED => \tao_helpers_Date::displayeDate($task->getUpdatedAt()),
             ];
@@ -116,6 +119,7 @@ class StuckTasksCheck extends AbstractCheck
         foreach ($tasks as $task) {
             $runningTasks[] = [
                 self::OPTION_TASK_ID => $task->getId(),
+                self::OPTION_LABEL => $task->getLabel(),
                 self::OPTION_STATUS => $task->getStatus(),
                 self::OPTION_UPDATED => \tao_helpers_Date::displayeDate($task->getUpdatedAt()),
             ];
