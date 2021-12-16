@@ -1,12 +1,12 @@
 <?php
 
-namespace oat\taoSystemStatus\model\Check\System;
+namespace oat\taoSystemStatus\model\SystemStatus;
 
 use oat\oatbox\service\ConfigurableService;
 
 class StuckTasksCheckService extends ConfigurableService
 {
-    public const SERVICE_ID = 'taoSystemStatus/TaskQueueCheck';
+    public const SERVICE_ID = 'taoSystemStatus/StuckTasksCheck';
     public const RUNNING_MAX_TIME = 'runningMaxTime';
     public const ENQUEUED_MAX_TIME = 'enqueuedMaxTime';
 

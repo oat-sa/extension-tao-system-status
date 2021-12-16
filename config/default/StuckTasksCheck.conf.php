@@ -1,8 +1,8 @@
 <?php
 
-use oat\taoSystemStatus\model\Check\System\StuckTasksCheckService;
+use oat\taoSystemStatus\model\SystemStatus\StuckTasksCheckService;
 
-return new \oat\taoSystemStatus\model\Check\System\StuckTasksCheckService([
-    StuckTasksCheckService::RUNNING_MAX_TIME => 2, // max time for running status, hours
-    StuckTasksCheckService::ENQUEUED_MAX_TIME => 24, // max time for enqueued status, hours
+return new oat\taoSystemStatus\model\SystemStatus\StuckTasksCheckService([
+    StuckTasksCheckService::RUNNING_MAX_TIME => 120, // max time for running status, minutes
+    StuckTasksCheckService::ENQUEUED_MAX_TIME => 1440, // max time for enqueued status, minutes
 ]);
