@@ -6,10 +6,12 @@ use common_report_Report as Report;
 use oat\oatbox\log\LoggerAwareTrait;
 use oat\tao\helpers\Template;
 use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
+use oat\tao\model\taskQueue\TaskLog\Entity\EntityInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\taoSystemStatus\model\SystemStatus\StuckTasksCheckService;
+use DateTimeImmutable;
 
 class StuckTasksCheck extends AbstractCheck
 {
@@ -29,13 +31,7 @@ class StuckTasksCheck extends AbstractCheck
         } else {
             $report = new Report(Report::TYPE_WARNING);
             foreach ($allStuckTasks as $stuckTask) {
-                $task = [
-                    self::OPTION_TASK_ID => $stuckTask[self::OPTION_TASK_ID],
-                    self::OPTION_LABEL => $stuckTask[self::OPTION_LABEL],
-                    self::OPTION_STATUS => $stuckTask[self::OPTION_STATUS],
-                    self::OPTION_UPDATED => $stuckTask[self::OPTION_UPDATED],
-                ];
-                $report->add(new Report(Report::TYPE_INFO, '', $task));
+                $report->add(new Report(Report::TYPE_INFO, '', $stuckTask));
             }
         }
         return $report;
@@ -75,6 +71,62 @@ class StuckTasksCheck extends AbstractCheck
         return true;
     }
 
+    private function getTaskByStatusAndTime(DateTimeImmutable $time, array $status): array
+    {
+        $filter = (new TaskLogFilter())
+            ->in(TaskLogBrokerInterface::COLUMN_STATUS, $status)
+            ->lte(TaskLogBrokerInterface::COLUMN_UPDATED_AT, $time->format('Y-m-d H:i:s'))
+            ->setLimit(10)
+            ->setSortBy(TaskLogBrokerInterface::COLUMN_UPDATED_AT)
+            ->setSortOrder('DESC');
+        $tasks = $this->getTaskLogInterface()->getBroker()->search($filter);
+        $runningTasks = [];
+
+        foreach ($tasks as $task) {
+            $runningTasks[] = $this->getTaskData($task);
+        }
+
+        return $runningTasks;
+    }
+
+    private function getTaskData(EntityInterface $task): array
+    {
+        return [
+            self::OPTION_TASK_ID => $task->getId(),
+            self::OPTION_LABEL => $task->getLabel(),
+            self::OPTION_STATUS => $task->getStatus(),
+            self::OPTION_UPDATED => \tao_helpers_Date::displayeDate($task->getUpdatedAt()),
+        ];
+    }
+
+    private function getAgeTimeRunning(): DateTimeImmutable
+    {
+        $runningMaxTime = $this->getStuckTasksCheckService()->getRunningMaxTime();
+        return $this->formatTime($runningMaxTime);
+    }
+
+    private function getAgeTimeEnqueued(): DateTimeImmutable
+    {
+        $enqueuedMaxTime = $this->getStuckTasksCheckService()->getEnqueuedMaxTime();
+        return $this->formatTime($enqueuedMaxTime);
+    }
+
+    private function formatTime(float $time): DateTimeImmutable
+    {
+        $ageDateTime = new \DateTimeImmutable(
+            sprintf('now -%s minutes', $time),
+            new \DateTimeZone('UTC')
+        );
+        return $ageDateTime;
+    }
+
+    private function getAllStuckTasks(): array
+    {
+        $enqueuedTasks = $this->getTaskByStatusAndTime($this->getAgeTimeEnqueued(), [TaskLogInterface::STATUS_ENQUEUED]);
+        $runningTasks = $this->getTaskByStatusAndTime($this->getAgeTimeRunning(), [TaskLogInterface::STATUS_RUNNING]);
+        return array_merge($enqueuedTasks, $runningTasks);;
+    }
+
     private function getStuckTasksCheckService(): StuckTasksCheckService
     {
         return $this->getServiceLocator()->get(StuckTasksCheckService::SERVICE_ID);
@@ -83,85 +135,5 @@ class StuckTasksCheck extends AbstractCheck
     private function getTaskLogInterface(): TaskLogInterface
     {
         return  $this->getServiceLocator()->get(TaskLogInterface::SERVICE_ID);
-    }
-
-    private function getEnqueuedTasks()
-    {
-        $filter = (new TaskLogFilter())
-            ->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_ENQUEUED])
-            ->lte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $this->getAgeTimeEnqueued()->format('Y-m-d H:i:s'))
-            ->setLimit(10)
-            ->setSortBy(TaskLogBrokerInterface::COLUMN_CREATED_AT)
-            ->setSortOrder('DESC');
-        $tasks = $this->getTaskLogInterface()->getBroker()->search($filter);
-
-        foreach ($tasks as $task) {
-            $enqueuedTasks[] = [
-                self::OPTION_TASK_ID => $task->getId(),
-                self::OPTION_LABEL => $task->getLabel(),
-                self::OPTION_STATUS => $task->getStatus(),
-                self::OPTION_UPDATED => \tao_helpers_Date::displayeDate($task->getUpdatedAt()),
-            ];
-        }
-        return $enqueuedTasks;
-    }
-
-    private function getRunningTasks()
-    {
-        $filter = (new TaskLogFilter())
-            ->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_RUNNING])
-            ->lte(TaskLogBrokerInterface::COLUMN_UPDATED_AT, $this->getAgeTimeRunning()->format('Y-m-d H:i:s'))
-            ->setLimit(10)
-            ->setSortBy(TaskLogBrokerInterface::COLUMN_UPDATED_AT)
-            ->setSortOrder('DESC');
-        $tasks = $this->getTaskLogInterface()->getBroker()->search($filter);
-
-        foreach ($tasks as $task) {
-            $runningTasks[] = [
-                self::OPTION_TASK_ID => $task->getId(),
-                self::OPTION_LABEL => $task->getLabel(),
-                self::OPTION_STATUS => $task->getStatus(),
-                self::OPTION_UPDATED => \tao_helpers_Date::displayeDate($task->getUpdatedAt()),
-            ];
-        }
-        return $runningTasks;
-    }
-
-    private function getAgeTimeRunning()
-    {
-        $runningMaxTime = $this->getStuckTasksCheckService()->getRunningMaxTime();
-
-        $ageDateTime = new \DateTimeImmutable(
-            sprintf('now -%s minutes', $runningMaxTime),
-            new \DateTimeZone('UTC')
-        );
-        return $ageDateTime;
-    }
-
-    private function getAgeTimeEnqueued()
-    {
-        $enqueuedMaxTime = $this->getStuckTasksCheckService()->getEnqueuedMaxTime();
-
-        $ageDateTime = new \DateTimeImmutable(
-            sprintf('now -%s minutes', $enqueuedMaxTime),
-            new \DateTimeZone('UTC')
-        );
-        return $ageDateTime;
-    }
-
-    private function getAllStuckTasks(): array
-    {
-        $enqueuedTasks = $this->getEnqueuedTasks();
-        $runningTasks = $this->getRunningTasks();
-        $allStuckTasks = [];
-
-        if (is_array($enqueuedTasks) && is_array($runningTasks)) {
-            $allStuckTasks = array_merge($enqueuedTasks, $runningTasks);
-        } elseif (is_array($enqueuedTasks) && !is_array($runningTasks)) {
-            $allStuckTasks = $enqueuedTasks;
-        } elseif (!is_array($enqueuedTasks) && is_array($runningTasks)) {
-            $allStuckTasks = $runningTasks;
-        }
-        return $allStuckTasks;
     }
 }

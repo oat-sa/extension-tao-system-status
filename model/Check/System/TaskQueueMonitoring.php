@@ -21,6 +21,7 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
+use oat\tao\helpers\Template;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
@@ -98,12 +99,10 @@ class TaskQueueMonitoring extends AbstractCheck
     {
         $label = $report->getData()[self::PARAM_DETAILS];
         $val = $report->getData()[self::REPORT_VALUE];
-        return "
-        <div class='system_status_info_block'>
-        <span class='system_status_info_block__label'>$label</span>
-        <br>
-        <span class='system_status_info_block__value'>$val</span>
-</div>
-        ";
+
+        $renderer = new \Renderer(Template::getTemplate('Reports/taskQueueMonitoring.tpl', 'taoSystemStatus'));
+
+        $renderer->setMultipleData([self::PARAM_DETAILS => $label, self::REPORT_VALUE => $val]);
+        return $renderer->render();
     }
 }
