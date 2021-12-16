@@ -53,18 +53,18 @@ class StuckTasksCheck extends AbstractCheck
     }
 
     public function renderReport(Report $report): string
-       {
-           $renderer = new \Renderer(Template::getTemplate('Reports/stuckTasksList.tpl', 'taoSystemStatus'));
-           $taskReports = [];
-           /** @var Report $taskReport */
-           foreach ($report->getChildren() as $taskReport) {
-               $taskReports[] = [
-                   'task-report' => $taskReport,
-               ];
-           }
-           $renderer->setData('reports', $taskReports);
-           return $renderer->render();
-       }
+    {
+        $renderer = new \Renderer(Template::getTemplate('Reports/stuckTasksList.tpl', 'taoSystemStatus'));
+        $taskReports = [];
+        /** @var Report $taskReport */
+        foreach ($report->getChildren() as $taskReport) {
+            $taskReports[] = [
+               'task-report' => $taskReport,
+            ];
+        }
+        $renderer->setData('reports', $taskReports);
+        return $renderer->render();
+    }
 
     public function isActive(): bool
     {
@@ -124,7 +124,7 @@ class StuckTasksCheck extends AbstractCheck
     {
         $enqueuedTasks = $this->getTaskByStatusAndTime($this->getAgeTimeEnqueued(), [TaskLogInterface::STATUS_ENQUEUED]);
         $runningTasks = $this->getTaskByStatusAndTime($this->getAgeTimeRunning(), [TaskLogInterface::STATUS_RUNNING]);
-        return array_merge($enqueuedTasks, $runningTasks);;
+        return array_merge($enqueuedTasks, $runningTasks);
     }
 
     private function getStuckTasksCheckService(): StuckTasksCheckService
