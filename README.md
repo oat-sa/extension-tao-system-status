@@ -20,3 +20,27 @@ NOTE: For AWS environemnts make sure that both Web Server Role and Worker Server
 
 Configure `\oat\taoSystemStatus\model\SystemStatus\SystemStatusService::OPTION_SUPPORT_PORTAL_LINK` of `SystemStatusService` service 
 with appropriate url to show the link to the Help Desk portal on the Tao's system status page 
+
+## Sending alerts:
+
+For sending alerts to any additional services the AlarmNotificationService should be configured
+For example sending alerts to OpsGenie `config/tao/AlarmNotificationService.conf.php`:
+
+```php
+<?php
+/**
+ * Default config header created during install
+ */
+
+return new oat\tao\model\notifications\AlarmNotificationService([
+    'notifiers' => [
+        [
+            'class' => '\\oat\\tao\\model\\notifiers\\OpsGenieNotifier',
+            'params' => ['api-key']
+        ]
+    ],
+    'dispatchTypes' => [
+        \oat\oatbox\reporting\Report::TYPE_ERROR //type of reports for sending 
+    ]
+]);
+```
