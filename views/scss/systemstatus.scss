@@ -169,6 +169,39 @@
   box-sizing: border-box;
 
 }
+
+.formatted-feedback-list {
+  list-style: none;
+  padding-left: 10px;
+}
+
+.formatted-feedback-list-element {
+  padding-left: 20px;
+  position: relative;
+}
+
+.formatted-feedback-list-icon {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+
+  &.icon-info {
+    color: #0e5d91;
+  }
+
+  &.icon-success {
+    color: #0e914b;
+  }
+
+  &.icon-warning {
+    color: #d8ae5b;
+  }
+
+  &.icon-error {
+    color: #ba122b;
+  }
+}
+
 /* Progress bar filling the whole right half for values above 50% */
 .progress-circle.over50 .first50-bar {
   /*Progress bar for the first 50%, filling the whole right half*/

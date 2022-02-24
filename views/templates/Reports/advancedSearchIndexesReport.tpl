@@ -11,13 +11,15 @@ $report = get_data('report');
     <span class="formatted-feedback-message"><?= $report->getMessage() ?></span>
 
     <?php if (!empty($report->getChildren())): ?>
-    <ul style="list-style: none">
+
+    <ul class="formatted-feedback-list">
         <?php foreach ($report->getChildren() as $child): ?>
-        <li>
-            <div class="icon-<?= mb_strtolower($child->getType()) ?>"></div>
+        <li class="formatted-feedback-list-element">
+            <div class="formatted-feedback-list-icon icon-<?= mb_strtolower($child->getType()) ?>"></div>
             <span class="formatted-feedback-message"><?= $child->getMessage() ?></span>
         </li>
         <?php endforeach; ?>
     </ul>
+
     <?php endif; ?>
 </div>
