@@ -30,16 +30,16 @@ class AdvancedSearchStatusCheck extends AbstractAdvancedSearchCheck
 {
     public function getDetails(): string
     {
-        return __('Is enabled');
+        return __('Status');
     }
 
     protected function doCheck(): common_report_Report
     {
         if ($this->getAdvancedSearchChecker()->isEnabled()) {
-            return Report::createSuccess(__('Yes'));
+            return Report::createSuccess(__('Enabled'));
         }
 
-        return Report::createError(__('No'));
+        return Report::createError(__('Disabled'));
     }
 
     private function getAdvancedSearchChecker(): AdvancedSearchChecker

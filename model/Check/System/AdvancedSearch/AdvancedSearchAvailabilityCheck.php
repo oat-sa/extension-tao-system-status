@@ -31,7 +31,7 @@ class AdvancedSearchAvailabilityCheck extends AbstractAdvancedSearchCheck
 {
     public function getDetails(): string
     {
-        return __('Is available');
+        return __('Availability');
     }
 
     protected function doCheck(): common_report_Report
@@ -39,10 +39,10 @@ class AdvancedSearchAvailabilityCheck extends AbstractAdvancedSearchCheck
         $advancedSearch = $this->getSearchProxy()->getAdvancedSearch();
 
         if ($advancedSearch instanceof ElasticSearch && $advancedSearch->ping()) {
-            return Report::createSuccess('Yes');
+            return Report::createSuccess(__('Available'));
         }
 
-        return Report::createError(__('No'));
+        return Report::createError(__('Unavailable'));
     }
 
     private function getSearchProxy(): SearchProxy

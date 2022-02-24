@@ -33,15 +33,21 @@ use oat\taoAdvancedSearch\model\Index\Report\IndexSummarizer;
 
 class AdvancedSearchIndexesCheck extends AbstractAdvancedSearchCheck
 {
+    public const PARAM_ALLOWABLE_PERCENTAGE = 'allowablePercentage';
+    public const PARAM_BLACKLISTED_INDEXES = 'blacklistedIndexes';
+
+    /** @var float */
+    private $allowablePercentage;
+
     public function getDetails(): string
     {
-        return __('Are indexes populated');
+        return __('Indexes population');
     }
 
     protected function doCheck(): common_report_Report
     {
         if (!$this->getAdvancedSearchChecker()->isEnabled()) {
-            return Report::createError('Advanced search not enabled');
+            return Report::createError('Advanced search disabled');
         }
 
         $advancedSearch = $this->getSearchProxy()->getAdvancedSearch();
@@ -53,35 +59,45 @@ class AdvancedSearchIndexesCheck extends AbstractAdvancedSearchCheck
         try {
             $reports = [];
             $summary = $this->getIndexSummarizer()->summarize();
+            $blacklistedIndexes = $this->getBlacklistedIndexes();
 
             foreach ($summary as $data) {
-                if (!$data['totalInDb']) {
+                if (
+                    !$data['totalInDb']
+                    || $data['percentageIndexed'] === 100.0
+                    || in_array($data['index'], $blacklistedIndexes, true)
+                ) {
                     continue;
                 }
 
-                if ($data['percentageIndexed'] !== 100.0) {
-                    $reports[] = new Report(
-                        $this->getTypeByPercentage($data['percentageIndexed']),
-                        sprintf(
-                            '%s: %d/%d (%s%%)',
-                            $data['index'],
-                            $data['totalIndexed'],
-                            $data['totalInDb'],
-                            $data['percentageIndexed']
-                        )
-                    );
-                }
+                $type = $this->getTypeByPercentage($data['percentageIndexed']);
+                $message = __(
+                    'Index "%s": %d/%d (%s%%)',
+                    $data['index'],
+                    $data['totalIndexed'],
+                    $data['totalInDb'],
+                    $data['percentageIndexed']
+                );
+
+                $reports[] = new Report($type, $message);
+                $this->{'log' . $type}(
+                    sprintf(
+                        '%s. Minimum allowed percentage is: %s%%',
+                        $message,
+                        $this->getAllowablePercentage()
+                    )
+                );
             }
 
             if (!empty($reports)) {
                 if (count($reports) === count($summary)) {
-                    return Report::createError('No', null, $reports);
+                    return Report::createError('Indexes are not populated', null, $reports);
                 }
 
-                return Report::createWarning('Some indexes where not populated', null, $reports);
+                return Report::createWarning('Some indexes are not populated', null, $reports);
             }
 
-            return Report::createSuccess('Yes');
+            return Report::createSuccess('Indexes are populated');
         } catch (Throwable $exception) {
             return Report::createError('Unexpected error');
         }
@@ -98,11 +114,25 @@ class AdvancedSearchIndexesCheck extends AbstractAdvancedSearchCheck
             return Report::TYPE_SUCCESS;
         }
 
-        if ($percentage < 98.0) {
+        if ($percentage < $this->getAllowablePercentage()) {
             return Report::TYPE_ERROR;
         }
 
         return Report::TYPE_WARNING;
+    }
+
+    private function getAllowablePercentage(): float
+    {
+        if (!isset($this->allowablePercentage)) {
+            $this->allowablePercentage = (float) ($this->getParameters()[self::PARAM_ALLOWABLE_PERCENTAGE] ?? 98);
+        }
+
+        return $this->allowablePercentage;
+    }
+
+    private function getBlacklistedIndexes(): array
+    {
+        return $this->getParameters()[self::PARAM_BLACKLISTED_INDEXES] ?? [];
     }
 
     private function getAdvancedSearchChecker(): AdvancedSearchChecker
