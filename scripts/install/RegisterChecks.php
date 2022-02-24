@@ -14,34 +14,70 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2019-2022 (original work) Open Assessment Technologies SA.
  */
+
+declare(strict_types=1);
 
 namespace oat\taoSystemStatus\scripts\install;
 
+use oat\oatbox\reporting\Report;
 use oat\oatbox\extension\AbstractAction;
-use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\CheckInterface;
-use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 use oat\taoSystemStatus\model\SystemStatusException;
+use oat\taoSystemStatus\model\Check\Instance\CronCheck;
+use oat\taoSystemStatus\model\Check\System\Act\SNSCheck;
+use oat\taoSystemStatus\model\Check\System\TaoLtiKVCheck;
+use oat\taoSystemStatus\model\Check\Instance\MathJaxCheck;
+use oat\taoSystemStatus\model\Check\System\DebugModeCheck;
+use oat\taoSystemStatus\model\Check\System\HeartBeatCheck;
+use oat\taoSystemStatus\model\Check\System\TaoUpdateCheck;
+use oat\taoSystemStatus\model\Check\System\LoginQueueCheck;
+use oat\taoSystemStatus\model\Check\System\CertificateCheck;
+use oat\taoSystemStatus\model\Check\System\FrontEndLogCheck;
+use oat\taoSystemStatus\model\Check\System\LockServiceCheck;
+use oat\taoSystemStatus\model\Check\System\WebSourceTTLCheck;
+use oat\taoSystemStatus\model\Check\Instance\WkhtmltopdfCheck;
+use oat\taoSystemStatus\model\Check\System\PHPSessionTtlCheck;
+use oat\taoSystemStatus\model\Check\Instance\MessagesJsonCheck;
+use oat\taoSystemStatus\model\Check\System\LocalNamespaceCheck;
+use oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck;
+use oat\taoSystemStatus\model\Check\System\TaskQueueMonitoring;
+use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
+use oat\oatbox\service\exception\InvalidServiceManagerException;
+use oat\taoSystemStatus\model\Check\System\AwsRDSFreeSpaceCheck;
+use oat\taoSystemStatus\model\Check\System\DefaultLanguageCheck;
+use oat\taoSystemStatus\model\Check\System\DefaultTimeZoneCheck;
+use oat\taoSystemStatus\model\Check\System\TaoLtiDeliveryKVCheck;
+use oat\taoSystemStatus\model\Check\Instance\WriteConfigDataCheck;
+use oat\taoSystemStatus\model\Check\System\AlarmNotificationCheck;
+use oat\taoSystemStatus\model\Check\System\AwsRedisFreeSpaceCheck;
+use oat\taoSystemStatus\model\Check\System\FileSystemS3CacheCheck;
+use oat\taoSystemStatus\model\Check\System\TaskQueueFinishedCheck;
+use oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check;
+use oat\taoSystemStatus\model\Check\System\Act\OdsConfigurationCheck;
+use oat\taoSystemStatus\model\Check\System\AutoSystemTerminationCheck;
+use oat\taoSystemStatus\model\Check\System\FileSystemS3CachePathCheck;
+use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchStatusCheck;
+use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexesCheck;
+use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchAvailabilityCheck;
 
 /**
- * Class RegisterChecks
  * @author Aleh Hutnikau <hutnikau@1pt.com>
- * @package oat\taoSystemStatus\scripts\install
  */
 class RegisterChecks extends AbstractAction
 {
     /**
-     * @param $params
+     * @param array $params
+     *
+     * @throws InvalidServiceManagerException
+     *
      * @return Report
-     * @throws \oat\taoSystemStatus\model\SystemStatusException
      */
     public function __invoke($params)
     {
         /** @var SystemStatusService $systemStatusService */
-        $systemStatusService = $this->getServiceLocator()->get(SystemStatusService::SERVICE_ID);
+        $systemStatusService = $this->getServiceManager()->getContainer()->get(SystemStatusService::SERVICE_ID);
 
         foreach ($this->getSystemChecks() as $check) {
             try {
@@ -51,7 +87,7 @@ class RegisterChecks extends AbstractAction
             }
         }
 
-        return new Report(Report::TYPE_SUCCESS, __('System status checks successfully registered.'));
+        return Report::createSuccess(__('System status checks successfully registered.'));
     }
 
     /**
@@ -60,38 +96,40 @@ class RegisterChecks extends AbstractAction
     private function getSystemChecks(): array
     {
         return [
-            new \oat\taoSystemStatus\model\Check\System\FrontEndLogCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaoLtiKVCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaoLtiDeliveryKVCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\LockServiceCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\DefaultLanguageCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\DefaultTimeZoneCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\LocalNamespaceCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\MessagesJsonCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\MathJaxCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\WkhtmltopdfCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\FileSystemS3CacheCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\ConfigCongruenceS3Check([]),
-            new \oat\taoSystemStatus\model\Check\Instance\WriteConfigDataCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\DebugModeCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaoUpdateCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaskQueueFailsCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaskQueueFinishedCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\AwsRedisFreeSpaceCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\HeartBeatCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\AwsRDSFreeSpaceCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\AutoSystemTerminationCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\LoginQueueCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\Act\OdsConfigurationCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\Act\SNSCheck([]),
-            new \oat\taoSystemStatus\model\Check\Instance\CronCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\TaskQueueMonitoring([]),
-            new \oat\taoSystemStatus\model\Check\System\WebSourceTTLCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\PHPSessionTtlCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\FileSystemS3CachePathCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\AlarmNotificationCheck([]),
-            new \oat\taoSystemStatus\model\Check\System\CertificateCheck([]),
+            new FrontEndLogCheck(),
+            new TaoLtiKVCheck(),
+            new TaoLtiDeliveryKVCheck(),
+            new LockServiceCheck(),
+            new DefaultLanguageCheck(),
+            new DefaultTimeZoneCheck(),
+            new LocalNamespaceCheck(),
+            new MessagesJsonCheck(),
+            new MathJaxCheck(),
+            new WkhtmltopdfCheck(),
+            new FileSystemS3CacheCheck(),
+            new ConfigCongruenceS3Check(),
+            new WriteConfigDataCheck(),
+            new DebugModeCheck(),
+            new TaoUpdateCheck(),
+            new TaskQueueFailsCheck(),
+            new TaskQueueFinishedCheck(),
+            new AwsRedisFreeSpaceCheck(),
+            new HeartBeatCheck(),
+            new AwsRDSFreeSpaceCheck(),
+            new AutoSystemTerminationCheck(),
+            new LoginQueueCheck(),
+            new OdsConfigurationCheck(),
+            new SNSCheck(),
+            new CronCheck(),
+            new TaskQueueMonitoring(),
+            new WebSourceTTLCheck(),
+            new PHPSessionTtlCheck(),
+            new FileSystemS3CachePathCheck(),
+            new AlarmNotificationCheck(),
+            new CertificateCheck(),
+            new AdvancedSearchStatusCheck(),
+            new AdvancedSearchAvailabilityCheck(),
+            new AdvancedSearchIndexesCheck(),
         ];
     }
-
 }
