@@ -63,6 +63,11 @@ abstract class AbstractCheck implements CheckInterface
     /**
      * @inheritdoc
      */
+    abstract public function isActive(): bool;
+
+    /**
+     * @inheritdoc
+     */
     abstract public function getType(): string;
 
     /**
@@ -74,11 +79,6 @@ abstract class AbstractCheck implements CheckInterface
      * @inheritdoc
      */
     abstract public function getDetails(): string;
-
-    /**
-     * @return Report
-     */
-    abstract protected function doCheck(): Report;
 
     /**
      * @inheritdoc
@@ -106,6 +106,11 @@ abstract class AbstractCheck implements CheckInterface
         $renderer->setData('report', $report);
         return $renderer->render();
     }
+
+    /**
+     * @return Report
+     */
+    abstract protected function doCheck(): Report;
 
     /**
      * @return string
@@ -143,11 +148,6 @@ abstract class AbstractCheck implements CheckInterface
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(common_ext_ExtensionsManager::SERVICE_ID);
     }
-
-    /**
-     * @inheritdoc
-     */
-    abstract public function isActive(): bool;
 
     /**
      * Check if current instance is a worker
