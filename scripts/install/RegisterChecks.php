@@ -78,7 +78,7 @@ class RegisterChecks extends AbstractAction
     public function __invoke($params)
     {
         /** @var SystemStatusService $systemStatusService */
-        $systemStatusService = $this->getServiceManager()->getContainer()->get(SystemStatusService::SERVICE_ID);
+        $systemStatusService = $this->getServiceManager()->get(SystemStatusService::SERVICE_ID);
 
         foreach ($this->getSystemChecks() as $check) {
             try {
