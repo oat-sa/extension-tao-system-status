@@ -48,7 +48,7 @@ class AdvancedSearchIndexationCheck extends AbstractAdvancedSearchCheck
 
     public function __construct(array $params = [])
     {
-        $this->allowablePercentage = (float) ($params[self::PARAM_ALLOWABLE_PERCENTAGE] ?? 80);
+        $this->allowablePercentage = (float) ($params[self::PARAM_ALLOWABLE_PERCENTAGE] ?? 98);
         $this->blacklistedIndexes = $params[self::PARAM_BLACKLISTED_INDEXES] ?? [];
 
         parent::__construct($params);
@@ -120,7 +120,7 @@ class AdvancedSearchIndexationCheck extends AbstractAdvancedSearchCheck
             $this->errorReports[] = $report;
         }
 
-        $this->{'log' . $report->getType()}(
+        $this->logWarning(
             sprintf(
                 '%s. Minimum allowed percentage is: %s%%',
                 $report->getMessage(),
