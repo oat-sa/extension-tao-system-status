@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,7 +60,7 @@ use oat\taoSystemStatus\model\Check\System\Act\OdsConfigurationCheck;
 use oat\taoSystemStatus\model\Check\System\AutoSystemTerminationCheck;
 use oat\taoSystemStatus\model\Check\System\FileSystemS3CachePathCheck;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchStatusCheck;
-use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexesCheck;
+use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexationCheck;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchAvailabilityCheck;
 
 /**
@@ -129,7 +130,7 @@ class RegisterChecks extends AbstractAction
             new CertificateCheck(),
             new AdvancedSearchStatusCheck(),
             new AdvancedSearchAvailabilityCheck(),
-            new AdvancedSearchIndexesCheck(),
+            new AdvancedSearchIndexationCheck(),
         ];
     }
 }

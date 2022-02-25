@@ -24,8 +24,7 @@ namespace oat\taoSystemStatus\model\Check\System\AdvancedSearch;
 
 use common_report_Report;
 use oat\oatbox\reporting\Report;
-use oat\tao\model\search\SearchProxy;
-use oat\tao\elasticsearch\ElasticSearch;
+use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
 
 class AdvancedSearchAvailabilityCheck extends AbstractAdvancedSearchCheck
 {
@@ -36,17 +35,15 @@ class AdvancedSearchAvailabilityCheck extends AbstractAdvancedSearchCheck
 
     protected function doCheck(): common_report_Report
     {
-        $advancedSearch = $this->getSearchProxy()->getAdvancedSearch();
-
-        if ($advancedSearch instanceof ElasticSearch && $advancedSearch->ping()) {
+        if ($this->getAdvancedSearchChecker()->ping()) {
             return Report::createSuccess(__('Available'));
         }
 
         return Report::createError(__('Unavailable'));
     }
 
-    private function getSearchProxy(): SearchProxy
+    private function getAdvancedSearchChecker(): AdvancedSearchChecker
     {
-        return $this->getContainer()->get(SearchProxy::SERVICE_ID);
+        return $this->getContainer()->get(AdvancedSearchChecker::class);
     }
 }

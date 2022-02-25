@@ -26,7 +26,7 @@ use Doctrine\DBAL\Schema\Schema;
 use oat\tao\scripts\tools\migrations\AbstractMigration;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchStatusCheck;
-use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexesCheck;
+use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexationCheck;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchAvailabilityCheck;
 
 final class Version202202240941212719_taoSystemStatus extends AbstractMigration
@@ -34,7 +34,7 @@ final class Version202202240941212719_taoSystemStatus extends AbstractMigration
     private const CHECKS = [
         AdvancedSearchStatusCheck::class,
         AdvancedSearchAvailabilityCheck::class,
-        AdvancedSearchIndexesCheck::class,
+        AdvancedSearchIndexationCheck::class,
     ];
 
     public function getDescription(): string
