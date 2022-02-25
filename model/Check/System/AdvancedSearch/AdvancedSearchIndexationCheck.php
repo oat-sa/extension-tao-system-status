@@ -66,6 +66,7 @@ class AdvancedSearchIndexationCheck extends AbstractAdvancedSearchCheck
 
     protected function doCheck(): common_report_Report
     {
+        $this->reset();
         $advancedSearchChecker = $this->getAdvancedSearchChecker();
 
         if (!$advancedSearchChecker->isEnabled()) {
@@ -96,6 +97,12 @@ class AdvancedSearchIndexationCheck extends AbstractAdvancedSearchCheck
         } catch (Throwable $exception) {
             return Report::createError('Unexpected error');
         }
+    }
+
+    private function reset(): void
+    {
+        $this->reports = [];
+        $this->errorReports = [];
     }
 
     private function createReport($data): Report
