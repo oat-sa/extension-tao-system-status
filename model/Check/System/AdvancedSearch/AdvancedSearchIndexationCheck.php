@@ -144,15 +144,15 @@ class AdvancedSearchIndexationCheck extends AbstractAdvancedSearchCheck
 
     private function buildFinalReport(int $processedIndexesCount): Report
     {
-        if (count($this->errorReports) === $processedIndexesCount) {
-            return Report::createError('Indexes are not populated', null, $this->errorReports);
-        }
-
         if (!empty($this->reports)) {
-            return Report::createWarning('Some indexes are not populated', null, $this->reports);
+            if (count($this->errorReports) === $processedIndexesCount) {
+                return Report::createError(__('Indexes are not populated'), null, $this->errorReports);
+            }
+
+            return Report::createWarning(__('Some indexes are not populated'), null, $this->reports);
         }
 
-        return Report::createSuccess('Indexes are populated');
+        return Report::createSuccess(__('Indexes are populated'));
     }
 
     private function getAdvancedSearchChecker(): AdvancedSearchChecker
