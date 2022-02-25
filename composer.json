@@ -29,7 +29,7 @@
         "php" : ">=7.1",
         "oat-sa/oatbox-extension-installer": "~1.1||dev-master",
         "oat-sa/generis" : ">=14.0.0",
-        "oat-sa/tao-core" : "dev-feature/adf-830/add-ping-method as 50.1.0",
+        "oat-sa/tao-core" : ">=50.2.0",
         "oat-sa/extension-tao-scheduler" : ">=3.0.0"
     },
     "autoload": {
