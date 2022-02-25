@@ -35,7 +35,11 @@ abstract class AbstractAdvancedSearchCheck extends AbstractCheck
 
     public function isActive(): bool
     {
-        return isset($this->getExtensionManager()->getInstalledExtensions()['taoAdvancedSearch']);
+        return in_array(
+            'taoAdvancedSearch',
+            $this->getExtensionManager()->getInstalledExtensionsIds(),
+            true
+        );
     }
 
     public function getType(): string
