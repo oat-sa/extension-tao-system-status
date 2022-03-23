@@ -34,7 +34,6 @@ use oat\taoSystemStatus\model\Check\System\DebugModeCheck;
 use oat\taoSystemStatus\model\Check\System\HeartBeatCheck;
 use oat\taoSystemStatus\model\Check\System\TaoUpdateCheck;
 use oat\taoSystemStatus\model\Check\System\LoginQueueCheck;
-use oat\taoSystemStatus\model\Check\System\CertificateCheck;
 use oat\taoSystemStatus\model\Check\System\FrontEndLogCheck;
 use oat\taoSystemStatus\model\Check\System\LockServiceCheck;
 use oat\taoSystemStatus\model\Check\System\WebSourceTTLCheck;
@@ -127,7 +126,6 @@ class RegisterChecks extends AbstractAction
             new PHPSessionTtlCheck(),
             new FileSystemS3CachePathCheck(),
             new AlarmNotificationCheck(),
-            new CertificateCheck(),
             new AdvancedSearchStatusCheck(),
             new AdvancedSearchAvailabilityCheck(),
             new AdvancedSearchIndexationCheck(),
