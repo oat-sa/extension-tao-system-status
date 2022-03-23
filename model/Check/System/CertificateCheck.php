@@ -31,6 +31,7 @@ use oat\taoSystemStatus\model\Check\AbstractCheck;
  * Class CertificateCheck
  * @package oat\taoSystemStatus\model\Check\System
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
+ * @deprecated This check is not used anymore and will be deleted in the next release
  */
 class CertificateCheck extends AbstractCheck
 {
@@ -108,7 +109,7 @@ class CertificateCheck extends AbstractCheck
      */
     public function isActive(): bool
     {
-        return true;
+        return false;
     }
 
     /**
