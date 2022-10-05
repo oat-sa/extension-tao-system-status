@@ -11,8 +11,8 @@
             "role": "Developer"
         }
     ],
-    "homepage" : "http://www.taotesting.com",
-    "license" : "GPL-2.0-only",
+    "homepage": "http://www.taotesting.com",
+    "license": "GPL-2.0-only",
     "keywords": [
         "tao",
         "computer-based-assessment",
@@ -26,11 +26,10 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php" : ">=7.1",
         "oat-sa/oatbox-extension-installer": "~1.1||dev-master",
-        "oat-sa/generis" : ">=14.0.0",
-        "oat-sa/tao-core" : ">=50.2.0",
-        "oat-sa/extension-tao-scheduler" : ">=3.0.0"
+        "oat-sa/generis": ">=15.22",
+        "oat-sa/tao-core": ">=50.24.6",
+        "oat-sa/extension-tao-scheduler": ">=3.0.0"
     },
     "autoload": {
         "psr-4": {
