@@ -22,7 +22,6 @@ namespace oat\taoSystemStatus\model\SystemStatus;
 
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\Check\CheckInterface;
-use oat\taoSystemStatus\model\Check\System\TaskQueueFinishedCheck;
 use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogService;
 use oat\taoSystemStatus\model\SystemStatusLog\SystemStatusLogStorageInterface;
 
