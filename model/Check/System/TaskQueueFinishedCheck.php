@@ -42,12 +42,20 @@ class TaskQueueFinishedCheck extends AbstractCheck
         'P1M' => 'PT4H'
     ];
 
+    private const OPTIONAL_FILTER_FIELDS = [
+        TaskLogBrokerInterface::COLUMN_PARAMETERS,
+        TaskLogBrokerInterface::COLUMN_LABEL,
+        TaskLogBrokerInterface::COLUMN_OWNER,
+    ];
+
     /**
      * @inheritdoc
      */
     protected function doCheck(): Report
     {
         $statistics = $this->getTasksStatistics();
+//        print_r(json_encode($statistics, JSON_PRETTY_PRINT));die;
+
         $report = new Report(Report::TYPE_SUCCESS, __('Task Queue statistics:'));
         $report->setData($statistics);
         return $report;
@@ -124,15 +132,21 @@ class TaskQueueFinishedCheck extends AbstractCheck
                 $to = clone($timeKey);
                 $from = clone($to);
                 $from->sub($intervalObj);
-                $filter = new TaskLogFilter();
-                $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_COMPLETED, TaskLogInterface::STATUS_ARCHIVED]);
-                $filter->gte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $from->format('Y-m-d H:i:s'));
-                $filter->lte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $to->format('Y-m-d H:i:s'));
 
-                $tasks = $taskQueueLog->search($filter);
+//                $filter = new TaskLogFilter();
+//                $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_COMPLETED, TaskLogInterface::STATUS_ARCHIVED]);
+//                $filter->gte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $from->format('Y-m-d H:i:s'));
+//                $filter->lte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $to->format('Y-m-d H:i:s'));
+//
+//                foreach (self::OPTIONAL_FILTER_FIELDS as $fld) {
+//                    $filter->deselect($fld);
+//                }
+
+                $tasks = $taskQueueLog->getMonitoringTaskqueueStats($from, $to);
+
                 $times = [];
                 foreach ($tasks as $task) {
-                    $executionTime = $task->getUpdatedAt()->getTimestamp() - $task->getCreatedAt()->getTimestamp();
+                    $executionTime = $task['updatedAt']->getTimestamp() - $task['createdAt']->getTimestamp();
                     $times[] = $executionTime;
                 }
                 $result[$name]['time'][] = $from->format('Y-m-d H:i:s');
@@ -140,6 +154,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
                 $result[$name]['amount'][] = count($tasks);
             }
         }
+
         return $result;
     }
 
