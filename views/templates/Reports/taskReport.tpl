@@ -9,7 +9,7 @@ $reports = get_data('reports');
     <thead>
         <tr>
             <th><?= __('Label') ?></th>
-            <th><?= __('Creted At') ?></th>
+            <th><?= __('Created At') ?></th>
             <th><?= __('Details') ?></th>
         </tr>
     </thead>

@@ -25,6 +25,7 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
+use oat\oatbox\reporting\ReportInterface;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\helpers\Template;
@@ -52,7 +53,7 @@ class TaskQueueFinishedCheck extends AbstractCheck
     protected function doCheck(): Report
     {
         return new Report(
-            Report::TYPE_SUCCESS,
+            ReportInterface::TYPE_SUCCESS,
             __('Task Queue statistics:'),
             $this->getTasksStatistics()
         );
