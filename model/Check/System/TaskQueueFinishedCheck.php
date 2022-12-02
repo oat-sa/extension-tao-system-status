@@ -118,7 +118,14 @@ class TaskQueueFinishedCheck extends AbstractCheck
             $intervalObj = new DateInterval($interval);
             $period = new DateInterval($name);
 
-            $points = round($this->getIntervalSeconds($period) / $this->getIntervalSeconds($intervalObj));
+            $intervalSeconds =$this->getIntervalSeconds($intervalObj);
+            $periodSeconds =$this->getIntervalSeconds($period);
+
+            if ($intervalSeconds == 0 || $periodSeconds == 0) {
+                $points = null;
+            } else {
+                $points = round($this->getIntervalSeconds($period) / $this->getIntervalSeconds($intervalObj));
+            }
 
             $timeKeys = tao_helpers_Date::getTimeKeys(
                 new DateInterval($interval),

@@ -62,6 +62,7 @@ class TaskQueueFinishedCheckTest extends TestCase
         $this->taskLogService->expects($this->any())
             ->method('getTaskExecutionTimesByDateRange')
             ->willReturn([]);
+
         $data = (($this->subject)())->getData();
 
         $this->assertCount(7, $data);
