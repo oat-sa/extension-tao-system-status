@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * This program is free software; you can redistribute it and/or
@@ -17,34 +16,25 @@ declare(strict_types=1);
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- *
  */
+
+declare(strict_types=1);
 
 namespace oat\taoSystemStatus\test\model\SystemStatus;
 
-use oat\generis\test\TestCase;
+use PHPUnit\Framework\TestCase;
 use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
-/**
- * Class SystemStatusService
- * @package oat\taoSystemStatus\test\model\SystemStatus
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
- */
 class SystemStatusServiceTest extends TestCase
 {
-    const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
-
     public function testGetInstanceId()
     {
         $instanceId = $this->getInstance()->getInstanceId();
         $this->assertEquals($instanceId, $this->getInstance()->getInstanceId());
     }
 
-    /**
-     * @return SystemStatusService
-     */
-    private function getInstance()
+    private function getInstance(): SystemStatusService
     {
         $service = new SystemStatusService([]);
         $service->setServiceLocator(ServiceManager::getServiceManager());

@@ -59,9 +59,7 @@ class TaskQueueFinishedCheckTest extends TestCase
 
     public function testDoCheck(): void
     {
-        $this->taskLogService->expects($this->any())
-            ->method('getTaskExecutionTimesByDateRange')
-            ->willReturn([]);
+        $this->taskLogService->method('getTaskExecutionTimesByDateRange')->willReturn([]);
 
         $data = (($this->subject)())->getData();
 
