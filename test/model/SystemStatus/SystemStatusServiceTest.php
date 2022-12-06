@@ -16,7 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- *
  */
 
 declare(strict_types=1);
@@ -27,11 +26,6 @@ use PHPUnit\Framework\TestCase;
 use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
-/**
- * Class SystemStatusService
- * @package oat\taoSystemStatus\test\model\SystemStatus
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
- */
 class SystemStatusServiceTest extends TestCase
 {
     const SERVICE_ID = 'taoSystemStatus/SystemCheckService';

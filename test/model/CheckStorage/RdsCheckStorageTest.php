@@ -16,7 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- *
  */
 
 declare(strict_types=1);
@@ -39,7 +38,7 @@ class RdsCheckStorageTest extends TestCase
     {
         $service = $this->getInstance();
         $this->assertTrue(
-            $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']))
+            $service->addCheck(new SampleInstanceCheck(['foo' => 'bar']))
         );
         $checks = $service->getChecks(CheckInterface::TYPE_INSTANCE);
         $this->assertEquals(SampleInstanceCheck::class, $checks[0]->getId());
@@ -50,14 +49,14 @@ class RdsCheckStorageTest extends TestCase
     {
         $this->expectException('\oat\taoSystemStatus\model\SystemStatusException');
         $service = $this->getInstance();
-        $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']));
-        $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']));
+        $service->addCheck(new SampleInstanceCheck(['foo' => 'bar']));
+        $service->addCheck(new SampleInstanceCheck(['foo' => 'bar']));
     }
 
     public function testRemoveCheck()
     {
         $service = $this->getInstance();
-        $check = $this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']);
+        $check = new SampleInstanceCheck(['foo' => 'bar']);
         $this->assertTrue($service->addCheck($check));
         $this->assertCount(1, $service->getChecks(CheckInterface::TYPE_INSTANCE));
         $this->assertTrue($service->removeCheck($check));
@@ -67,7 +66,7 @@ class RdsCheckStorageTest extends TestCase
     public function testGetCheck()
     {
         $service = $this->getInstance();
-        $check = $this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']);
+        $check = new SampleInstanceCheck(['foo' => 'bar']);
         $this->assertTrue($service->addCheck($check));
         $this->assertEquals($check, $service->getCheck($check->getId()));
 
@@ -78,7 +77,7 @@ class RdsCheckStorageTest extends TestCase
         $service = $this->getInstance();
         $this->assertCount(0, $service->getChecks(CheckInterface::TYPE_INSTANCE));
         $this->assertTrue(
-            $service->addCheck($this->getCheckMock(CheckInterface::TYPE_INSTANCE, ['foo' => 'bar']))
+            $service->addCheck(new SampleInstanceCheck(['foo' => 'bar']))
         );
         $checks = $service->getChecks(CheckInterface::TYPE_INSTANCE);
         $this->assertCount(1, $checks);
@@ -100,20 +99,5 @@ class RdsCheckStorageTest extends TestCase
         $serviceManager = new ServiceManager($config);
         $service->setServiceLocator($serviceManager);
         return $service;
-    }
-
-    /**
-     * @param $type
-     * @param $params
-     * @return CheckInterface
-     */
-    private function getCheckMock($type, $params)
-    {
-        if ($type === CheckInterface::TYPE_INSTANCE) {
-            return new SampleInstanceCheck($params);
-        }
-        if ($type === CheckInterface::TYPE_SYSTEM) {
-            return new SampleSystemCheck($params);
-        }
     }
 }

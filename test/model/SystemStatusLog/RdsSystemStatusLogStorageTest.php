@@ -16,7 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- *
  */
 
 declare(strict_types=1);
@@ -30,7 +29,6 @@ use oat\oatbox\service\ServiceManager;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\SystemStatusLog\RdsSystemStatusLogStorageStorage;
 use oat\taoSystemStatus\test\model\Check\SampleInstanceCheck;
-
 
 class RdsSystemStatusLogStorageTest extends TestCase
 {
@@ -56,18 +54,18 @@ class RdsSystemStatusLogStorageTest extends TestCase
         $service = $this->getInstance();
 
         $checks = $service->getLatest(new \DateInterval('PT1M'));
-        $this->assertCount(0,$checks);
+        $this->assertCount(0, $checks);
 
         $this->assertTrue($service->log($check, $report1, 'instance1'));
         $this->assertTrue($service->log($check, $report2, 'instance1'));
         $checks = $service->getLatest(new \DateInterval('PT1M'));
         $this->assertEquals($check->getId(), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_CHECK_ID]);
         $this->assertEquals(json_encode($report2), $checks[0][RdsSystemStatusLogStorageStorage::COLUMN_REPORT]);
-        $this->assertCount(1,$checks);
+        $this->assertCount(1, $checks);
 
         $this->assertTrue($service->log($check, $report3, 'instance2'));
         $checks = $service->getLatest(new \DateInterval('PT1M'));
-        $this->assertCount(2,$checks);
+        $this->assertCount(2, $checks);
         sleep(2);
         $this->assertCount(0, $service->getLatest(new \DateInterval('PT1S')));
     }

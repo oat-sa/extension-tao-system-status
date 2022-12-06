@@ -16,7 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2020 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- *
  */
 
 declare(strict_types=1);
@@ -28,14 +27,8 @@ use PHPUnit\Framework\TestCase;
 use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\taoSystemStatus\model\Report\ReportComparator;
 
-/**
- * Class ReportComparatorTest
- * @package oat\taoSystemStatus\test\model\SystemStatus
- * @author Aleh Hutnikau, <hutnikau@1pt.com>
- */
 class ReportComparatorTest extends TestCase
 {
-
     public function testGetDegradations()
     {
         $oldReport = $this->getInitialReport();
@@ -97,9 +90,13 @@ class ReportComparatorTest extends TestCase
 
     private function getReport($type, $message, $id = null): Report
     {
-        return new Report($type, $message, [
-            CheckInterface::PARAM_CHECK_ID => $id,
-            CheckInterface::PARAM_DETAILS => $id,
-        ]);
+        return new Report(
+            $type,
+            $message,
+            [
+                CheckInterface::PARAM_CHECK_ID => $id,
+                CheckInterface::PARAM_DETAILS => $id,
+            ]
+        );
     }
 }

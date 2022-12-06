@@ -66,7 +66,7 @@ class AdvancedSearchAvailabilityCheckTest extends TestCase
      * @dataProvider invokeProvider
      */
     public function testInvoke(
-        bool   $advancedSearchPing,
+        bool $advancedSearchPing,
         string $expectedReportType,
         string $expectedReportMessage
     ): void {
