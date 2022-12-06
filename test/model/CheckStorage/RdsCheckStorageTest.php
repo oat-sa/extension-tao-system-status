@@ -69,7 +69,6 @@ class RdsCheckStorageTest extends TestCase
         $check = new SampleInstanceCheck(['foo' => 'bar']);
         $this->assertTrue($service->addCheck($check));
         $this->assertEquals($check, $service->getCheck($check->getId()));
-
     }
 
     public function testGetChecks()

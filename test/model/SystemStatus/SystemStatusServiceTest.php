@@ -28,18 +28,13 @@ use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 
 class SystemStatusServiceTest extends TestCase
 {
-    const SERVICE_ID = 'taoSystemStatus/SystemCheckService';
-
     public function testGetInstanceId()
     {
         $instanceId = $this->getInstance()->getInstanceId();
         $this->assertEquals($instanceId, $this->getInstance()->getInstanceId());
     }
 
-    /**
-     * @return SystemStatusService
-     */
-    private function getInstance()
+    private function getInstance(): SystemStatusService
     {
         $service = new SystemStatusService([]);
         $service->setServiceLocator(ServiceManager::getServiceManager());

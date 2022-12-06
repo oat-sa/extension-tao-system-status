@@ -78,7 +78,7 @@ class PHPSessionTtlCheckTest extends TestCase
         $this->assertEquals(Report::TYPE_WARNING, $report->getType());
         $this->assertEquals(
             '\'session.gc_maxlifetime\' php option has default value. Session life time is 1440 seconds' . PHP_EOL .
-            '\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. '.
+            '\'session.cookie_lifetime\' php option is less than \'session.gc_maxlifetime\'. ' .
             'Session life time is 1439 seconds',
             $report->getMessage()
         );
