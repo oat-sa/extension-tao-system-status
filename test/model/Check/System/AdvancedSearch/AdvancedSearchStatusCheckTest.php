@@ -22,40 +22,41 @@ declare(strict_types=1);
 
 namespace oat\taoSystemStatus\test\model\Check\System\AdvancedSearch;
 
-use oat\generis\test\TestCase;
+use oat\oatbox\service\ServiceManager;
+use PHPUnit\Framework\TestCase;
 use common_ext_ExtensionsManager;
 use oat\oatbox\reporting\ReportInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchStatusCheck;
+use Psr\Container\ContainerInterface;
 
 class AdvancedSearchStatusCheckTest extends TestCase
 {
-    /** @var AdvancedSearchStatusCheck */
-    private $sut;
-
-    /** @var AdvancedSearchChecker|MockObject */
-    private $advancedSearchChecker;
+    private AdvancedSearchStatusCheck $sut;
+    private AdvancedSearchChecker $advancedSearchChecker;
+    private common_ext_ExtensionsManager $extensionManager;
 
     protected function setUp(): void
     {
-        $extensionManager = $this->createMock(common_ext_ExtensionsManager::class);
-        $extensionManager
-            ->expects($this->once())
-            ->method('getInstalledExtensionsIds')
-            ->willReturn(['taoAdvancedSearch']);
+        $this->sut = new AdvancedSearchStatusCheck();
 
+        $this->extensionManager = $this->createMock(common_ext_ExtensionsManager::class);
         $this->advancedSearchChecker = $this->createMock(AdvancedSearchChecker::class);
 
-        $this->sut = new AdvancedSearchStatusCheck();
-        $this->sut->setServiceLocator(
-            $this->getServiceLocatorMock(
-                [
-                    common_ext_ExtensionsManager::SERVICE_ID => $extensionManager,
-                    AdvancedSearchChecker::class => $this->advancedSearchChecker,
-                ]
-            )
-        );
+        $map = [
+            [common_ext_ExtensionsManager::SERVICE_ID, $this->extensionManager],
+            [AdvancedSearchChecker::class, $this->advancedSearchChecker],
+        ];
+
+        $containerMock = $this->createMock(ContainerInterface::class);
+        $containerMock->expects($this->any())
+            ->method('get')
+            ->willReturnMap($map);
+
+        $serviceLocatorMock = $this->createMock(ServiceManager::class);
+        $serviceLocatorMock->expects($this->any())->method('getContainer')->willReturn($containerMock);
+
+        $this->sut->setServiceLocator($serviceLocatorMock);
     }
 
     public function testGetDetails(): void
@@ -75,6 +76,11 @@ class AdvancedSearchStatusCheckTest extends TestCase
             ->expects($this->once())
             ->method('isEnabled')
             ->willReturn($isAdvancedSearchEnabled);
+
+        $this->extensionManager
+            ->expects($this->once())
+            ->method('getInstalledExtensionsIds')
+            ->willReturn(['taoAdvancedSearch']);
 
         $report = $this->sut->__invoke();
 

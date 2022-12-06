@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * This program is free software; you can redistribute it and/or
@@ -20,9 +19,11 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoSystemStatus\test\model\SystemStatus;
 
-use oat\generis\test\TestCase;
+use PHPUnit\Framework\TestCase;
 use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\SystemStatus\SystemStatusService;
 

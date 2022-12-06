@@ -23,15 +23,20 @@ declare(strict_types=1);
 namespace oat\taoSystemStatus\test\model\Check\System\AdvancedSearch;
 
 use common_report_Report;
-use oat\generis\test\TestCase;
+use oat\oatbox\service\ServiceManager;
+use oat\generis\test\PersistenceManagerMockTrait;
+use PHPUnit\Framework\TestCase;
 use oat\oatbox\reporting\Report;
 use common_ext_ExtensionsManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AbstractAdvancedSearchCheck;
+use Psr\Container\ContainerInterface;
 
 class AbstractAdvancedSearchCheckTest extends TestCase
 {
+    use PersistenceManagerMockTrait;
+
     /** @var AbstractAdvancedSearchCheck */
     private $sut;
 
@@ -53,13 +58,14 @@ class AbstractAdvancedSearchCheckTest extends TestCase
                 return Report::createInfo('report');
             }
         };
-        $this->sut->setServiceLocator(
-            $this->getServiceLocatorMock(
-                [
-                    common_ext_ExtensionsManager::SERVICE_ID => $this->extensionsManager,
-                ]
-            )
-        );
+
+        $serviceLocatorMock = $this->createMock(ServiceManager::class);
+        $serviceLocatorMock->expects($this->any())
+            ->method('getContainer')
+            ->willReturn(
+                $this->createConfiguredMock(ContainerInterface::class, ['get' => $this->extensionsManager])
+            );
+        $this->sut->setServiceLocator($serviceLocatorMock);
     }
 
     /**

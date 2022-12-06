@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * This program is free software; you can redistribute it and/or
@@ -20,10 +19,12 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoSystemStatus\test\model\Check\System;
 
 use common_report_Report as Report;
-use oat\generis\test\TestCase;
+use PHPUnit\Framework\TestCase;
 use oat\taoSystemStatus\model\Check\System\PHPSessionTtlCheck;
 
 /**

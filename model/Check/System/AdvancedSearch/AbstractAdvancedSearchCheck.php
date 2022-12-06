@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace oat\taoSystemStatus\model\Check\System\AdvancedSearch;
 
-use common_report_Report;
-use oat\oatbox\reporting\Report;
 use common_ext_ExtensionsManager;
 use Psr\Container\ContainerInterface;
 use oat\taoSystemStatus\model\Check\AbstractCheck;

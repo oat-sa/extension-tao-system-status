@@ -22,52 +22,47 @@ declare(strict_types=1);
 
 namespace oat\taoSystemStatus\test\model\Check\System\AdvancedSearch;
 
-use Psr\Log\LoggerInterface;
-use oat\generis\test\TestCase;
-use common_ext_ExtensionsManager;
-use oat\oatbox\log\LoggerService;
-use oat\oatbox\reporting\ReportInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
+use oat\oatbox\service\ServiceManager;
 use oat\taoAdvancedSearch\model\Index\Report\IndexSummarizer;
+use Psr\Container\ContainerInterface;
+use PHPUnit\Framework\TestCase;
+use common_ext_ExtensionsManager;
+use oat\oatbox\reporting\ReportInterface;
+use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
 use oat\taoSystemStatus\model\Check\System\AdvancedSearch\AdvancedSearchIndexationCheck;
 
 class AdvancedSearchIndexationCheckTest extends TestCase
 {
-    /** @var AdvancedSearchIndexationCheck */
-    private $sut;
-
-    /** @var AdvancedSearchChecker|MockObject */
-    private $advancedSearchChecker;
-
-    /** @var IndexSummarizer|MockObject */
-    private $indexSummarizer;
-
-    /** @var MockObject|LoggerInterface */
-    private $logger;
+    private AdvancedSearchIndexationCheck $sut;
+    private AdvancedSearchChecker $advancedSearchChecker;
+    private common_ext_ExtensionsManager $extensionManager;
+    private IndexSummarizer $indexSummarizer;
 
     protected function setUp(): void
     {
-        $extensionManager = $this->createMock(common_ext_ExtensionsManager::class);
-        $extensionManager
-            ->expects($this->once())
-            ->method('getInstalledExtensionsIds')
-            ->willReturn(['taoAdvancedSearch']);
+        $this->extensionManager = $this->createMock(common_ext_ExtensionsManager::class);
 
         $this->advancedSearchChecker = $this->createMock(AdvancedSearchChecker::class);
         $this->indexSummarizer = $this->createMock(IndexSummarizer::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->sut = new AdvancedSearchIndexationCheck();
+
+        $map = [
+            [common_ext_ExtensionsManager::SERVICE_ID, $this->extensionManager],
+            [AdvancedSearchChecker::class, $this->advancedSearchChecker],
+            [IndexSummarizer::class, $this->indexSummarizer],
+        ];
+
+        $containerMock = $this->createMock(ContainerInterface::class);
+        $containerMock->expects($this->any())
+            ->method('get')
+            ->willReturnMap($map);
+
+        $serviceLocatorMock = $this->createMock(ServiceManager::class);
+        $serviceLocatorMock->expects($this->any())->method('getContainer')->willReturn($containerMock);
+
         $this->sut->setServiceLocator(
-            $this->getServiceLocatorMock(
-                [
-                    common_ext_ExtensionsManager::SERVICE_ID => $extensionManager,
-                    AdvancedSearchChecker::class => $this->advancedSearchChecker,
-                    IndexSummarizer::class => $this->indexSummarizer,
-                    LoggerService::SERVICE_ID => $this->logger,
-                ]
-            )
+            $serviceLocatorMock
         );
     }
 
@@ -79,29 +74,27 @@ class AdvancedSearchIndexationCheckTest extends TestCase
     /**
      * @dataProvider invokeProvider
      */
-    public function testInvoke(
-        array $summary,
-        string $expectedReportType,
-        string $expectedReportMessage,
-        int $logCount
-    ): void {
+    public function testInvoke(array $summary, string $expectedReportType, string $expectedReportMessage): void
+    {
         $this->advancedSearchChecker
             ->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
+
         $this->advancedSearchChecker
             ->expects($this->once())
             ->method('ping')
             ->willReturn(true);
 
+        $this->extensionManager
+            ->expects($this->once())
+            ->method('getInstalledExtensionsIds')
+            ->willReturn(['taoAdvancedSearch']);
+
         $this->indexSummarizer
             ->expects($this->once())
             ->method('summarize')
             ->willReturn($summary);
-
-        $this->logger
-            ->expects($this->exactly($logCount))
-            ->method('warning');
 
         $report = $this->sut->__invoke();
 
@@ -111,21 +104,19 @@ class AdvancedSearchIndexationCheckTest extends TestCase
 
     public function testInvokeWithDisabledAdvancedSearch(): void
     {
+        $this->extensionManager
+            ->expects($this->once())
+            ->method('getInstalledExtensionsIds')
+            ->willReturn(['taoAdvancedSearch']);
+
         $this->advancedSearchChecker
             ->expects($this->once())
             ->method('isEnabled')
             ->willReturn(false);
+
         $this->advancedSearchChecker
             ->expects($this->never())
             ->method('ping');
-
-        $this->indexSummarizer
-            ->expects($this->never())
-            ->method('summarize');
-
-        $this->logger
-            ->expects($this->never())
-            ->method('warning');
 
         $report = $this->sut->__invoke();
 
@@ -135,22 +126,20 @@ class AdvancedSearchIndexationCheckTest extends TestCase
 
     public function testInvokeWithUnavailableAdvancedSearch(): void
     {
+        $this->extensionManager
+            ->expects($this->once())
+            ->method('getInstalledExtensionsIds')
+            ->willReturn(['taoAdvancedSearch']);
+
         $this->advancedSearchChecker
             ->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
+
         $this->advancedSearchChecker
             ->expects($this->once())
             ->method('ping')
             ->willReturn(false);
-
-        $this->indexSummarizer
-            ->expects($this->never())
-            ->method('summarize');
-
-        $this->logger
-            ->expects($this->never())
-            ->method('warning');
 
         $report = $this->sut->__invoke();
 
@@ -178,7 +167,6 @@ class AdvancedSearchIndexationCheckTest extends TestCase
                 ],
                 'expectedReportType' => ReportInterface::TYPE_SUCCESS,
                 'expectedReportMessage' => 'Indexes are populated',
-                'logCount' => 0,
             ],
             'Some indexes are not populated (warning)' => [
                 'summary' => [
@@ -197,7 +185,6 @@ class AdvancedSearchIndexationCheckTest extends TestCase
                 ],
                 'expectedReportType' => ReportInterface::TYPE_WARNING,
                 'expectedReportMessage' => 'Some indexes are not populated',
-                'logCount' => 1,
             ],
             'Some indexes are not populated (error)' => [
                 'summary' => [
@@ -216,7 +203,6 @@ class AdvancedSearchIndexationCheckTest extends TestCase
                 ],
                 'expectedReportType' => ReportInterface::TYPE_ERROR,
                 'expectedReportMessage' => 'Indexes are not populated',
-                'logCount' => 1,
             ],
             'Indexes are not populated' => [
                 'summary' => [
@@ -235,7 +221,6 @@ class AdvancedSearchIndexationCheckTest extends TestCase
                 ],
                 'expectedReportType' => ReportInterface::TYPE_ERROR,
                 'expectedReportMessage' => 'Indexes are not populated',
-                'logCount' => 2,
             ],
         ];
     }

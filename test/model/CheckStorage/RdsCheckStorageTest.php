@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * This program is free software; you can redistribute it and/or
@@ -20,21 +19,22 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoSystemStatus\test\model\CheckStorage;
 
 use oat\generis\persistence\PersistenceManager;
-use oat\generis\test\TestCase;
+use oat\generis\test\PersistenceManagerMockTrait;
+use PHPUnit\Framework\TestCase;
 use oat\oatbox\service\ServiceManager;
 use oat\taoSystemStatus\model\Check\CheckInterface;
 use oat\taoSystemStatus\model\CheckStorage\RdsCheckStorage;
 use oat\taoSystemStatus\test\model\Check\SampleInstanceCheck;
-use oat\taoSystemStatus\test\model\Check\SampleSystemCheck;
 
-/**
- * @inheritdoc
- */
 class RdsCheckStorageTest extends TestCase
 {
+    use PersistenceManagerMockTrait;
+
     public function testAddCheck()
     {
         $service = $this->getInstance();
@@ -89,11 +89,13 @@ class RdsCheckStorageTest extends TestCase
 
     private function getInstance()
     {
-        $persistenceManager = $this->getSqlMock('testCheckStorage');
+        $persistenceManager = $this->getPersistenceManagerMock('testCheckStorage');
         $persistence = $persistenceManager->getPersistenceById('testCheckStorage');
+
         $service = new RdsCheckStorage('testCheckStorage');
         $service->install($persistence);
         $config = new \common_persistence_KeyValuePersistence([], new \common_persistence_InMemoryKvDriver());
+
         $config->set(PersistenceManager::SERVICE_ID, $persistenceManager);
         $serviceManager = new ServiceManager($config);
         $service->setServiceLocator($serviceManager);

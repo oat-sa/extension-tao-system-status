@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,21 +19,23 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoSystemStatus\test\model\CheckStorage;
 
 use oat\generis\persistence\PersistenceManager;
-use oat\generis\test\TestCase;
+use oat\generis\test\PersistenceManagerMockTrait;
+use PHPUnit\Framework\TestCase;
 use oat\oatbox\service\ServiceManager;
 use common_report_Report as Report;
 use oat\taoSystemStatus\model\SystemStatusLog\RdsSystemStatusLogStorageStorage;
 use oat\taoSystemStatus\test\model\Check\SampleInstanceCheck;
 
 
-/**
- * @inheritdoc
- */
 class RdsSystemStatusLogStorageTest extends TestCase
 {
+    use PersistenceManagerMockTrait;
+
     public function testLog()
     {
         $service = $this->getInstance();
@@ -72,7 +75,7 @@ class RdsSystemStatusLogStorageTest extends TestCase
 
     private function getInstance()
     {
-        $persistenceManager = $this->getSqlMock('testSystemStatusLogStorage');
+        $persistenceManager = $this->getPersistenceManagerMock('testSystemStatusLogStorage');
         $persistence = $persistenceManager->getPersistenceById('testSystemStatusLogStorage');
         $service = new RdsSystemStatusLogStorageStorage('testSystemStatusLogStorage');
         $service->install($persistence);
