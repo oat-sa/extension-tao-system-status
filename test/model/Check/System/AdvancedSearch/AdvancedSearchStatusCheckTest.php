@@ -49,12 +49,12 @@ class AdvancedSearchStatusCheckTest extends TestCase
         ];
 
         $containerMock = $this->createMock(ContainerInterface::class);
-        $containerMock->expects($this->any())
+        $containerMock
             ->method('get')
             ->willReturnMap($map);
 
         $serviceLocatorMock = $this->createMock(ServiceManager::class);
-        $serviceLocatorMock->expects($this->any())->method('getContainer')->willReturn($containerMock);
+        $serviceLocatorMock->method('getContainer')->willReturn($containerMock);
 
         $this->sut->setServiceLocator($serviceLocatorMock);
     }

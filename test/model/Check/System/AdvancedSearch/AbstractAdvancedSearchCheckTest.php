@@ -60,7 +60,7 @@ class AbstractAdvancedSearchCheckTest extends TestCase
         };
 
         $serviceLocatorMock = $this->createMock(ServiceManager::class);
-        $serviceLocatorMock->expects($this->any())
+        $serviceLocatorMock
             ->method('getContainer')
             ->willReturn(
                 $this->createConfiguredMock(ContainerInterface::class, ['get' => $this->extensionsManager])

@@ -40,6 +40,10 @@ class AdvancedSearchIndexationCheckTest extends TestCase
 
     protected function setUp(): void
     {
+        if (!class_exists('oat\\taoAdvancedSearch\\model\\Index\\Report\\IndexSummarizer')) {
+            $this->markTestSkipped('Advanced Search is not installed, skip test');
+        }
+
         $this->extensionManager = $this->createMock(common_ext_ExtensionsManager::class);
 
         $this->advancedSearchChecker = $this->createMock(AdvancedSearchChecker::class);
@@ -54,16 +58,12 @@ class AdvancedSearchIndexationCheckTest extends TestCase
         ];
 
         $containerMock = $this->createMock(ContainerInterface::class);
-        $containerMock->expects($this->any())
-            ->method('get')
-            ->willReturnMap($map);
+        $containerMock->method('get')->willReturnMap($map);
 
         $serviceLocatorMock = $this->createMock(ServiceManager::class);
-        $serviceLocatorMock->expects($this->any())->method('getContainer')->willReturn($containerMock);
+        $serviceLocatorMock->method('getContainer')->willReturn($containerMock);
 
-        $this->sut->setServiceLocator(
-            $serviceLocatorMock
-        );
+        $this->sut->setServiceLocator($serviceLocatorMock);
     }
 
     public function testGetDetails(): void
