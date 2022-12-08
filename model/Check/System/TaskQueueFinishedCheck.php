@@ -21,13 +21,15 @@
 namespace oat\taoSystemStatus\model\Check\System;
 
 use common_report_Report as Report;
-use oat\tao\model\taskQueue\TaskLog\Broker\TaskLogBrokerInterface;
-use oat\tao\model\taskQueue\TaskLog\TaskLogFilter;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 use oat\taoSystemStatus\model\Check\AbstractCheck;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\helpers\Template;
 use common_Exception;
 use Exception;
+use tao_helpers_Date;
 
 /**
  * Class TaskQueueFinishedCheck
@@ -109,14 +111,21 @@ class TaskQueueFinishedCheck extends AbstractCheck
 
         $result = [];
         foreach (self::OPTIONS_INTERVAL as $name => $interval) {
-            $intervalObj = new \DateInterval($interval);
-            $period = new \DateInterval($name);
+            $intervalObj = new DateInterval($interval);
+            $period = new DateInterval($name);
 
-            $points = round($this->getIntervalSeconds($period) / $this->getIntervalSeconds($intervalObj));
+            $intervalSeconds =$this->getIntervalSeconds($intervalObj);
+            $periodSeconds =$this->getIntervalSeconds($period);
 
-            $timeKeys = \tao_helpers_Date::getTimeKeys(
-                new \DateInterval($interval),
-                new \DateTime('now', new \DateTimeZone('UTC')),
+            if ($intervalSeconds == 0 || $periodSeconds == 0) {
+                $points = null;
+            } else {
+                $points = round($this->getIntervalSeconds($period) / $this->getIntervalSeconds($intervalObj));
+            }
+
+            $timeKeys = tao_helpers_Date::getTimeKeys(
+                new DateInterval($interval),
+                new DateTime('now', new DateTimeZone('UTC')),
                 $points
             );
 
@@ -124,22 +133,15 @@ class TaskQueueFinishedCheck extends AbstractCheck
                 $to = clone($timeKey);
                 $from = clone($to);
                 $from->sub($intervalObj);
-                $filter = new TaskLogFilter();
-                $filter->in(TaskLogBrokerInterface::COLUMN_STATUS, [TaskLogInterface::STATUS_COMPLETED, TaskLogInterface::STATUS_ARCHIVED]);
-                $filter->gte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $from->format('Y-m-d H:i:s'));
-                $filter->lte(TaskLogBrokerInterface::COLUMN_CREATED_AT, $to->format('Y-m-d H:i:s'));
 
-                $tasks = $taskQueueLog->search($filter);
-                $times = [];
-                foreach ($tasks as $task) {
-                    $executionTime = $task->getUpdatedAt()->getTimestamp() - $task->getCreatedAt()->getTimestamp();
-                    $times[] = $executionTime;
-                }
+                $taskExecutionTimes = $taskQueueLog->getTaskExecutionTimesByDateRange($from, $to);
+
                 $result[$name]['time'][] = $from->format('Y-m-d H:i:s');
-                $result[$name]['average'][] = empty($times) ? 0: array_sum($times) / count($times);
-                $result[$name]['amount'][] = count($tasks);
+                $result[$name]['average'][] = empty($taskExecutionTimes) ? 0: array_sum($taskExecutionTimes) / count($taskExecutionTimes);
+                $result[$name]['amount'][] = count($taskExecutionTimes);
             }
         }
+
         return $result;
     }
 
