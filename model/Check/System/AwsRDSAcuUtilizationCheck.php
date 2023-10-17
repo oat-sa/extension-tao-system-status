@@ -20,15 +20,11 @@
 
 namespace oat\taoSystemStatus\model\Check\System;
 
-use Aws\Rds\RdsClient;
-use oat\oatbox\reporting\Report;
-use oat\generis\persistence\PersistenceManager;
-use oat\taoSystemStatus\model\Check\AbstractCheck;
 use DateInterval;
 use DateTime;
-use oat\taoSystemStatus\model\SystemCheckException;
-use oat\awsTools\AwsClient;
+use oat\oatbox\reporting\Report;
 use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
+use oat\taoSystemStatus\model\SystemCheckException;
 
 /**
  * Class AwsRDSAcuUtilizationCheck
