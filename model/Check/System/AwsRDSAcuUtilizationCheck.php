@@ -20,22 +20,29 @@
 
 namespace oat\taoSystemStatus\model\Check\System;
 
+use Aws\Rds\RdsClient;
 use oat\oatbox\reporting\Report;
+use oat\generis\persistence\PersistenceManager;
+use oat\taoSystemStatus\model\Check\AbstractCheck;
 use DateInterval;
 use DateTime;
-use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 use oat\taoSystemStatus\model\SystemCheckException;
+use oat\awsTools\AwsClient;
+use oat\taoSystemStatus\model\Check\Traits\PieChartReportRenderer;
 
 /**
- * Class AwsRedisFreeSpaceCheck
+ * Class AwsRDSAcuUtilizationCheck
  * @package oat\taoSystemStatus\model\Check\System
- * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
+ * @author Makar Sichevoi, <makar.sichevoy@taotesting.com>
  */
-class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
+class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
 {
     use PieChartReportRenderer;
 
     private const PARAM_PERIOD = 'period';
+    private const ID_ACU_UTILIZATION = "acuutilization";
+    private const NAMESPACE = 'AWS/RDS';
+    private const METRIC_NAME = 'ACUUtilization';
 
     /**
      * @inheritdoc
@@ -45,11 +52,11 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
         $rdsHost = $this->getRDSHost();
         $stackId = $this->getStackId($rdsHost);
 
-        $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
+        $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
 
         $InstanceData = null;
-        foreach ($dbInstances['DBInstances'] as $dbInstance) {
-            if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
+        foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
+            if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
 
                 $InstanceData = $dbInstance;
                 break;
@@ -57,20 +64,21 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
         }
 
         if ($InstanceData === null) {
-            throw new SystemCheckException('RDS instance not found');
+            throw new SystemCheckException('RDS cluster instance not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($InstanceData);
+        $utilizationPercentage = $this->getAcuUtilization($InstanceData);
 
-        if ($freeSpacePercentage < 30) {
-            $this->logError(__('Free space on RDS storage') . '< 30%');
-            $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage).'%');
-        } elseif ($freeSpacePercentage < 50) {
-            $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage).'%');
+        if ($utilizationPercentage > 80) {
+            $this->logError(__('ACU Utilization on RDS storage') . '> 80%');
+            $report = new Report(Report::TYPE_ERROR, round($utilizationPercentage).'%');
+        } elseif ($utilizationPercentage > 50) {
+            $report = new Report(Report::TYPE_WARNING, round($utilizationPercentage).'%');
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage).'%');
+            $report = new Report(Report::TYPE_SUCCESS, round($utilizationPercentage).'%');
         }
-        $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
+
+        $report->setData([self::PARAM_VALUE => round($utilizationPercentage)]);
 
         return $report;
     }
@@ -81,7 +89,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function isActive(): bool
     {
-        return $this->isAws() && $this->isAwsDbInstance();
+        return $this->isAws() && !$this->isAwsDbInstance();
     }
 
     /**
@@ -105,7 +113,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function getDetails(): string
     {
-        return __('Used space on RDS storage');
+        return __('ACU Utilization on RDS storage');
     }
 
     /**
@@ -113,48 +121,50 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      * @return float|int
      * @throws SystemCheckException
      */
-    public function getFreePercentage(array $instanceData)
+    public function getAcuUtilization(array $instanceData)
     {
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
         $since = (new DateTime())->sub($interval);
         $cloudWatchClient = $this->getAwsClient()->getCloudWatchClient();
         $result = $cloudWatchClient->getMetricData([
-            'StartTime' => $since,
-            'EndTime' => (new DateTime()),
             'MetricDataQueries' => [
                 [
-                    'Id' => 'free',
+                    'Id' => self::ID_ACU_UTILIZATION,
                     'MetricStat' => [
                         'Metric' => [
-                            'Namespace' => 'AWS/RDS',
-                            'MetricName' => 'FreeStorageSpace',
+                            'Namespace' => self::NAMESPACE,
+                            'MetricName' => self::METRIC_NAME,
                             'Dimensions' => [
                                 [
-                                    'Name' => 'DBInstanceIdentifier',
-                                    'Value' => $instanceData['DBInstanceIdentifier']
+                                    'Name' => 'DBClusterIdentifier',
+                                    'Value' => $instanceData['DBClusterIdentifier']
                                 ]
                             ]
                         ],
                         'Period' => $period,
                         'Stat' => 'Average',
+                        'Unit' => 'Percent'
                     ]
-                ]
-            ]
+                ],
+            ],
+            'StartTime' => $since,
+            'EndTime' => (new DateTime()),
+            'ScanBy' => 'TimestampDescending'
         ]);
 
-        $freeGB = null;
+        $utilization = null;
 
         foreach ($result->toArray()['MetricDataResults'] as $metric) {
-            if ($metric['Id'] === 'free') {
-                $freeGB = $metric['Values'][0] / (1024*1024*1024);
+            if ($metric['Id'] === self::ID_ACU_UTILIZATION) {
+                $utilization = reset($metric['Values']);
             }
         }
-        $allocatedStorage = $instanceData['AllocatedStorage'];
 
-        if ($freeGB === null) {
+        if ($utilization === null) {
             throw new SystemCheckException('Cannot get rds instance metrics');
         }
-        return $freeGB / ($allocatedStorage / 100);
+
+        return $utilization;
     }
 }
