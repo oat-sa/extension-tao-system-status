@@ -45,16 +45,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
         $rdsHost = $this->getRDSHost();
         $stackId = $this->getStackId($rdsHost);
 
-        $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
-
-        $InstanceData = null;
-        foreach ($dbInstances['DBInstances'] as $dbInstance) {
-            if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
-
-                $InstanceData = $dbInstance;
-                break;
-            }
-        }
+        $InstanceData = $this->getInstanceData($stackId);
 
         if ($InstanceData === null) {
             throw new SystemCheckException('RDS instance not found');
@@ -81,7 +72,9 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function isActive(): bool
     {
-        return $this->isAws() && $this->isAwsDbInstance();
+        $instanceData = $this->getInstanceData($this->getStackId($this->getRDSHost()));
+
+        return $this->isAws() && $instanceData && array_key_exists('DBInstanceIdentifier', $instanceData);
     }
 
     /**
@@ -156,5 +149,24 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
             throw new SystemCheckException('Cannot get rds instance metrics');
         }
         return $freeGB / ($allocatedStorage / 100);
+    }
+
+    /**
+     * @param string $stackId
+     * @return array|null
+     */
+    protected function getInstanceData(string $stackId):? array
+    {
+        $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
+
+        $InstanceData = null;
+        foreach ($dbInstances['DBInstances'] as $dbInstance) {
+            if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
+                $InstanceData = $dbInstance;
+                break;
+            }
+        }
+
+        return $InstanceData;
     }
 }

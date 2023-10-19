@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2022 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2023 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -65,12 +65,30 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
             ->with(PersistenceManager::SERVICE_ID)
             ->willReturn($this->persistenceManagerMock);
 
+        $rdsClientMock = $this->createMock(RdsClientStub::class);
+        $awsResult = new Result([
+            'DBClusters' => [
+                ['DBClusterIdentifier' => 'test2-dbcluster-idintifier'],
+                ['DBClusterIdentifier' => 'test-dbcluster-idintifier'],
+            ]
+        ]);
+
+        $rdsClientMock
+            ->expects(self::once())
+            ->method('describeDBClusters')
+            ->willReturn($awsResult);
+
+        $this->awsRDSAcuUtilizationCheckPartialMock
+            ->expects(self::once())
+            ->method('getRdsClient')
+            ->willReturn($rdsClientMock);
+
         $this->awsRDSAcuUtilizationCheckPartialMock->setServiceLocator($this->serviceLocatorMock);
 
         $this->persistenceManagerMock
             ->expects($this->once())
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test-dbclaster-idintifier']]]
+            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test-dbcluster-idintifier']]]
             );
 
         $isActive = $this->awsRDSAcuUtilizationCheckPartialMock->isActive();
@@ -89,6 +107,24 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
             ->method('get')
             ->with(PersistenceManager::SERVICE_ID)
             ->willReturn($this->persistenceManagerMock);
+
+        $rdsClientMock = $this->createMock(RdsClientStub::class);
+        $awsResult = new Result([
+            'DBInstances' => [
+                ['DBInstanceIdentifier' => 'test2-dbinstance-idintifier'],
+                ['DBInstanceIdentifier' => 'test1-dbinstance-idintifier'],
+            ]
+        ]);
+
+        $rdsClientMock
+            ->expects(self::once())
+            ->method('describeDBClusters')
+            ->willReturn($awsResult);
+
+        $this->awsRDSAcuUtilizationCheckPartialMock
+            ->expects(self::once())
+            ->method('getRdsClient')
+            ->willReturn($rdsClientMock);
 
         $this->awsRDSAcuUtilizationCheckPartialMock->setServiceLocator($this->serviceLocatorMock);
 
@@ -152,25 +188,25 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $rdsClientMock = $this->createMock(RdsClientStub::class);
         $awsResult = new Result([
             'DBClusters' => [
-                ['DBClusterIdentifier' => 'test2-dbclaster-idintifier'],
-                ['DBClusterIdentifier' => 'test1-dbclaster-idintifier'],
+                ['DBClusterIdentifier' => 'test2-dbcluster-idintifier'],
+                ['DBClusterIdentifier' => 'test1-dbcluster-idintifier'],
             ]
         ]);
 
         $rdsClientMock
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('describeDBClusters')
             ->willReturn($awsResult);
 
         $this->awsRDSAcuUtilizationCheckPartialMock
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('getRdsClient')
             ->willReturn($rdsClientMock);
 
         $this->persistenceManagerMock
             ->expects(self::exactly(2))
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbclaster-idintifier']]]
+            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']]]
             );
 
         $awsClientMock
@@ -238,25 +274,25 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $rdsClientMock = $this->createMock(RdsClientStub::class);
         $awsResult = new Result([
             'DBClusters' => [
-                ['DBClusterIdentifier' => 'test2-dbclaster-idintifier'],
-                ['DBClusterIdentifier' => 'test1-dbclaster-idintifier'],
+                ['DBClusterIdentifier' => 'test2-dbcluster-idintifier'],
+                ['DBClusterIdentifier' => 'test1-dbcluster-idintifier'],
             ]
         ]);
 
         $rdsClientMock
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('describeDBClusters')
             ->willReturn($awsResult);
 
         $this->awsRDSAcuUtilizationCheckPartialMock
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('getRdsClient')
             ->willReturn($rdsClientMock);
 
         $this->persistenceManagerMock
             ->expects(self::exactly(2))
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbclaster-idintifier']]]
+            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']]]
             );
 
         $awsClientMock

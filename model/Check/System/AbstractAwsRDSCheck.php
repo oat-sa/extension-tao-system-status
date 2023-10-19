@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2023 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -33,7 +33,6 @@ use oat\taoSystemStatus\model\SystemCheckException;
  */
 abstract class AbstractAwsRDSCheck extends AbstractCheck
 {
-    private const IDENTIFIER_DB_INSTANCE = 'dbinstance';
     protected const PARAM_DEFAULT_PERIOD = 300;
 
     /**
@@ -49,7 +48,7 @@ abstract class AbstractAwsRDSCheck extends AbstractCheck
      * @return string
      * @throws SystemCheckException
      */
-    protected function getStackId(string $rdsHost) : string
+    protected function getStackId(string $rdsHost): string
     {
         $hostParts = explode('.', $rdsHost);
 
@@ -63,7 +62,7 @@ abstract class AbstractAwsRDSCheck extends AbstractCheck
     /**
      * @return null|string
      */
-    protected function getRDSHost() : string
+    protected function getRDSHost(): string
     {
         $persistences = $this->getPersistenceManager()
             ->getOption(PersistenceManager::OPTION_PERSISTENCES);
@@ -74,6 +73,7 @@ abstract class AbstractAwsRDSCheck extends AbstractCheck
                 $host = $persistence['connection']['host'];
             }
         }
+
         return $host;
     }
 
@@ -89,22 +89,9 @@ abstract class AbstractAwsRDSCheck extends AbstractCheck
     /**
      * @return PersistenceManager
      */
-    protected function getPersistenceManager() : PersistenceManager
+    protected function getPersistenceManager(): PersistenceManager
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getServiceLocator()->get(PersistenceManager::SERVICE_ID);
-    }
-
-    /**
-     * @return bool
-     * @throws SystemCheckException
-     */
-    protected function isAwsDbInstance(): bool
-    {
-        $rdsHost = $this->getRDSHost();
-        $stackId = $this->getStackId($rdsHost);
-        $isRdsClusterIdentifier = strpos($stackId, self::IDENTIFIER_DB_INSTANCE) > 0;
-
-        return $isRdsClusterIdentifier;
     }
 }

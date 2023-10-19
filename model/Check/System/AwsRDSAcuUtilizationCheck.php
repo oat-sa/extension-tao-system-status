@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2019 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2023 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -47,17 +47,7 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
     {
         $rdsHost = $this->getRDSHost();
         $stackId = $this->getStackId($rdsHost);
-
-        $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
-
-        $InstanceData = null;
-        foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
-            if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
-
-                $InstanceData = $dbInstance;
-                break;
-            }
-        }
+        $InstanceData = $this->getInstanceData($stackId);
 
         if ($InstanceData === null) {
             throw new SystemCheckException('RDS cluster instance not found');
@@ -85,7 +75,9 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      */
     public function isActive(): bool
     {
-        return $this->isAws() && !$this->isAwsDbInstance();
+        $instanceData = $this->getInstanceData($this->getStackId($this->getRDSHost()));
+
+        return $this->isAws() && $instanceData && array_key_exists('DBClusterIdentifier', $instanceData);
     }
 
     /**
@@ -162,5 +154,24 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
         }
 
         return $utilization;
+    }
+
+    /**
+     * @param string $stackId
+     * @return null|array
+     */
+    protected function getInstanceData(string $stackId):? array
+    {
+        $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
+
+        $instanceData = null;
+        foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
+            if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
+                $instanceData = $dbInstance;
+                break;
+            }
+        }
+
+        return $instanceData;
     }
 }
