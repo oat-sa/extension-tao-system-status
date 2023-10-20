@@ -46,15 +46,13 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      */
     protected function doCheck(): Report
     {
-        $rdsHost = $this->getRDSHost();
-        $stackId = $this->getStackId($rdsHost);
-        $InstanceData = $this->getInstanceData($stackId);
+        $instanceData = $this->getInstanceData();
 
-        if ($InstanceData === null) {
+        if ($instanceData === null) {
             throw new SystemCheckException('RDS cluster instance not found');
         }
 
-        $utilizationPercentage = $this->getAcuUtilization($InstanceData);
+        $utilizationPercentage = $this->getAcuUtilization($instanceData);
 
         if ($utilizationPercentage > 80) {
             $this->logError(__('ACU Utilization on RDS storage') . '> 80%');
@@ -76,9 +74,13 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      */
     public function isActive(): bool
     {
-        $instanceData = $this->getInstanceData($this->getStackId($this->getRDSHost()));
+        if (!$this->isAws()) {
+            return false;
+        }
 
-        return $this->isAws() && $instanceData && array_key_exists('DBClusterIdentifier', $instanceData);
+        $instanceData = $this->getInstanceData();
+
+        return $this->getInstanceData() && array_key_exists('DBClusterIdentifier', $instanceData);
     }
 
     /**
@@ -161,8 +163,11 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      * @param string $stackId
      * @return null|array
      */
-    protected function getInstanceData(string $stackId): ?array
+    protected function getInstanceData(): ?array
     {
+        $rdsHost = $this->getRDSHost();
+        $stackId = $this->getStackId($rdsHost);
+
         $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
 
         if (!array_key_exists('DBClusters', $dbClusterInstances)) {

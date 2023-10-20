@@ -43,16 +43,13 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     protected function doCheck(): Report
     {
-        $rdsHost = $this->getRDSHost();
-        $stackId = $this->getStackId($rdsHost);
+        $instanceData = $this->getInstanceData();
 
-        $InstanceData = $this->getInstanceData($stackId);
-
-        if ($InstanceData === null) {
+        if ($instanceData === null) {
             throw new SystemCheckException('RDS instance not found');
         }
 
-        $freeSpacePercentage = $this->getFreePercentage($InstanceData);
+        $freeSpacePercentage = $this->getFreePercentage($instanceData);
 
         if ($freeSpacePercentage < 30) {
             $this->logError(__('Free space on RDS storage') . '< 30%');
@@ -74,9 +71,13 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function isActive(): bool
     {
-        $instanceData = $this->getInstanceData($this->getStackId($this->getRDSHost()));
+        if (!$this->isAws()) {
+            return false;
+        }
 
-        return $this->isAws() && $instanceData && array_key_exists('DBInstanceIdentifier', $instanceData);
+        $instanceData = $this->getInstanceData();
+
+        return $this->getInstanceData() && array_key_exists('DBInstanceIdentifier', $instanceData);
     }
 
     /**
@@ -157,8 +158,11 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      * @param string $stackId
      * @return array|null
      */
-    protected function getInstanceData(string $stackId): ?array
+    protected function getInstanceData(): ?array
     {
+        $rdsHost = $this->getRDSHost();
+        $stackId = $this->getStackId($rdsHost);
+
         $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
 
         if (!array_key_exists('DBInstances', $dbInstances)) {
