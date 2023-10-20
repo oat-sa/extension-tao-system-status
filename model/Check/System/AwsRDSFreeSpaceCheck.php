@@ -77,7 +77,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
 
         $instanceData = $this->getInstanceData();
 
-        return $this->getInstanceData() && array_key_exists('DBInstanceIdentifier', $instanceData);
+        return $instanceData && array_key_exists('DBInstanceIdentifier', $instanceData);
     }
 
     /**

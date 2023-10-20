@@ -80,7 +80,7 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
 
         $instanceData = $this->getInstanceData();
 
-        return $this->getInstanceData() && array_key_exists('DBClusterIdentifier', $instanceData);
+        return $instanceData && array_key_exists('DBClusterIdentifier', $instanceData);
     }
 
     /**
