@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,12 +56,13 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
 
         if ($freeSpacePercentage < 30) {
             $this->logError(__('Free space on RDS storage') . '< 30%');
-            $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage).'%');
+            $report = new Report(Report::TYPE_ERROR, round($freeSpacePercentage) . '%');
         } elseif ($freeSpacePercentage < 50) {
-            $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage).'%');
+            $report = new Report(Report::TYPE_WARNING, round($freeSpacePercentage) . '%');
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage).'%');
+            $report = new Report(Report::TYPE_SUCCESS, round($freeSpacePercentage) . '%');
         }
+
         $report->setData([self::PARAM_VALUE => round($freeSpacePercentage)]);
 
         return $report;
@@ -140,7 +142,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
 
         foreach ($result->toArray()['MetricDataResults'] as $metric) {
             if ($metric['Id'] === 'free') {
-                $freeGB = $metric['Values'][0] / (1024*1024*1024);
+                $freeGB = $metric['Values'][0] / (1024 * 1024 * 1024);
             }
         }
         $allocatedStorage = $instanceData['AllocatedStorage'];
@@ -155,7 +157,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      * @param string $stackId
      * @return array|null
      */
-    protected function getInstanceData(string $stackId):? array
+    protected function getInstanceData(string $stackId): ?array
     {
         $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
 

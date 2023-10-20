@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,11 +58,11 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
 
         if ($utilizationPercentage > 80) {
             $this->logError(__('ACU Utilization on RDS storage') . '> 80%');
-            $report = new Report(Report::TYPE_ERROR, round($utilizationPercentage).'%');
+            $report = new Report(Report::TYPE_ERROR, round($utilizationPercentage) . '%');
         } elseif ($utilizationPercentage > 50) {
-            $report = new Report(Report::TYPE_WARNING, round($utilizationPercentage).'%');
+            $report = new Report(Report::TYPE_WARNING, round($utilizationPercentage) . '%');
         } else {
-            $report = new Report(Report::TYPE_SUCCESS, round($utilizationPercentage).'%');
+            $report = new Report(Report::TYPE_SUCCESS, round($utilizationPercentage) . '%');
         }
 
         $report->setData([self::PARAM_VALUE => round($utilizationPercentage)]);
@@ -160,7 +161,7 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      * @param string $stackId
      * @return null|array
      */
-    protected function getInstanceData(string $stackId):? array
+    protected function getInstanceData(string $stackId): ?array
     {
         $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
 

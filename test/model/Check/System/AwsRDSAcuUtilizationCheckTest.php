@@ -88,7 +88,14 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $this->persistenceManagerMock
             ->expects($this->once())
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test-dbcluster-idintifier']]]
+            ->willReturn(
+                [
+                    [
+                        'driver' => 'dbal',
+                        'connection' =>
+                            ['host' => 'testconfig.rds.test-dbcluster-idintifier']
+                    ]
+                ]
             );
 
         $isActive = $this->awsRDSAcuUtilizationCheckPartialMock->isActive();
@@ -131,7 +138,13 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $this->persistenceManagerMock
             ->expects($this->once())
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test-dbinstance-idintifier']]]
+            ->willReturn(
+                [
+                    [
+                        'driver' => 'dbal',
+                        'connection' => ['host' => 'testconfig.rds.test-dbinstance-idintifier']
+                    ]
+                ]
             );
 
         $isActive = $this->awsRDSAcuUtilizationCheckPartialMock->isActive();
@@ -142,21 +155,30 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
     public function checkResults(): array
     {
         return [
-            'Ok' => [1.0, [
-                'type' => 'success',
-                'message' => '1%',
-                'value' => 1
-            ]],
-            'Warning' => [55.0, [
-                'type' => 'warning',
-                'message' => '55%',
-                'value' => 55
-            ]],
-            'Error' => [90.0, [
-                'type' => 'error',
-                'message' => '90%',
-                'value' => 90
-            ]]
+            'Ok' => [
+                1.0,
+                [
+                    'type' => 'success',
+                    'message' => '1%',
+                    'value' => 1
+                ]
+            ],
+            'Warning' => [
+                55.0,
+                [
+                    'type' => 'warning',
+                    'message' => '55%',
+                    'value' => 55
+                ]
+            ],
+            'Error' => [
+                90.0,
+                [
+                    'type' => 'error',
+                    'message' => '90%',
+                    'value' => 90
+                ]
+            ]
         ];
     }
 
@@ -206,7 +228,13 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $this->persistenceManagerMock
             ->expects(self::exactly(2))
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']]]
+            ->willReturn(
+                [
+                    [
+                        'driver' => 'dbal',
+                        'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']
+                    ]
+                ]
             );
 
         $awsClientMock
@@ -292,7 +320,8 @@ class AwsRDSAcuUtilizationCheckTest extends TestCase
         $this->persistenceManagerMock
             ->expects(self::exactly(2))
             ->method('getOption')
-            ->willReturn([['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']]]
+            ->willReturn(
+                [['driver' => 'dbal', 'connection' => ['host' => 'testconfig.rds.test1-dbcluster-idintifier']]]
             );
 
         $awsClientMock

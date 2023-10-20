@@ -28,7 +28,8 @@ use Aws\Result;
 
 class CloudwatchClientStub extends AwsClient
 {
-    public function getMetricData(array $args = []): Result {
+    public function getMetricData(array $args = []): Result
+    {
         return new Result();
     }
 }

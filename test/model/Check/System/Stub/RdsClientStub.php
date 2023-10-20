@@ -28,7 +28,8 @@ use Aws\Result;
 
 class RdsClientStub extends RdsClient
 {
-    public function describeDBClusters(array $args = []): Result {
+    public function describeDBClusters(array $args = []): Result
+    {
         return new Result();
     }
 }
