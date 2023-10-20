@@ -159,6 +159,10 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
     {
         $dbInstances = $this->getRdsClient()->describeDBInstances()->toArray();
 
+        if (!array_key_exists('DBInstances', $dbInstances)) {
+            return null;
+        }
+
         $InstanceData = null;
         foreach ($dbInstances['DBInstances'] as $dbInstance) {
             if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {

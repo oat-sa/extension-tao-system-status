@@ -164,6 +164,10 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
     {
         $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
 
+        if (!array_key_exists('DBClusters', $dbClusterInstances)) {
+            return null;
+        }
+
         $instanceData = null;
         foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
             if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
