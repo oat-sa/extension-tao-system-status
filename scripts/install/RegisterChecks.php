@@ -25,6 +25,7 @@ namespace oat\taoSystemStatus\scripts\install;
 use oat\oatbox\reporting\Report;
 use oat\oatbox\extension\AbstractAction;
 use oat\taoSystemStatus\model\Check\CheckInterface;
+use oat\taoSystemStatus\model\Check\System\AwsRDSAcuUtilizationCheck;
 use oat\taoSystemStatus\model\SystemStatusException;
 use oat\taoSystemStatus\model\Check\Instance\CronCheck;
 use oat\taoSystemStatus\model\Check\System\Act\SNSCheck;
@@ -116,6 +117,7 @@ class RegisterChecks extends AbstractAction
             new AwsRedisFreeSpaceCheck(),
             new HeartBeatCheck(),
             new AwsRDSFreeSpaceCheck(),
+            new AwsRDSAcuUtilizationCheck(),
             new AutoSystemTerminationCheck(),
             new LoginQueueCheck(),
             new OdsConfigurationCheck(),
