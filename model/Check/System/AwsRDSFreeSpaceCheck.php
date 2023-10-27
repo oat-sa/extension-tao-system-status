@@ -75,9 +75,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
             return false;
         }
 
-        $instanceData = $this->getInstanceData();
-
-        return $instanceData && array_key_exists('DBInstanceIdentifier', $instanceData);
+        return $this->getInstanceData() && !$this->isClusterInstance();
     }
 
     /**
@@ -155,7 +153,6 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
     }
 
     /**
-     * @param string $stackId
      * @return array|null
      */
     protected function getInstanceData(): ?array
@@ -171,12 +168,35 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
 
         $InstanceData = null;
         foreach ($dbInstances['DBInstances'] as $dbInstance) {
-            if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
+            if (str_starts_with($dbInstance['DBInstanceIdentifier'], $stackId)) {
                 $InstanceData = $dbInstance;
                 break;
             }
         }
 
         return $InstanceData;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isClusterInstance(): bool
+    {
+        $rdsHost = $this->getRDSHost();
+        $stackId = $this->getStackId($rdsHost);
+
+        $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
+
+        if (!array_key_exists('DBClusters', $dbClusterInstances)) {
+            return false;
+        }
+
+        foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
+            if (str_starts_with($dbInstance['DBClusterIdentifier'], $stackId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
