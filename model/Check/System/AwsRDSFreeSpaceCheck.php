@@ -109,7 +109,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function getFreePercentage(array $instanceData)
     {
-        $params = $this->getParameters();
+//        $params = $this->getParameters();
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
         $since = (new DateTime())->sub($interval);
