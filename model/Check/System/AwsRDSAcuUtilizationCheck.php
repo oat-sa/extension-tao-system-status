@@ -114,7 +114,7 @@ class AwsRDSAcuUtilizationCheck extends AbstractAwsRDSCheck
      */
     public function getAcuUtilization(array $instanceData)
     {
-//        $params = $this->getParameters();
+        $params = $this->getParameters();
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
         $since = (new DateTime())->sub($interval);
