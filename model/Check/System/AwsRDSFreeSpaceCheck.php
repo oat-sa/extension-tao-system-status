@@ -75,9 +75,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
             return false;
         }
 
-        $instanceData = $this->getInstanceData();
-
-        return $instanceData && array_key_exists('DBInstanceIdentifier', $instanceData);
+        return $this->getInstanceData() && !$this->isClusterInstance();
     }
 
     /**
@@ -111,6 +109,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
      */
     public function getFreePercentage(array $instanceData)
     {
+        $params = $this->getParameters();
         $period = $params[self::PARAM_PERIOD] ?? self::PARAM_DEFAULT_PERIOD;
         $interval = new DateInterval('PT' . $period . 'S');
         $since = (new DateTime())->sub($interval);
@@ -155,7 +154,6 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
     }
 
     /**
-     * @param string $stackId
      * @return array|null
      */
     protected function getInstanceData(): ?array
@@ -169,14 +167,37 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
             return null;
         }
 
-        $InstanceData = null;
+        $instanceData = null;
         foreach ($dbInstances['DBInstances'] as $dbInstance) {
             if (strpos($dbInstance['DBInstanceIdentifier'], $stackId) === 0) {
-                $InstanceData = $dbInstance;
+                $instanceData = $dbInstance;
                 break;
             }
         }
 
-        return $InstanceData;
+        return $instanceData;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isClusterInstance(): bool
+    {
+        $rdsHost = $this->getRDSHost();
+        $stackId = $this->getStackId($rdsHost);
+
+        $dbClusterInstances = $this->getRdsClient()->describeDBClusters()->toArray();
+
+        if (!array_key_exists('DBClusters', $dbClusterInstances)) {
+            return false;
+        }
+
+        foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
+            if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

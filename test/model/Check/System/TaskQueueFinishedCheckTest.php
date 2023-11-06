@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace oat\taoSystemStatus\test\model\Check\System;
 
+use DateTime;
+use DateTimeZone;
 use oat\generis\test\PersistenceManagerMockTrait;
 use oat\oatbox\service\ServiceManager;
 use oat\tao\model\taskQueue\TaskLogInterface;
@@ -91,9 +93,14 @@ class TaskQueueFinishedCheckTest extends TestCase
         $this->assertArrayHasKey('time', $data['P1M']);
         $this->assertArrayHasKey('average', $data['P1M']);
         $this->assertArrayHasKey('amount', $data['P1M']);
-        $this->assertCount(186, $data['P1M']['time']);
-        $this->assertCount(186, $data['P1M']['average']);
-        $this->assertCount(186, $data['P1M']['amount']);
+
+        $dateTime = new DateTime('now', new DateTimeZone('UTC'));
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$dateTime->format('m'), (int)$dateTime->format('Y'));
+        $expectedPeriods = $daysInMonth * 24 / 4;
+
+        $this->assertCount($expectedPeriods, $data['P1M']['time']);
+        $this->assertCount($expectedPeriods, $data['P1M']['average']);
+        $this->assertCount($expectedPeriods, $data['P1M']['amount']);
 
         $this->assertArrayHasKey(CheckInterface::PARAM_CATEGORY, $data);
         $this->assertEquals(__('Monitoring / Statistics'), $data[CheckInterface::PARAM_CATEGORY]);
