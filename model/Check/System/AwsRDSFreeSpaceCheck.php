@@ -193,7 +193,7 @@ class AwsRDSFreeSpaceCheck extends AbstractAwsRDSCheck
         }
 
         foreach ($dbClusterInstances['DBClusters'] as $dbInstance) {
-            if (str_starts_with($dbInstance['DBClusterIdentifier'], $stackId)) {
+            if (strpos($dbInstance['DBClusterIdentifier'], $stackId) === 0) {
                 return true;
             }
         }
