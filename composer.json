@@ -30,7 +30,7 @@
         "oat-sa/generis": ">=15.22",
         "oat-sa/tao-core": ">=50.30.0",
         "oat-sa/extension-tao-scheduler": ">=3.0.0",
-        "oat-sa/lib-generis-aws": ">=0.14.0"
+        "oat-sa/lib-generis-aws": "dev-fix/update-dependency as 99.99.99"
     },
     "autoload": {
         "psr-4": {
