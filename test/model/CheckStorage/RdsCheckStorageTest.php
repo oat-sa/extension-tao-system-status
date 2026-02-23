@@ -92,7 +92,7 @@ class RdsCheckStorageTest extends TestCase
 
         $service = new RdsCheckStorage('testCheckStorage');
         $service->install($persistence);
-        $config = new \common_persistence_KeyValuePersistence([], new \common_persistence_InMemoryKvDriver());
+        $config = new \common_persistence_KeyValuePersistence(new \common_persistence_InMemoryKvDriver(), []);
 
         $config->set(PersistenceManager::SERVICE_ID, $persistenceManager);
         $serviceManager = new ServiceManager($config);
