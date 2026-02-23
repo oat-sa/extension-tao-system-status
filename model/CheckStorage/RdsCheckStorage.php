@@ -41,14 +41,14 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
     private $persistenceId;
 
-    const TABLE_NAME = 'system_checks';
+    public const TABLE_NAME = 'system_checks';
 
-    const COLUMN_ID = 'id';
-    const COLUMN_CLASS = 'class';
-    const COLUMN_TYPE = 'type';
-    const COLUMN_PARAMS = 'params';
+    public const COLUMN_ID = 'id';
+    public const COLUMN_CLASS = 'class';
+    public const COLUMN_TYPE = 'type';
+    public const COLUMN_PARAMS = 'params';
 
-    const UNIQUE_ID_INDEX = 'idx_unique_system_checks_storage';
+    public const UNIQUE_ID_INDEX = 'idx_unique_system_checks_storage';
 
     /**
      * RdsCheckStorage constructor.
