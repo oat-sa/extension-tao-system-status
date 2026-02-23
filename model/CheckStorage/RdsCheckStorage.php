@@ -28,6 +28,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ReflectionClass;
 use common_persistence_SqlPersistence;
@@ -73,6 +74,8 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
         try {
             return $this->getPersistence()->insert(self::TABLE_NAME, $data) === 1;
+        } catch (UniqueConstraintViolationException $e) {
+            throw new SystemStatusException('Cannot add the Check to check storage: ' . $e->getMessage());
         } catch (DBALException $e) {
             throw new SystemStatusException('Cannot add the Check to check storage: ' . $e->getMessage());
         }
