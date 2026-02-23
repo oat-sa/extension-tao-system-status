@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +28,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ReflectionClass;
 use common_persistence_SqlPersistence;
@@ -40,14 +42,14 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
     private $persistenceId;
 
-    const TABLE_NAME = 'system_checks';
+    public const TABLE_NAME = 'system_checks';
 
-    const COLUMN_ID = 'id';
-    const COLUMN_CLASS = 'class';
-    const COLUMN_TYPE = 'type';
-    const COLUMN_PARAMS = 'params';
+    public const COLUMN_ID = 'id';
+    public const COLUMN_CLASS = 'class';
+    public const COLUMN_TYPE = 'type';
+    public const COLUMN_PARAMS = 'params';
 
-    const UNIQUE_ID_INDEX = 'idx_unique_system_checks_storage';
+    public const UNIQUE_ID_INDEX = 'idx_unique_system_checks_storage';
 
     /**
      * RdsCheckStorage constructor.
@@ -72,6 +74,8 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
 
         try {
             return $this->getPersistence()->insert(self::TABLE_NAME, $data) === 1;
+        } catch (UniqueConstraintViolationException $e) {
+            throw new SystemStatusException('Cannot add the Check to check storage: ' . $e->getMessage());
         } catch (DBALException $e) {
             throw new SystemStatusException('Cannot add the Check to check storage: ' . $e->getMessage());
         }
@@ -86,8 +90,8 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->delete(self::TABLE_NAME);
         $queryBuilder->where(self::COLUMN_ID . ' = ?');
         $queryBuilder->setParameters([$check->getId()]);
-        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        return $stmt->execute();
+        $this->getPersistence()->exec($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        return true;
     }
 
     /**
@@ -100,7 +104,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->where(self::COLUMN_ID . ' = ?');
         $queryBuilder->setParameters([$id]);
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        $checkData = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $checkData = $stmt->fetchAssociative();
 
         try {
             $checkReflection = new ReflectionClass($checkData[self::COLUMN_CLASS]);
@@ -129,7 +133,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->setParameters([$type]);
         $result = [];
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        $checksData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $checksData = $stmt->fetchAllAssociative();
         foreach ($checksData as $check) {
             try {
                 $checkReflection = new ReflectionClass($check[self::COLUMN_CLASS]);
@@ -168,7 +172,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
             $table->addColumn(static::COLUMN_PARAMS, 'text', ['notnull' => true]);
             $table->addColumn(static::COLUMN_TYPE, 'text', ['notnull' => true]);
             $table->addUniqueIndex([self::COLUMN_ID], self::UNIQUE_ID_INDEX);
-        } catch(SchemaException $e) {
+        } catch (SchemaException $e) {
             \common_Logger::w($e->getMessage());
             return false;
         }

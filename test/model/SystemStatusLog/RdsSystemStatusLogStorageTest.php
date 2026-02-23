@@ -77,7 +77,7 @@ class RdsSystemStatusLogStorageTest extends TestCase
         $persistence = $persistenceManager->getPersistenceById('testSystemStatusLogStorage');
         $service = new RdsSystemStatusLogStorageStorage('testSystemStatusLogStorage');
         $service->install($persistence);
-        $config = new \common_persistence_KeyValuePersistence([], new \common_persistence_InMemoryKvDriver());
+        $config = new \common_persistence_KeyValuePersistence(new \common_persistence_InMemoryKvDriver(), []);
         $config->set(PersistenceManager::SERVICE_ID, $persistenceManager);
         $serviceManager = new ServiceManager($config);
         $service->setServiceLocator($serviceManager);
