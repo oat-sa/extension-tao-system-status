@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,8 +87,8 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->delete(self::TABLE_NAME);
         $queryBuilder->where(self::COLUMN_ID . ' = ?');
         $queryBuilder->setParameters([$check->getId()]);
-        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        return $stmt->execute();
+        $this->getPersistence()->exec($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        return true;
     }
 
     /**
@@ -100,7 +101,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->where(self::COLUMN_ID . ' = ?');
         $queryBuilder->setParameters([$id]);
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        $checkData = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $checkData = $stmt->fetchAssociative();
 
         try {
             $checkReflection = new ReflectionClass($checkData[self::COLUMN_CLASS]);
@@ -129,7 +130,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
         $queryBuilder->setParameters([$type]);
         $result = [];
         $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        $checksData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $checksData = $stmt->fetchAllAssociative();
         foreach ($checksData as $check) {
             try {
                 $checkReflection = new ReflectionClass($check[self::COLUMN_CLASS]);
@@ -168,7 +169,7 @@ class RdsCheckStorage implements CheckStorageInterface, ServiceLocatorAwareInter
             $table->addColumn(static::COLUMN_PARAMS, 'text', ['notnull' => true]);
             $table->addColumn(static::COLUMN_TYPE, 'text', ['notnull' => true]);
             $table->addUniqueIndex([self::COLUMN_ID], self::UNIQUE_ID_INDEX);
-        } catch(SchemaException $e) {
+        } catch (SchemaException $e) {
             \common_Logger::w($e->getMessage());
             return false;
         }
