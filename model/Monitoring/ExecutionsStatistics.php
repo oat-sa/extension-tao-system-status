@@ -71,9 +71,9 @@ class ExecutionsStatistics extends ConfigurableService
         }
         $sql = implode(' UNION ALL ', $queries);
 
-        /** @var \Doctrine\DBAL\Driver\PDOStatement $stmt */
-        $stmt = $persistence->getDriver()->query($sql, $params);
-        return $stmt->fetchAll();
+        /** @var \Doctrine\DBAL\Result $result */
+        $result = $persistence->getDriver()->query($sql, $params);
+        return $result->fetchAllAssociative();
     }
 
     /**
@@ -109,9 +109,9 @@ class ExecutionsStatistics extends ConfigurableService
         }
         $sql = implode(' UNION ALL ', $queries);
 
-        /** @var \Doctrine\DBAL\Driver\PDOStatement $stmt */
-        $stmt = $persistence->getDriver()->query($sql, $params);
-        return $stmt->fetchAll();
+        /** @var \Doctrine\DBAL\Result $result */
+        $result = $persistence->getDriver()->query($sql, $params);
+        return $result->fetchAllAssociative();
     }
 
     /**

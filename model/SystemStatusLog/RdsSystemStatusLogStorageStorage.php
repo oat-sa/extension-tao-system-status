@@ -21,7 +21,7 @@
 namespace oat\taoSystemStatus\model\SystemStatusLog;
 
 use common_report_Report as Report;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\SchemaException;
 use oat\generis\persistence\PersistenceManager;
@@ -95,8 +95,8 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
         $queryBuilder->select(['*']);
         $queryBuilder->where(self::COLUMN_ID . ' IN (' . $conditionSql . ')');
         $queryBuilder->setParameter('date', $date->format('Y-m-d H:i:s'));
-        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        return $result->fetchAllAssociative();
     }
 
 
