@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +37,7 @@ use DatePeriod;
  */
 class ExecutionsStatistics extends ConfigurableService
 {
-    const SERVICE_ID = 'taoSystemStatus/ExecutionsStatistics';
+    public const SERVICE_ID = 'taoSystemStatus/ExecutionsStatistics';
 
     /**
      * @param DatePeriod $period
@@ -61,8 +62,12 @@ class ExecutionsStatistics extends ConfigurableService
                 $previousDate = $date;
                 continue;
             }
-            $qb->select('\'' . $date->format('Y-m-d H:i:s') .'\' as time, COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ') as count')
-                ->where(MonitoringStorage::COLUMN_START_TIME . ' >= ? AND ' . MonitoringStorage::COLUMN_START_TIME . ' < ?');
+            $timeExpr = '\'' . $date->format('Y-m-d H:i:s') . '\' as time';
+            $countExpr = 'COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ') as count';
+            $qb->select($timeExpr . ', ' . $countExpr)
+                ->where(
+                    MonitoringStorage::COLUMN_START_TIME . ' >= ? AND ' . MonitoringStorage::COLUMN_START_TIME . ' < ?'
+                );
             $params[] = (string) $previousDate->getTimestamp();
             $params[] = (string) $date->getTimestamp();
 
@@ -99,8 +104,12 @@ class ExecutionsStatistics extends ConfigurableService
                 $previousDate = $date;
                 continue;
             }
-            $qb->select('\'' . $date->format('Y-m-d H:i:s') .'\' as time, COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ')')
-                ->where(MonitoringStorage::COLUMN_END_TIME . ' >= ? AND ' . MonitoringStorage::COLUMN_END_TIME . ' < ?');
+            $timeExpr = '\'' . $date->format('Y-m-d H:i:s') . '\' as time';
+            $countExpr = 'COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ')';
+            $qb->select($timeExpr . ', ' . $countExpr)
+                ->where(
+                    MonitoringStorage::COLUMN_END_TIME . ' >= ? AND ' . MonitoringStorage::COLUMN_END_TIME . ' < ?'
+                );
             $params[] = (string) $previousDate->getTimestamp();
             $params[] = (string) $date->getTimestamp();
 
