@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoSystemStatus\model\Monitoring;
 
 use oat\generis\persistence\PersistenceManager;
