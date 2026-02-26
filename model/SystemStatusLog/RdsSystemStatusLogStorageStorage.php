@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 namespace oat\taoSystemStatus\model\SystemStatusLog;
 
 use common_report_Report as Report;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\SchemaException;
 use oat\generis\persistence\PersistenceManager;
@@ -36,15 +37,14 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  */
 class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterface, ServiceLocatorAwareInterface
 {
-
     use ServiceLocatorAwareTrait;
 
     private $persistenceId;
 
-    const TABLE_NAME = 'system_status_log';
+    public const TABLE_NAME = 'system_status_log';
 
-    const CHECK_ID_INDEX = 'idx_system_status_log_check_id';
-    const INSTANCE_ID_INDEX = 'idx_system_status_log_instance_id';
+    public const CHECK_ID_INDEX = 'idx_system_status_log_check_id';
+    public const INSTANCE_ID_INDEX = 'idx_system_status_log_instance_id';
 
     /**
      * RdsSystemStatusLogStorageStorage constructor.
@@ -71,7 +71,7 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
         try {
             return $this->getPersistence()->insert(self::TABLE_NAME, $data) === 1;
         } catch (DBALException $e) {
-            throw new SystemStatusException('Cannot log check '.$check->getId().' : ' . $e->getMessage());
+            throw new SystemStatusException('Cannot log check ' . $check->getId() . ' : ' . $e->getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
         $date = \DateTime::createFromFormat('Y-m-d H:i:s', $dbNow);
         $date = $date->sub($interval);
         $conditionSql = $this->getQueryBuilder()
-            ->select('max('.self::COLUMN_ID.')')
+            ->select('max(' . self::COLUMN_ID . ')')
             ->where(self::COLUMN_CREATED_AT . ' > :date')
             ->groupBy([
                 self::COLUMN_CHECK_ID,
@@ -95,8 +95,8 @@ class RdsSystemStatusLogStorageStorage implements SystemStatusLogStorageInterfac
         $queryBuilder->select(['*']);
         $queryBuilder->where(self::COLUMN_ID . ' IN (' . $conditionSql . ')');
         $queryBuilder->setParameter('date', $date->format('Y-m-d H:i:s'));
-        $stmt = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $this->getPersistence()->query($queryBuilder->getSQL(), $queryBuilder->getParameters());
+        return $result->fetchAllAssociative();
     }
 
 
