@@ -105,7 +105,7 @@ class ExecutionsStatistics extends ConfigurableService
                 continue;
             }
             $timeExpr = '\'' . $date->format('Y-m-d H:i:s') . '\' as time';
-            $countExpr = 'COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ')';
+            $countExpr = 'COUNT(' . MonitoringStorage::COLUMN_DELIVERY_EXECUTION_ID . ') as count';
             $qb->select($timeExpr . ', ' . $countExpr)
                 ->where(
                     MonitoringStorage::COLUMN_END_TIME . ' >= ? AND ' . MonitoringStorage::COLUMN_END_TIME . ' < ?'
